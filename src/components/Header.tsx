@@ -97,10 +97,8 @@ export default function Header({
         {/* Left branding */}
         <div 
           onClick={() => setActiveTab('browse')} 
-          onDoubleClick={() => setActiveTab('admin')}
           className="flex cursor-pointer items-center space-x-2.5 group"
           id="branding-logo"
-          title={language === 'en' ? "Double-click to access Admin Dashboard" : "एडमिन पैनल पर जाने के लिए डबल-क्लिक करें"}
         >
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white shadow-sm ring-1 ring-blue-500">
             <Bot className="h-5.5 w-5.5 text-white" />
@@ -419,17 +417,7 @@ export default function Header({
                     <span>{t.submitSkill}</span>
                   </Button>
 
-                  <Button
-                    onClick={() => {
-                      setActiveTab('admin');
-                      setMobileMenuOpen(false);
-                    }}
-                    variant="outline"
-                    className="w-full space-x-2 py-2 border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-md text-xs font-semibold cursor-pointer"
-                  >
-                    <ShieldAlert className="h-4 w-4" />
-                    <span>{language === 'en' ? "Access Admin Dashboard" : "एडमिन पैनल खोलें"}</span>
-                  </Button>
+
                 </div>
               </div>
             </SheetContent>

@@ -33,7 +33,7 @@ import CollectionList from './components/CollectionList';
 import ResourceLibrary from './components/ResourceLibrary';
 import PromptLibrary from './components/PromptLibrary';
 import SubmitForm from './components/SubmitForm';
-import AdminDashboard from './components/AdminDashboard';
+
 import { translations } from './translations';
 
 import { Skill, Category, Collection, Resource, Prompt, Submission } from './types';
@@ -412,7 +412,7 @@ export default function App() {
         )}
 
         {/* Dynamic Pages wrapper */}
-        <div className={activeTab === 'admin' ? "w-full max-w-[98%] mx-auto px-4 py-4 sm:px-6 lg:px-8 h-[calc(100vh-6.5rem)] flex flex-col min-h-0" : "mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8"}>
+        <div className={"mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8"}>
           
           {/* TAB 1: Main Browse list */}
           {activeTab === 'browse' && (
@@ -705,22 +705,7 @@ export default function App() {
             </div>
           )}
 
-          {/* TAB 7: Administrative Dashboard console moderation panel */}
-          {activeTab === 'admin' && (
-            <div className="animate-in fade-in duration-200 flex-1 flex flex-col min-h-0">
-              <AdminDashboard 
-                skills={skills}
-                submissions={submissions}
-                categories={categories}
-                onApproveSubmission={handleAdminApproveSubmission}
-                onRejectSubmission={handleAdminRejectSubmission}
-                onAddSkill={handleAdminAddSkillDirectly}
-                onUpdateSkill={handleAdminUpdateSkill}
-                onDeleteSkill={handleAdminDeleteSkill}
-                onClose={() => setActiveTab('browse')}
-              />
-            </div>
-          )}
+
 
         </div>
       </main>

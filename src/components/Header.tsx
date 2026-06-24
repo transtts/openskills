@@ -95,9 +95,11 @@ export default function Header({
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
         {/* Left branding */}
-        <div 
-          onClick={() => setActiveTab('browse')} 
-          className="flex cursor-pointer items-center space-x-2.5 group"
+        <a 
+          href="https://www.openskills.in/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex cursor-pointer items-center space-x-2.5 group no-underline"
           id="branding-logo"
         >
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white shadow-sm ring-1 ring-blue-500">
@@ -106,7 +108,7 @@ export default function Header({
           <span className="font-sans font-bold tracking-tight text-zinc-950 text-lg group-hover:text-blue-600 transition-colors">
             openSkills
           </span>
-        </div>
+        </a>
 
         {/* Center Nav Link Items (Desktop) */}
         <nav className="hidden md:flex items-center space-x-1">

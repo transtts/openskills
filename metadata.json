@@ -1,0 +1,6 @@
+{
+  "name": "openSkills",
+  "description": "A centralized directory for discovering, browsing, searching, and accessing openSkills GitHub repositories.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

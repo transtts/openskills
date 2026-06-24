@@ -33,6 +33,7 @@ import CollectionList from './components/CollectionList';
 import ResourceLibrary from './components/ResourceLibrary';
 import PromptLibrary from './components/PromptLibrary';
 import SubmitForm from './components/SubmitForm';
+import AdminDashboard from './components/AdminDashboard';
 
 import { translations } from './translations';
 
@@ -46,8 +47,20 @@ import {
 } from './data';
 
 export default function App() {
-  // Navigation states
-  const [activeTab, setActiveTab] = useState<string>('browse');
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    return window.location.hash === '#admin' ? 'admin' : 'browse';
+  });
+
+  // Listen for URL hash changes to open admin page via secret URL
+  useEffect(() => {
+    const handleHashChange = () => {
+      if (window.location.hash === '#admin') {
+        setActiveTab('admin');
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   // Language translation state
   const [language, setLanguage] = useState<'en' | 'hi'>(() => {
@@ -412,7 +425,7 @@ export default function App() {
         )}
 
         {/* Dynamic Pages wrapper */}
-        <div className={"mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8"}>
+        <div className={activeTab === 'admin' ? "w-full max-w-[98%] mx-auto px-4 py-4 sm:px-6 lg:px-8 h-[calc(100vh-6.5rem)] flex flex-col min-h-0" : "mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8"}>
           
           {/* TAB 1: Main Browse list */}
           {activeTab === 'browse' && (
@@ -705,7 +718,22 @@ export default function App() {
             </div>
           )}
 
-
+          {/* TAB 7: Admin Dashboard (hidden, accessible via #admin URL) */}
+          {activeTab === 'admin' && (
+            <div className="animate-in fade-in duration-200 flex-1 flex flex-col min-h-0">
+              <AdminDashboard 
+                skills={skills}
+                submissions={submissions}
+                categories={categories}
+                onApproveSubmission={handleAdminApproveSubmission}
+                onRejectSubmission={handleAdminRejectSubmission}
+                onAddSkill={handleAdminAddSkillDirectly}
+                onUpdateSkill={handleAdminUpdateSkill}
+                onDeleteSkill={handleAdminDeleteSkill}
+                onClose={() => { setActiveTab('browse'); window.location.hash = ''; }}
+              />
+            </div>
+          )}
 
         </div>
       </main>

@@ -151,7 +151,7 @@ export default function AdminContentEditor({
         slug: 'sequential-thinking-framework',
         metaTitle: 'Sequential Thinking Framework - openSkills Directory',
         metaDescription: 'Learn how to equip Claude Desktop with sequential thinking structures and step-by-step trace pipelines.',
-        canonicalUrl: 'https://openskills.io/skills/sequential-thinking',
+        canonicalUrl: 'https://openskills.in/skills/sequential-thinking',
         keywords: 'claude, mcp, reasoning, agents',
         featured: true,
         pinned: true,
@@ -183,7 +183,7 @@ export default function AdminContentEditor({
         slug: 'postgres-mcp-connector',
         metaTitle: 'PostgreSQL MCP Connector for Claude Desktop',
         metaDescription: 'Guide on how to hook up local database engines dynamically to Sonnet instances.',
-        canonicalUrl: 'https://openskills.io/repo/postgres-mcp',
+        canonicalUrl: 'https://openskills.in/repo/postgres-mcp',
         keywords: 'postgres, database, mcp, sql',
         featured: false,
         pinned: false,
@@ -209,7 +209,7 @@ export default function AdminContentEditor({
         slug: 'algorithmic-art-generator',
         metaTitle: 'Algorithmic Art Generator - openSkills Directory',
         metaDescription: 'Generate stunning algorithmic art patterns using Claude with mathematical functions, fractals, and generative design techniques.',
-        canonicalUrl: 'https://openskills.io/skills/algorithmic-art-generator',
+        canonicalUrl: 'https://openskills.in/skills/algorithmic-art-generator',
         keywords: 'algorithmic art, fractal, generative, claude skill, svg',
         featured: true,
         pinned: false,
@@ -378,9 +378,9 @@ export default function AdminContentEditor({
 
   // Audit Logs simulation dataset
   const [auditLogs] = useState([
-    { id: '1', user: 'admin@openskills.io', action: 'Published Item', target: 'Sequential Thinking Framework', time: '10 mins ago', ip: '192.168.1.45' },
-    { id: '2', user: 'admin@openskills.io', action: 'Created Draft', target: 'PostgreSQL MCP Connector', time: '1 hour ago', ip: '192.168.1.45' },
-    { id: '3', user: 'admin@openskills.io', action: 'Saved SEO parameters', target: 'Sequential Thinking Framework', time: '3 hours ago', ip: '192.168.1.45' },
+    { id: '1', user: 'admin@openskills.in', action: 'Published Item', target: 'Sequential Thinking Framework', time: '10 mins ago', ip: '192.168.1.45' },
+    { id: '2', user: 'admin@openskills.in', action: 'Created Draft', target: 'PostgreSQL MCP Connector', time: '1 hour ago', ip: '192.168.1.45' },
+    { id: '3', user: 'admin@openskills.in', action: 'Saved SEO parameters', target: 'Sequential Thinking Framework', time: '3 hours ago', ip: '192.168.1.45' },
     { id: '4', user: 'guest_user', action: 'Attempted Root Command Access (Blocked)', target: 'Terminal Access System', time: '4 hours ago', ip: '45.120.33.109' }
   ]);
 
@@ -425,7 +425,7 @@ export default function AdminContentEditor({
           slug: 'algorithmic-art-generator',
           metaTitle: 'Algorithmic Art Generator - openSkills Directory',
           metaDescription: 'Generate stunning algorithmic art patterns using Claude with mathematical functions, fractals, and generative design techniques.',
-          canonicalUrl: 'https://openskills.io/skills/algorithmic-art-generator',
+          canonicalUrl: 'https://openskills.in/skills/algorithmic-art-generator',
           keywords: 'algorithmic art, fractal, generative, claude skill, svg',
           featured: true,
           pinned: false,
@@ -622,7 +622,7 @@ export default function AdminContentEditor({
             slug: skill.id,
             metaTitle: skill.seo?.metaTitle || `${skill.name} - openSkills Directory`,
             metaDescription: skill.seo?.metaDescription || skill.description,
-            canonicalUrl: skill.seo?.canonicalUrl || `https://openskills.io/skills/${skill.id}`,
+            canonicalUrl: skill.seo?.canonicalUrl || `https://openskills.in/skills/${skill.id}`,
             keywords: skill.tags.join(', '),
             featured: skill.featured,
             pinned: false,
@@ -1030,7 +1030,7 @@ export default function AdminContentEditor({
       slug: `new-asset-${Date.now()}`,
       metaTitle: 'Create new - openSkills Directory',
       metaDescription: 'A newly created draft.',
-      canonicalUrl: 'https://openskills.io/skills/new',
+      canonicalUrl: 'https://openskills.in/skills/new',
       keywords: 'new, asset',
       featured: false,
       pinned: false,
@@ -1831,7 +1831,7 @@ export default function AdminContentEditor({
             <div className="h-5 w-5 rounded-full bg-zinc-950 flex items-center justify-center font-bold text-[9px] text-yellow-500 uppercase">
               A
             </div>
-            <span className="font-semibold text-zinc-700 truncate max-w-[120px]">admin@openskills.io</span>
+            <span className="font-semibold text-zinc-700 truncate max-w-[120px]">admin@openskills.in</span>
           </div>
           <button 
             onClick={handleAdminLogout} 
@@ -2904,7 +2904,7 @@ export default function AdminContentEditor({
                   value={formCanonicalUrl}
                   onChange={(e) => handleFieldChange(() => setFormCanonicalUrl(e.target.value))}
                   className="w-full bg-white px-3 py-1.5 border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md font-mono text-[10px]"
-                  placeholder="https://openskills.io/skill/..."
+                  placeholder="https://openskills.in/skill/..."
                 />
               </div>
 
@@ -2967,7 +2967,7 @@ export default function AdminContentEditor({
               <div className="bg-white border border-zinc-200 rounded-xl p-3 space-y-1 text-xs">
                 <span className="text-[9px] font-bold uppercase text-zinc-400">Google SERP Preview simulation</span>
                 <span className="text-blue-700 font-sans font-bold hover:underline block truncate max-w-xs">{formMetaTitle || formTitle || 'openSkills Curated Guides'}</span>
-                <span className="text-zinc-650 text-[10px] text-zinc-400 block font-mono">openskills.io/skill/{formSlug || 'new-slug'}</span>
+                <span className="text-zinc-650 text-[10px] text-zinc-400 block font-mono">openskills.in/skill/{formSlug || 'new-slug'}</span>
                 <span className="text-zinc-600 text-[10px] line-clamp-2 leading-normal">{formMetaDescription || 'Equip your local Sonnet setups with database inspectors, web servers, and automation logic...'}</span>
               </div>
 

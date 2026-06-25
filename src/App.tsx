@@ -603,7 +603,7 @@ export default function App() {
   });
 
   return (
-    <div className="min-h-screen bg-white flex flex-col font-sans antialiased text-zinc-950 selection:bg-blue-600/10 selection:text-blue-600 overflow-x-hidden">
+    <div className="min-h-screen bg-white flex flex-col font-sans antialiased text-zinc-950 selection:bg-blue-600/10 selection:text-blue-600">
       
 
       {/* Dynamic Header Component */}

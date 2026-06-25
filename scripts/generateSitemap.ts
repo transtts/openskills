@@ -35,7 +35,7 @@ ${urls.map(url => `  <url>
 </urlset>
 `;
 
-  const outputDir = path.resolve('public');
+  const outputDir = path.resolve(__dirname, '../public');
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }

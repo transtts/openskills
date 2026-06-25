@@ -35,7 +35,11 @@ ${urls.map(url => `  <url>
 </urlset>
 `;
 
-  const outputPath = path.resolve('public', 'sitemap.xml');
+  const outputDir = path.resolve('public');
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+  const outputPath = path.join(outputDir, 'sitemap.xml');
   fs.writeFileSync(outputPath, xml, 'utf8');
   console.log(`🎉 Sitemap successfully generated with ${urls.length} URLs at ${outputPath}`);
 }

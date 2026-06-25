@@ -605,28 +605,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans antialiased text-zinc-950 selection:bg-blue-600/10 selection:text-blue-600 overflow-x-hidden">
       
-      {/* Temporary Debug Export Block */}
-      <div style={{ position: 'relative', zIndex: 10000, margin: '20px', padding: '15px', border: '2px solid #3b82f6', borderRadius: '12px', background: '#f8fafc', color: '#1e293b', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}>
-        <h3 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 'bold', color: '#1d4ed8' }}>Export Local CMS Data to GitHub</h3>
-        <p style={{ margin: '0 0 12px 0', fontSize: '11px', color: '#475569', lineHeight: '1.4' }}>
-          आपकी अपडेट की हुई स्किल्स और कैटेगरी केवल आपके ब्राउज़र (LocalStorage) में सुरक्षित हैं। इसे GitHub पर पुश करने के लिए नीचे दिए गए बॉक्स का पूरा टेक्स्ट कॉपी करें और चैट में पेस्ट करें:
-        </p>
-        <textarea 
-          id="temp-localstorage-export" 
-          style={{ width: '100%', height: '120px', fontSize: '10px', fontFamily: 'monospace', padding: '8px', border: '1px solid #cbd5e1', borderRadius: '6px', background: '#ffffff', color: '#0f172a' }}
-          onClick={(e) => (e.target as HTMLTextAreaElement).select()}
-          readOnly
-          value={JSON.stringify({
-            skills: localStorage.getItem('claude_hub_skills_2'),
-            categories: localStorage.getItem('openskills_categories_2'),
-            collections: localStorage.getItem('openskills_collections_2'),
-            resources: localStorage.getItem('openskills_resources_2'),
-            prompts: localStorage.getItem('claude_hub_prompts_2'),
-            contents: localStorage.getItem('openskills_cms_contents_3')
-          })}
-        />
-      </div>
-      
+
       {/* Dynamic Header Component */}
       <Header 
         activeTab={activeTab} 

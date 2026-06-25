@@ -48,7 +48,8 @@ export default function Header({
   setTheme
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [bookmarksDrawerOpen, setBookmarksDrawerOpen] = useState(false);
+  const [desktopBookmarksOpen, setDesktopBookmarksOpen] = useState(false);
+  const [mobileBookmarksOpen, setMobileBookmarksOpen] = useState(false);
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -111,7 +112,7 @@ export default function Header({
         </a>
 
         {/* Center Nav Link Items (Desktop) */}
-        <nav className="hidden md:flex items-center space-x-1">
+        <nav className="hidden lg:flex items-center space-x-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -131,7 +132,7 @@ export default function Header({
         </nav>
 
         {/* Right Nav Options (Desktop) */}
-        <div className="hidden md:flex items-center space-x-3 font-sans">
+        <div className="hidden lg:flex items-center space-x-3 font-sans">
           <div className="relative">
             <Input
               id="header-search-input"
@@ -164,14 +165,14 @@ export default function Header({
           </div>
 
           {/* Bookmarks Toggle with Badge */}
-          <DropdownMenu open={bookmarksDrawerOpen} onOpenChange={setBookmarksDrawerOpen}>
+          <DropdownMenu open={desktopBookmarksOpen} onOpenChange={setDesktopBookmarksOpen}>
             <DropdownMenuTrigger asChild>
               <Button
                 id="toolbar-bookmarks-btn"
                 variant="outline"
                 size="icon"
                 className={`relative h-9 w-9 cursor-pointer transition-colors ${
-                  bookmarksDrawerOpen 
+                  desktopBookmarksOpen 
                     ? 'border-zinc-900 bg-zinc-50 text-zinc-950' 
                     : 'border-zinc-200 bg-white text-zinc-700'
                 }`}
@@ -201,7 +202,7 @@ export default function Header({
                       key={skill.id}
                       onClick={() => {
                         onOpenBookmark(skill);
-                        setBookmarksDrawerOpen(false);
+                        setDesktopBookmarksOpen(false);
                       }}
                       className="group flex flex-col items-start p-2 hover:bg-zinc-50 border border-transparent hover:border-zinc-100 rounded-md cursor-pointer transition-colors focus:bg-zinc-50 focus:text-zinc-950"
                     >
@@ -258,7 +259,7 @@ export default function Header({
         </div>
 
         {/* Mobile menu trigger */}
-        <div className="flex md:hidden items-center space-x-1.5">
+        <div className="flex lg:hidden items-center space-x-1.5">
           {/* Quick Search input for mobile inline style */}
           <div className="relative max-w-[100px] xs:max-w-[120px]">
             <Input
@@ -288,7 +289,7 @@ export default function Header({
           </div>
 
           {/* Bookmarks Dropdown for mobile */}
-          <DropdownMenu open={bookmarksDrawerOpen} onOpenChange={setBookmarksDrawerOpen}>
+          <DropdownMenu open={mobileBookmarksOpen} onOpenChange={setMobileBookmarksOpen}>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
@@ -314,7 +315,7 @@ export default function Header({
                       key={skill.id}
                       onClick={() => {
                         onOpenBookmark(skill);
-                        setBookmarksDrawerOpen(false);
+                        setMobileBookmarksOpen(false);
                       }}
                       className="p-2 bg-zinc-50 rounded-md text-xs font-medium text-zinc-800 cursor-pointer focus:bg-zinc-50 focus:text-zinc-950"
                     >
@@ -325,6 +326,22 @@ export default function Header({
               )}
             </DropdownMenuContent>
           </DropdownMenu>
+
+          {/* Dark / Light Mode Switcher for mobile/tablet */}
+          <Button
+            id="theme-toggle-btn-mobile"
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+            className="p-2 text-zinc-550 hover:text-zinc-900 cursor-pointer shrink-0"
+            title={theme === 'light' ? (language === 'en' ? "Switch to Dark Mode" : "डार्क मोड चालू करें") : (language === 'en' ? "Switch to Light Mode" : "लाइट मोड चालू करें")}
+          >
+            {theme === 'light' ? (
+              <Moon className="h-4.5 w-4.5 text-zinc-600" />
+            ) : (
+              <Sun className="h-4.5 w-4.5 text-amber-500 fill-amber-500" />
+            )}
+          </Button>
           
           {/* Mobile Sheet Nav trigger */}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
@@ -407,17 +424,6 @@ export default function Header({
                       </button>
                     </div>
                   </div>
-
-                  <Button
-                    onClick={() => {
-                      setActiveTab('submit');
-                      setMobileMenuOpen(false);
-                    }}
-                    className="w-full space-x-2 py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-md text-xs font-semibold cursor-pointer"
-                  >
-                    <PlusCircle className="h-4 w-4" />
-                    <span>{t.submitSkill}</span>
-                  </Button>
 
 
                 </div>

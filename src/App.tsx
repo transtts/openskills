@@ -159,7 +159,49 @@ export default function App() {
   });
 
   // Categories status (reflects active approved skills counts)
-  const [categories, setCategories] = useState<Category[]>(initialCategories);
+  const [categories, setCategories] = useState<Category[]>(() => {
+    const saved = localStorage.getItem('openskills_categories_2');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return initialCategories;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('openskills_categories_2', JSON.stringify(categories));
+  }, [categories]);
+
+  // Collections state
+  const [collections, setCollections] = useState<Collection[]>(() => {
+    const saved = localStorage.getItem('openskills_collections_2');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return initialCollections;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('openskills_collections_2', JSON.stringify(collections));
+  }, [collections]);
+
+  // Resources state
+  const [resources, setResources] = useState<Resource[]>(() => {
+    const saved = localStorage.getItem('openskills_resources_2');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return initialResources;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('openskills_resources_2', JSON.stringify(resources));
+  }, [resources]);
 
   // Search/Filter states
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -207,6 +249,23 @@ export default function App() {
     localStorage.setItem('claude_hub_prompts_2', JSON.stringify(prompts));
   }, [prompts]);
 
+  // Reset selected skill when changing tabs
+  useEffect(() => {
+    setSelectedSkill(null);
+  }, [activeTab]);
+
+  // Scroll to skill details container when a skill is selected
+  useEffect(() => {
+    if (selectedSkill) {
+      setTimeout(() => {
+        const element = document.getElementById('skill-details-container');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 80);
+    }
+  }, [selectedSkill]);
+
   // Recalculate dynamic skillsCount mapping for category items
   useEffect(() => {
     setCategories(prev => {
@@ -219,6 +278,118 @@ export default function App() {
       });
     });
   }, [skills]);
+
+  // Dynamic SEO Injection inside document <head>
+  useEffect(() => {
+    let title = "openSkills - AI Skills, MCP Servers & Claude Skills Hub";
+    let description = "Discover AI Skills, MCP Servers, Claude Skills, Open Source Repositories, Tools and Resources.";
+    let canonical = "https://www.openskills.in";
+    let keywords = "ai skills, mcp servers, claude skills, model context protocol, developer tools";
+    let ogImage = "https://www.openskills.in/og-image.png";
+
+    if (selectedSkill) {
+      title = selectedSkill.seo?.metaTitle || `${selectedSkill.name} - AI Skill & MCP Server`;
+      description = selectedSkill.seo?.metaDescription || selectedSkill.description;
+      canonical = selectedSkill.seo?.canonicalUrl || `https://openskills.in/skills/${selectedSkill.id}`;
+      keywords = selectedSkill.tags?.join(', ') || '';
+      ogImage = selectedSkill.seo?.activeOgImage || (selectedSkill.seo?.ogImages && selectedSkill.seo.ogImages[0]) || "https://www.openskills.in/og-image.png";
+    } else {
+      switch (activeTab) {
+        case 'browse':
+          if (selectedCategory !== 'all') {
+            const cat = categories.find(c => c.id === selectedCategory);
+            if (cat) {
+              title = cat.seo?.metaTitle || `${cat.name} AI Skills & MCP Servers - openSkills`;
+              description = cat.seo?.metaDescription || cat.description || `Browse curated AI Skills and MCP Servers in the ${cat.name} category.`;
+              canonical = cat.seo?.canonicalUrl || `https://openskills.in/categories/${cat.id}`;
+              keywords = `${cat.name}, mcp server, ai skill, openskills`;
+            }
+          } else if (selectedTag !== 'all') {
+            title = `Browse AI Skills tagged #${selectedTag} - openSkills`;
+            description = `Find premium MCP servers and AI developer tools tagged with #${selectedTag} on openSkills.`;
+            canonical = `https://openskills.in/tags/${selectedTag}`;
+            keywords = `${selectedTag}, mcp server, ai skill, openskills`;
+          }
+          break;
+        case 'categories':
+          title = "Categories - openSkills AI Directory";
+          description = "Browse AI Skills, Claude Skills, and Model Context Protocol (MCP) servers grouped by category.";
+          canonical = "https://openskills.in/categories";
+          keywords = "categories, ai categories, mcp directory";
+          break;
+        case 'collections':
+          title = "Curated Collections - openSkills";
+          description = "Hand-picked collections of top AI skills and MCP servers for developer productivity.";
+          canonical = "https://openskills.in/collections";
+          keywords = "collections, curated ai, mcp collections";
+          break;
+        case 'resources':
+          title = "Resource Library - openSkills";
+          description = "Tutorials, documentation, and guides to build and run Model Context Protocol (MCP) integrations.";
+          canonical = "https://openskills.in/resources";
+          keywords = "resources, mcp documentation, mcp tutorials, guides";
+          break;
+        case 'prompts':
+          title = "Prompt Library - openSkills";
+          description = "Premium prompt library and templates optimized for Claude Desktop and agentic workflows.";
+          canonical = "https://openskills.in/prompts";
+          keywords = "prompts, claude prompts, system prompts, prompt library";
+          break;
+        case 'submit':
+          title = "Submit a Skill - openSkills AI Directory";
+          description = "Contribute your open-source Model Context Protocol (MCP) servers or AI skills to openSkills.";
+          canonical = "https://openskills.in/submit";
+          keywords = "submit mcp, register skill, open source mcp";
+          break;
+        case 'admin':
+          title = "CMS Admin Console - openSkills";
+          description = "Manage openSkills content assets, categories, collections, and submissions.";
+          canonical = "https://openskills.in/admin";
+          keywords = "admin, cms, manage";
+          break;
+        default:
+          break;
+      }
+    }
+
+    // 1. Update Title
+    document.title = title;
+
+    // Helper to update/create meta tag
+    const updateOrCreateMeta = (name: string, content: string, isProperty = false) => {
+      const selector = isProperty ? `meta[property="${name}"]` : `meta[name="${name}"]`;
+      let element = document.querySelector(selector);
+      if (!element) {
+        element = document.createElement('meta');
+        if (isProperty) {
+          element.setAttribute('property', name);
+        } else {
+          element.setAttribute('name', name);
+        }
+        document.head.appendChild(element);
+      }
+      element.setAttribute('content', content);
+    };
+
+    // 2. Update Standard SEO meta tags
+    updateOrCreateMeta('description', description);
+    updateOrCreateMeta('keywords', keywords);
+
+    // 3. Update Canonical URL
+    let canonicalElement = document.querySelector('link[rel="canonical"]');
+    if (!canonicalElement) {
+      canonicalElement = document.createElement('link');
+      canonicalElement.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonicalElement);
+    }
+    canonicalElement.setAttribute('href', canonical);
+
+    // 4. Update OpenGraph (Social/Search Engine) Meta Tags
+    updateOrCreateMeta('og:title', title, true);
+    updateOrCreateMeta('og:description', description, true);
+    updateOrCreateMeta('og:url', canonical, true);
+    updateOrCreateMeta('og:image', ogImage, true);
+  }, [selectedSkill, activeTab, selectedCategory, selectedTag, categories]);
 
   // Extract all unique tags dynamically
   const availableTags: string[] = (() => {
@@ -333,6 +504,47 @@ export default function App() {
     setBookmarks(prev => prev.filter(b => b.id !== id));
   };
 
+  // Admin Category callbacks
+  const handleAdminAddCategory = (newCat: Category) => {
+    setCategories(prev => [...prev, newCat]);
+  };
+  const handleAdminUpdateCategory = (updated: Category) => {
+    setCategories(prev => prev.map(c => c.id === updated.id ? updated : c));
+  };
+  const handleAdminDeleteCategory = (id: string) => {
+    setCategories(prev => prev.filter(c => c.id !== id));
+  };
+
+  // Admin Collection callbacks
+  const handleAdminAddCollection = (newCol: Collection) => {
+    setCollections(prev => [...prev, newCol]);
+  };
+  const handleAdminUpdateCollection = (updated: Collection) => {
+    setCollections(prev => prev.map(c => c.id === updated.id ? updated : c));
+  };
+  const handleAdminDeleteCollection = (id: string) => {
+    setCollections(prev => prev.filter(c => c.id !== id));
+  };
+
+  // Admin Resource callbacks
+  const handleAdminAddResource = (newRes: Resource) => {
+    setResources(prev => [...prev, newRes]);
+  };
+  const handleAdminUpdateResource = (updated: Resource) => {
+    setResources(prev => prev.map(r => r.id === updated.id ? updated : r));
+  };
+  const handleAdminDeleteResource = (id: string) => {
+    setResources(prev => prev.filter(r => r.id !== id));
+  };
+
+  // Admin Prompt callbacks
+  const handleAdminAddPrompt = (newPrompt: Prompt) => {
+    setPrompts(prev => [...prev, newPrompt]);
+  };
+  const handleAdminDeletePrompt = (id: string) => {
+    setPrompts(prev => prev.filter(p => p.id !== id));
+  };
+
   // Route back directly from landing headers
   const handleSelectMenuCategoryPage = (catId: string) => {
     setSelectedCategory(catId);
@@ -391,14 +603,17 @@ export default function App() {
   });
 
   return (
-    <div className="min-h-screen bg-white flex flex-col font-sans antialiased text-zinc-950 selection:bg-blue-600/10 selection:text-blue-600">
+    <div className="min-h-screen bg-white flex flex-col font-sans antialiased text-zinc-950 selection:bg-blue-600/10 selection:text-blue-600 overflow-x-hidden">
       
       {/* Dynamic Header Component */}
       <Header 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
         bookmarks={bookmarks}
-        onOpenBookmark={(sk) => setSelectedSkill(sk)}
+        onOpenBookmark={(sk) => {
+          setSelectedSkill(sk);
+          window.scrollTo({ top: 0, behavior: 'instant' });
+        }}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         language={language}
@@ -425,10 +640,29 @@ export default function App() {
         )}
 
         {/* Dynamic Pages wrapper */}
-        <div className={activeTab === 'admin' ? "w-full max-w-[98%] mx-auto px-4 py-4 sm:px-6 lg:px-8 h-[calc(100vh-6.5rem)] flex flex-col min-h-0" : "mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8"}>
+        <div className={activeTab === 'admin' ? "w-full max-w-[98%] mx-auto px-4 py-4 sm:px-6 lg:px-8 h-[calc(100vh-6.5rem)] flex flex-col min-h-0" : "mx-auto max-w-7xl px-4 pt-8 pb-10 sm:px-6 lg:px-8"}>
           
-          {/* TAB 1: Main Browse list */}
-          {activeTab === 'browse' && (
+          {selectedSkill ? (
+            <div id="skill-details-container" className="scroll-mt-20 animate-in fade-in duration-200">
+              <SkillDetailsModal 
+                skill={selectedSkill}
+                allSkills={skills}
+                onClose={() => {
+                  setSelectedSkill(null);
+                  window.scrollTo({ top: 0, behavior: 'instant' });
+                }}
+                onSelectSkill={(sims) => {
+                  setSelectedSkill(sims);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                isBookmarked={bookmarks.some(b => b.id === selectedSkill.id)}
+                onToggleBookmark={handleToggleBookmark}
+              />
+            </div>
+          ) : (
+            <>
+              {/* TAB 1: Main Browse list */}
+              {activeTab === 'browse' && (
             <div id="browse-directory-anchor" className="space-y-8 animate-in fade-in duration-200">
               
               {/* Search Control Board */}
@@ -446,97 +680,101 @@ export default function App() {
               />
 
               {/* Sub tabs filtering selector inside directory */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-zinc-200 pb-4.5 gap-4">
-                
-                {/* Visual directory subtabs */}
-                <div className="flex items-center space-x-1.5 bg-zinc-100 p-1 rounded-lg">
-                  <button
-                    onClick={() => setBrowseSectionTab('all')}
-                    className={`flex items-center space-x-1 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors ${
-                      browseSectionTab === 'all' 
-                        ? 'bg-white text-zinc-950 shadow-sm' 
-                        : 'text-zinc-500 hover:text-zinc-900'
-                    }`}
-                  >
-                    <span>{language === 'en' ? "Browse All" : "सभी ब्राउज़ करें"}</span>
-                  </button>
-
-                  <button
-                    onClick={() => setBrowseSectionTab('featured')}
-                    className={`flex items-center space-x-1 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors ${
-                      browseSectionTab === 'featured' 
-                        ? 'bg-white text-zinc-950 shadow-sm font-bold text-blue-600' 
-                        : 'text-zinc-500 hover:text-zinc-900'
-                    }`}
-                  >
-                    <Award className="h-3.5 w-3.5 mr-0.5 text-blue-500" />
-                    <span>{language === 'en' ? "Featured Claude Skills" : "चुनिंदा क्लॉड स्किल्स"}</span>
-                  </button>
-
-                  <button
-                    onClick={() => setBrowseSectionTab('trending')}
-                    className={`flex items-center space-x-1 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors ${
-                      browseSectionTab === 'trending' 
-                        ? 'bg-white text-zinc-950 shadow-sm font-bold text-amber-600' 
-                        : 'text-zinc-500 hover:text-zinc-900'
-                    }`}
-                  >
-                    <TrendingUp className="h-3.5 w-3.5 mr-0.5 text-amber-500" />
-                    <span>{language === 'en' ? "Trending Repos" : "ट्रेंडिंग रिपोजिटरी"}</span>
-                  </button>
-                </div>
-
-                {/* Optional controllers based on subtab */}
-                <div className="flex items-center space-x-4 ml-auto sm:ml-0">
+              <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] border-t border-b border-zinc-200/80 bg-white dark:bg-zinc-950 py-8">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-row items-center justify-between gap-4">
                   
-                  {/* If in trending mode, render sub-tab filtersToday/Week/Month */}
-                  {browseSectionTab === 'trending' && (
-                    <div className="flex items-center space-x-1 border-r border-zinc-200 pr-4">
-                      {(['today', 'week', 'month'] as const).map((period) => (
-                        <button
-                          key={period}
-                          onClick={() => setTrendingPeriod(period)}
-                          className={`px-2.5 py-1 text-[10px] font-bold uppercase rounded cursor-pointer transition-all ${
-                            trendingPeriod === period 
-                              ? 'bg-amber-100 text-amber-800 font-bold border border-amber-200' 
-                              : 'text-zinc-550 border border-transparent hover:text-zinc-950'
-                          }`}
-                        >
-                          {period}
-                        </button>
-                      ))}
-                    </div>
-                  )}
+                  {/* Visual directory subtabs */}
+                  <div className="flex-1 min-w-0 overflow-x-auto no-scrollbar">
+                    <div className="flex items-center space-x-1.5 bg-zinc-100 p-1 rounded-lg w-fit">
+                      <button
+                        onClick={() => setBrowseSectionTab('all')}
+                        className={`flex items-center space-x-1 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors whitespace-nowrap ${
+                          browseSectionTab === 'all' 
+                            ? 'bg-white text-zinc-950 shadow-sm' 
+                            : 'text-zinc-500 hover:text-zinc-900'
+                        }`}
+                      >
+                        <span>{language === 'en' ? "Browse All" : "सभी ब्राउज़ करें"}</span>
+                      </button>
 
-                  {/* Grid/Table visual layout switches */}
-                  <div className="flex items-center border border-zinc-200 rounded-lg p-0.5 bg-zinc-100">
-                    <button
-                      onClick={() => setLayoutMode('grid')}
-                      className={`p-1.5 rounded-md transition-all ${
-                        layoutMode === 'grid' 
-                          ? 'bg-white text-zinc-900 shadow-sm' 
-                          : 'text-zinc-400 hover:text-zinc-700'
-                      }`}
-                      title="Card block view layout grid"
-                    >
-                      <LayoutGrid className="h-3.5 w-3.5" />
-                    </button>
+                      <button
+                        onClick={() => setBrowseSectionTab('featured')}
+                        className={`flex items-center space-x-1 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors whitespace-nowrap ${
+                          browseSectionTab === 'featured' 
+                            ? 'bg-white text-zinc-950 shadow-sm font-bold text-blue-600' 
+                            : 'text-zinc-500 hover:text-zinc-900'
+                        }`}
+                      >
+                        <Award className="h-3.5 w-3.5 mr-0.5 text-blue-500" />
+                        <span>{language === 'en' ? "Featured Claude Skills" : "चुनिंदा क्लॉड स्किल्स"}</span>
+                      </button>
+
+                      <button
+                        onClick={() => setBrowseSectionTab('trending')}
+                        className={`flex items-center space-x-1 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors whitespace-nowrap ${
+                          browseSectionTab === 'trending' 
+                            ? 'bg-white text-zinc-950 shadow-sm font-bold text-amber-600' 
+                            : 'text-zinc-500 hover:text-zinc-900'
+                        }`}
+                      >
+                        <TrendingUp className="h-3.5 w-3.5 mr-0.5 text-amber-500" />
+                        <span>{language === 'en' ? "Trending Repos" : "ट्रेंडिंग रिपोजिटरी"}</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Optional controllers based on subtab */}
+                  <div className="flex items-center space-x-4 shrink-0 ml-auto">
                     
-                    <button
-                      onClick={() => setLayoutMode('table')}
-                      className={`p-1.5 rounded-md transition-all ${
-                        layoutMode === 'table' 
-                          ? 'bg-white text-zinc-900 shadow-sm' 
-                          : 'text-zinc-400 hover:text-zinc-700'
-                      }`}
-                      title="Compact table visual index overview"
-                    >
-                      <Table className="h-3.5 w-3.5" />
-                    </button>
+                    {/* If in trending mode, render sub-tab filtersToday/Week/Month */}
+                    {browseSectionTab === 'trending' && (
+                      <div className="flex items-center space-x-1 border-r border-zinc-200 pr-4">
+                        {(['today', 'week', 'month'] as const).map((period) => (
+                          <button
+                            key={period}
+                            onClick={() => setTrendingPeriod(period)}
+                            className={`px-2.5 py-1 text-[10px] font-bold uppercase rounded cursor-pointer transition-all ${
+                              trendingPeriod === period 
+                                ? 'bg-amber-100 text-amber-800 font-bold border border-amber-200' 
+                                : 'text-zinc-550 border border-transparent hover:text-zinc-950'
+                            }`}
+                          >
+                            {period}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Grid/Table visual layout switches */}
+                    <div className="flex items-center border border-zinc-200 rounded-lg p-0.5 bg-zinc-100">
+                      <button
+                        onClick={() => setLayoutMode('grid')}
+                        className={`p-1.5 rounded-md transition-all ${
+                          layoutMode === 'grid' 
+                            ? 'bg-white text-zinc-900 shadow-sm' 
+                            : 'text-zinc-400 hover:text-zinc-700'
+                        }`}
+                        title="Card block view layout grid"
+                      >
+                        <LayoutGrid className="h-3.5 w-3.5" />
+                      </button>
+                      
+                      <button
+                        onClick={() => setLayoutMode('table')}
+                        className={`p-1.5 rounded-md transition-all ${
+                          layoutMode === 'table' 
+                            ? 'bg-white text-zinc-900 shadow-sm' 
+                            : 'text-zinc-400 hover:text-zinc-700'
+                        }`}
+                        title="Compact table visual index overview"
+                      >
+                        <Table className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+
                   </div>
 
                 </div>
-
               </div>
 
               {/* RENDER LOGIC DIRECTORY: Grid visual Cards layout vs Compact Table list */}
@@ -682,7 +920,7 @@ export default function App() {
           {activeTab === 'collections' && (
             <div className="animate-in fade-in duration-200">
               <CollectionList 
-                collections={initialCollections} 
+                collections={collections} 
                 skills={skills} 
                 onOpenSkillDetails={(sk) => setSelectedSkill(sk)} 
               />
@@ -692,7 +930,7 @@ export default function App() {
           {/* TAB 4: Helpful documentation Resource library list */}
           {activeTab === 'resources' && (
             <div className="animate-in fade-in duration-200">
-              <ResourceLibrary resources={initialResources} />
+              <ResourceLibrary resources={resources} />
             </div>
           )}
 
@@ -725,31 +963,103 @@ export default function App() {
                 skills={skills}
                 submissions={submissions}
                 categories={categories}
+                collections={collections}
+                resources={resources}
+                prompts={prompts}
                 onApproveSubmission={handleAdminApproveSubmission}
                 onRejectSubmission={handleAdminRejectSubmission}
                 onAddSkill={handleAdminAddSkillDirectly}
                 onUpdateSkill={handleAdminUpdateSkill}
                 onDeleteSkill={handleAdminDeleteSkill}
+                onAddCategory={handleAdminAddCategory}
+                onUpdateCategory={handleAdminUpdateCategory}
+                onDeleteCategory={handleAdminDeleteCategory}
+                onAddCollection={handleAdminAddCollection}
+                onUpdateCollection={handleAdminUpdateCollection}
+                onDeleteCollection={handleAdminDeleteCollection}
+                onAddResource={handleAdminAddResource}
+                onUpdateResource={handleAdminUpdateResource}
+                onDeleteResource={handleAdminDeleteResource}
+                onAddPrompt={handleAdminAddPrompt}
+                onUpdatePrompt={(updatedPrompt) => {
+                  setPrompts(prev => prev.map(p => p.id === updatedPrompt.id ? updatedPrompt : p));
+                }}
+                onDeletePrompt={handleAdminDeletePrompt}
                 onClose={() => { setActiveTab('browse'); window.location.hash = ''; }}
               />
             </div>
+          )}
+            </>
           )}
 
         </div>
       </main>
 
+      {/* Footer Divider Line */}
+      {activeTab !== 'admin' && (
+        <div className="w-full border-t border-zinc-200/80 mb-10" />
+      )}
 
+      {/* Modern Boxed Footer */}
+      {activeTab !== 'admin' && (
+        <footer className="mx-auto max-w-7xl w-full px-4 pb-10 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden bg-white border border-zinc-200 shadow-sm rounded-xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            
+            {/* 1px Particle Dot Grid Background (Fades to left) */}
+            <div 
+              className="absolute inset-0 pointer-events-none opacity-80"
+              style={{
+                backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48'><rect x='6' y='6' width='1' height='1' fill='%2360a5fa' opacity='0.8'/><rect x='18' y='6' width='1' height='1' fill='%23a78bfa' opacity='0.95'/><rect x='30' y='6' width='1' height='1' fill='%23818cf8' opacity='0.75'/><rect x='42' y='6' width='1' height='1' fill='%2338bdf8' opacity='0.9'/><rect x='6' y='18' width='1' height='1' fill='%23818cf8' opacity='0.9'/><rect x='18' y='18' width='1' height='1' fill='%2338bdf8' opacity='0.7'/><rect x='30' y='18' width='1' height='1' fill='%23a78bfa' opacity='0.85'/><rect x='42' y='18' width='1' height='1' fill='%2360a5fa' opacity='0.95'/><rect x='6' y='30' width='1' height='1' fill='%23a78bfa' opacity='0.85'/><rect x='18' y='30' width='1' height='1' fill='%2360a5fa' opacity='0.9'/><rect x='30' y='30' width='1' height='1' fill='%2338bdf8' opacity='0.8'/><rect x='42' y='30' width='1' height='1' fill='%23818cf8' opacity='0.95'/><rect x='6' y='42' width='1' height='1' fill='%2338bdf8' opacity='0.95'/><rect x='18' y='42' width='1' height='1' fill='%23818cf8' opacity='0.8'/><rect x='30' y='42' width='1' height='1' fill='%2360a5fa' opacity='0.9'/><rect x='42' y='42' width='1' height='1' fill='%23a78bfa' opacity='0.85'/></svg>")`,
+                backgroundSize: '48px 48px',
+                maskImage: 'linear-gradient(to left, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 70%)',
+                WebkitMaskImage: 'linear-gradient(to left, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 70%)',
+              }}
+            />
 
-      {/* Global Interactive Documentation Modal */}
-      {selectedSkill && (
-        <SkillDetailsModal 
-          skill={selectedSkill}
-          allSkills={skills}
-          onClose={() => setSelectedSkill(null)}
-          onSelectSkill={(sims) => setSelectedSkill(sims)}
-          isBookmarked={bookmarks.some(b => b.id === selectedSkill.id)}
-          onToggleBookmark={handleToggleBookmark}
-        />
+            <div className="relative z-10 flex flex-col items-center md:items-start space-y-2">
+              <div className="flex items-center space-x-2">
+                <div className="flex h-7 w-7 items-center justify-center rounded bg-blue-600 text-white shadow-sm ring-1 ring-blue-500">
+                  <Bot className="h-4.5 w-4.5 text-white" />
+                </div>
+                <span className="font-sans font-bold tracking-tight text-zinc-950 text-base">
+                  openSkills
+                </span>
+              </div>
+              <p className="text-[11px] text-zinc-500 max-w-sm text-center md:text-left leading-relaxed">
+                {language === 'en' 
+                  ? "Unified Model Context Protocol (MCP) directory and premium AI developer utility hub."
+                  : "यूनिफाइड मॉडल कॉन्टेक्स्ट प्रोटोकॉल (MCP) निर्देशिका और प्रीमियम AI डेवलपर उपयोगिता हब।"}
+              </p>
+            </div>
+            
+            <div className="relative z-10 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs font-semibold text-zinc-500">
+              <button onClick={() => { setSelectedSkill(null); setActiveTab('browse'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-blue-600 transition-colors cursor-pointer">
+                {language === 'en' ? "Browse" : "ब्राउज़"}
+              </button>
+              <button onClick={() => { setSelectedSkill(null); setActiveTab('categories'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-blue-600 transition-colors cursor-pointer">
+                {language === 'en' ? "Categories" : "श्रेणियां"}
+              </button>
+              <button onClick={() => { setSelectedSkill(null); setActiveTab('collections'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-blue-600 transition-colors cursor-pointer">
+                {language === 'en' ? "Collections" : "संग्रह"}
+              </button>
+              <button onClick={() => { setSelectedSkill(null); setActiveTab('resources'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-blue-600 transition-colors cursor-pointer">
+                {language === 'en' ? "Resources" : "संसाधन"}
+              </button>
+              <button onClick={() => { setSelectedSkill(null); setActiveTab('prompts'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-blue-600 transition-colors cursor-pointer">
+                {language === 'en' ? "Prompts" : "प्रॉम्प्ट्स"}
+              </button>
+            </div>
+            
+            <div className="relative z-10 flex flex-col items-center md:items-end text-[10px] text-zinc-400 space-y-1 shrink-0">
+              <span>
+                &copy; {new Date().getFullYear()} openSkills. All rights reserved.
+              </span>
+              <span>
+                Made for the AI community.
+              </span>
+            </div>
+          </div>
+        </footer>
       )}
 
     </div>

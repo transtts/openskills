@@ -47,6 +47,11 @@ export interface Category {
   iconName: string;
   description?: string;
   skillsCount: number;
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    canonicalUrl?: string;
+  };
 }
 
 export interface Collection {
@@ -56,6 +61,11 @@ export interface Collection {
   colorTheme: 'blue' | 'purple' | 'zinc' | 'emerald' | 'amber';
   skillsCount: number;
   skillIds: string[];
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    canonicalUrl?: string;
+  };
 }
 
 export interface Resource {
@@ -66,6 +76,11 @@ export interface Resource {
   readTime: string;
   author: string;
   url: string;
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    canonicalUrl?: string;
+  };
 }
 
 export interface Prompt {
@@ -75,6 +90,11 @@ export interface Prompt {
   content: string;
   category: 'Coding' | 'Writing' | 'Marketing' | 'Research' | 'Automation';
   tags: string[];
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    canonicalUrl?: string;
+  };
 }
 
 export interface Submission {

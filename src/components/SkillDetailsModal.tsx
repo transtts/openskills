@@ -18,7 +18,6 @@ import {
   Code
 } from 'lucide-react';
 import { Skill } from '../types';
-import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 
@@ -64,11 +63,7 @@ export default function SkillDetailsModal({
   ];
 
   return (
-    <Dialog open={!!skill} onOpenChange={(open) => { if (!open) onClose(); }}>
-      <DialogContent 
-        showCloseButton={false}
-        className="fixed top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2 w-[95vw] sm:max-w-4xl lg:max-w-6xl h-[680px] max-h-[90vh] p-0 overflow-hidden flex flex-col bg-white border border-zinc-200 shadow-2xl rounded-xl duration-100 outline-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95"
-      >
+    <div className="w-full bg-white border border-zinc-200 shadow-sm rounded-xl overflow-hidden flex flex-col min-h-[calc(100vh-7.5rem)] animate-in fade-in duration-200">
         {/* Modal Top Header Bar */}
         <div className="flex items-center justify-between border-b border-zinc-200 bg-zinc-50/50 px-6 py-4">
           <div className="flex items-center space-x-3 text-sm">
@@ -96,28 +91,26 @@ export default function SkillDetailsModal({
             </Button>
 
             {/* Close button */}
-            <DialogClose asChild>
-              <Button 
-                onClick={onClose} 
-                variant="outline"
-                size="icon-sm"
-                className="flex h-8.5 w-8.5 items-center justify-center rounded-md border border-zinc-200 hover:border-zinc-300 bg-white hover:bg-zinc-50 text-zinc-500 hover:text-zinc-800 transition-colors"
-              >
-                <X className="h-4.5 w-4.5" />
-              </Button>
-            </DialogClose>
+            <Button 
+              onClick={onClose} 
+              variant="outline"
+              size="icon-sm"
+              className="flex h-8.5 w-8.5 items-center justify-center rounded-md border border-zinc-200 hover:border-zinc-300 bg-white hover:bg-zinc-50 text-zinc-500 hover:text-zinc-800 transition-colors"
+            >
+              <X className="h-4.5 w-4.5" />
+            </Button>
           </div>
         </div>
 
         {/* Modal App Header Block */}
         <div className="border-b border-zinc-100 bg-white px-6 py-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <DialogTitle className="font-sans text-2xl font-extrabold tracking-tight text-zinc-950 md:text-3xl">
+            <h2 className="font-sans text-2xl font-extrabold tracking-tight text-zinc-950 md:text-3xl">
               {skill.name}
-            </DialogTitle>
-            <DialogDescription className="mt-1.5 text-sm sm:text-base text-zinc-500 max-w-3xl leading-relaxed">
+            </h2>
+            <p className="mt-1.5 text-sm sm:text-base text-zinc-500 max-w-3xl leading-relaxed">
               {skill.description}
-            </DialogDescription>
+            </p>
           </div>
           <div className="flex items-center space-x-3.5 shrink-0 self-start md:self-center">
             <Button 
@@ -139,7 +132,7 @@ export default function SkillDetailsModal({
         </div>
 
         {/* Dynamic Inner Layout Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 flex-1 overflow-y-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-4 flex-1">
           
           {/* LEFT SIDEBAR: Repository Metrics */}
           <div className="border-b lg:border-b-0 lg:border-r border-zinc-200 bg-zinc-50/40 p-5 space-y-6 text-xs">
@@ -462,7 +455,6 @@ export default function SkillDetailsModal({
           </div>
 
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
   );
 }

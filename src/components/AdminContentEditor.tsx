@@ -52,21 +52,36 @@ import {
   FolderPlus,
   FolderOpen
 } from 'lucide-react';
-import { Skill, Prompt, Resource, Category } from '../types';
+import { Skill, Prompt, Resource, Category, Collection } from '../types';
 
 interface AdminContentEditorProps {
   skills: Skill[];
   categories: Category[];
+  collections: Collection[];
+  resources: Resource[];
+  prompts: Prompt[];
   onAddSkill: (newSkill: Skill) => void;
   onUpdateSkill: (updatedSkill: Skill) => void;
   onDeleteSkill: (skillId: string) => void;
+  onAddCategory: (newCategory: Category) => void;
+  onUpdateCategory: (updatedCategory: Category) => void;
+  onDeleteCategory: (categoryId: string) => void;
+  onAddCollection: (newCollection: Collection) => void;
+  onUpdateCollection: (updatedCollection: Collection) => void;
+  onDeleteCollection: (collectionId: string) => void;
+  onAddResource: (newResource: Resource) => void;
+  onUpdateResource: (updatedResource: Resource) => void;
+  onDeleteResource: (resourceId: string) => void;
+  onAddPrompt: (newPrompt: Prompt) => void;
+  onUpdatePrompt: (updatedPrompt: Prompt) => void;
+  onDeletePrompt: (promptId: string) => void;
   onClose: () => void;
 }
 
 // Default content template list
 interface CMSContentItem {
   id: string;
-  type: 'Skill' | 'GitHub Repository' | 'Prompt' | 'Tutorial' | 'Collection' | 'Resource' | 'Documentation' | 'Workflow' | 'AI Agent' | 'Template';
+  type: 'Skill' | 'GitHub Repository' | 'Prompt' | 'Tutorial' | 'Collection' | 'Resource' | 'Documentation' | 'Workflow' | 'AI Agent' | 'Template' | 'Category';
   title: string;
   description: string;
   markdownContent: string;
@@ -118,9 +133,24 @@ const updateMarkdownHeading = (markdown: string, newTitle: string): string => {
 export default function AdminContentEditor({
   skills,
   categories,
+  collections,
+  resources,
+  prompts,
   onAddSkill,
   onUpdateSkill,
   onDeleteSkill,
+  onAddCategory,
+  onUpdateCategory,
+  onDeleteCategory,
+  onAddCollection,
+  onUpdateCollection,
+  onDeleteCollection,
+  onAddResource,
+  onUpdateResource,
+  onDeleteResource,
+  onAddPrompt,
+  onUpdatePrompt,
+  onDeletePrompt,
   onClose
 }: AdminContentEditorProps) {
   // Authentication State
@@ -349,6 +379,9 @@ export default function AdminContentEditor({
   const [formFolderId, setFormFolderId] = useState<string>('');
 
   const [revisionSidebarOpen, setRevisionSidebarOpen] = useState(false);
+  const [isCreateDropdownOpen, setIsCreateDropdownOpen] = useState(false);
+  const [isEmptyCreateDropdownOpen, setIsEmptyCreateDropdownOpen] = useState(false);
+  const [isToolbarCreateDropdownOpen, setIsToolbarCreateDropdownOpen] = useState(false);
 
   // Selected tag input state
   const [newTagInput, setNewTagInput] = useState('');
@@ -606,7 +639,7 @@ export default function AdminContentEditor({
         const hasMatch = updated.some(c => 
           c.id === skill.id || 
           c.id === `content-${skill.id}` || 
-          c.title.toLowerCase() === skill.name.toLowerCase()
+          (c.type === 'Skill' && c.title.toLowerCase() === skill.name.toLowerCase())
         );
 
         if (!hasMatch) {
@@ -643,46 +676,310 @@ export default function AdminContentEditor({
     });
   }, [skills]);
 
+  // Synchronize Categories on mount
+  useEffect(() => {
+    setContents(prev => {
+      const updated = [...prev];
+      let changed = false;
+      categories.forEach(cat => {
+        const hasMatch = updated.some(c => 
+          c.id === cat.id || 
+          c.id === `content-cat-${cat.id}` || 
+          (c.type === 'Category' && c.title.toLowerCase() === cat.name.toLowerCase())
+        );
+        if (!hasMatch) {
+          updated.push({
+            id: `content-cat-${cat.id}`,
+            type: 'Category',
+            title: cat.name,
+            description: cat.description,
+            markdownContent: `# ${cat.name}\n\n${cat.description}`,
+            status: 'Published',
+            category: cat.id,
+            tags: [cat.iconName],
+            slug: cat.id,
+            metaTitle: `${cat.name} Category - openSkills`,
+            metaDescription: cat.description,
+            canonicalUrl: `https://openskills.in/categories/${cat.id}`,
+            keywords: cat.name,
+            featured: false,
+            pinned: false,
+            visibility: 'Public',
+            publishDate: new Date().toISOString().split('T')[0],
+            lastUpdated: new Date().toISOString(),
+          });
+          changed = true;
+        }
+      });
+      return changed ? updated : prev;
+    });
+  }, [categories]);
+
+  // Synchronize Collections on mount
+  useEffect(() => {
+    setContents(prev => {
+      const updated = [...prev];
+      let changed = false;
+      collections.forEach(col => {
+        const hasMatch = updated.some(c => 
+          c.id === col.id || 
+          c.id === `content-col-${col.id}` || 
+          (c.type === 'Collection' && c.title.toLowerCase() === col.name.toLowerCase())
+        );
+        if (!hasMatch) {
+          updated.push({
+            id: `content-col-${col.id}`,
+            type: 'Collection',
+            title: col.name,
+            description: col.description,
+            markdownContent: `# ${col.name}\n\n${col.description}\n\nTheme: ${col.colorTheme}\n\nSkills: ${col.skillIds.join(', ')}`,
+            status: 'Published',
+            category: 'development',
+            tags: col.skillIds,
+            slug: col.id,
+            metaTitle: `${col.name} Collection - openSkills`,
+            metaDescription: col.description,
+            canonicalUrl: `https://openskills.in/collections/${col.id}`,
+            keywords: col.name,
+            featured: false,
+            pinned: false,
+            visibility: 'Public',
+            publishDate: new Date().toISOString().split('T')[0],
+            lastUpdated: new Date().toISOString(),
+            githubLicense: col.colorTheme,
+          });
+          changed = true;
+        }
+      });
+      return changed ? updated : prev;
+    });
+  }, [collections]);
+
+  // Synchronize Resources on mount
+  useEffect(() => {
+    setContents(prev => {
+      const updated = [...prev];
+      let changed = false;
+      resources.forEach(res => {
+        const hasMatch = updated.some(c => 
+          c.id === res.id || 
+          c.id === `content-res-${res.id}` || 
+          (c.type === 'Resource' && c.title.toLowerCase() === res.title.toLowerCase())
+        );
+        if (!hasMatch) {
+          updated.push({
+            id: `content-res-${res.id}`,
+            type: 'Resource',
+            title: res.title,
+            description: res.description,
+            markdownContent: `# ${res.title}\n\n${res.description}\n\nLink: ${res.url}`,
+            status: 'Published',
+            category: 'development',
+            tags: [res.type],
+            slug: res.id,
+            metaTitle: `${res.title} - openSkills Resource`,
+            metaDescription: res.description,
+            canonicalUrl: res.url,
+            keywords: res.type,
+            featured: false,
+            pinned: false,
+            visibility: 'Public',
+            publishDate: new Date().toISOString().split('T')[0],
+            lastUpdated: new Date().toISOString(),
+            githubName: res.author,
+            githubUrl: res.url,
+            githubLicense: res.readTime,
+          });
+          changed = true;
+        }
+      });
+      return changed ? updated : prev;
+    });
+  }, [resources]);
+
+  // Synchronize Prompts on mount
+  useEffect(() => {
+    setContents(prev => {
+      const updated = [...prev];
+      let changed = false;
+      prompts.forEach(p => {
+        const hasMatch = updated.some(c => 
+          c.id === p.id || 
+          c.id === `content-prompt-${p.id}` || 
+          (c.type === 'Prompt' && c.title.toLowerCase() === p.title.toLowerCase())
+        );
+        if (!hasMatch) {
+          updated.push({
+            id: `content-prompt-${p.id}`,
+            type: 'Prompt',
+            title: p.title,
+            description: p.description,
+            markdownContent: `# ${p.title}\n\n${p.description}\n\n\`\`\`\n${p.content}\n\`\`\``,
+            status: 'Published',
+            category: p.category.toLowerCase(),
+            tags: p.tags,
+            slug: p.id,
+            metaTitle: `${p.title} Prompt - openSkills`,
+            metaDescription: p.description,
+            canonicalUrl: `https://openskills.in/prompts/${p.id}`,
+            keywords: p.tags.join(', '),
+            featured: false,
+            pinned: false,
+            visibility: 'Public',
+            publishDate: new Date().toISOString().split('T')[0],
+            lastUpdated: new Date().toISOString(),
+            promptTitle: p.title,
+            promptCategory: p.category,
+            promptContent: p.content,
+            promptVariables: [],
+          });
+          changed = true;
+        }
+      });
+      return changed ? updated : prev;
+    });
+  }, [prompts]);
+
   // Reverse sync: Push Published CMS items to the live website automatically
   useEffect(() => {
     contents.forEach(item => {
       if (item.status !== 'Published') return;
-      if (item.type !== 'Skill' && item.type !== 'GitHub Repository') return;
 
-      const alreadyExists = skills.some(s =>
-        s.id === item.id ||
-        s.id === item.id.replace('content-', '') ||
-        `content-${s.id}` === item.id ||
-        s.name.toLowerCase() === item.title.toLowerCase()
-      );
+      const generatedId = item.id.replace('content-cat-', '').replace('content-col-', '').replace('content-res-', '').replace('content-prompt-', '').replace('content-', '');
 
-      if (!alreadyExists) {
-        const generatedId = item.id.startsWith('content-')
-          ? item.id.replace('content-', '')
-          : item.id;
-
-        onAddSkill({
-          id: generatedId,
-          name: item.title,
-          description: item.description,
-          category: item.category,
-          tags: item.tags,
-          stars: item.githubStars || 50,
-          forks: item.githubForks || 10,
-          updated: item.publishDate || new Date().toISOString().split('T')[0],
-          author: item.githubName ? item.githubName.split('/')[0] : 'admin_curator',
-          repoUrl: item.githubUrl || `https://github.com/openskills/${item.title.toLowerCase().replace(/\s+/g, '-')}`,
-          installation: `npm install -g @openskills/${generatedId}\n# Run using:\n# npx -y @openskills/${generatedId}`,
-          usage: 'Use standard Model Context command cues.',
-          examples: [],
-          changelog: [],
-          featured: item.featured,
-          trendingToday: false,
-          trendingWeek: false,
-          trendingMonth: false,
-          status: 'approved',
-          bookmarksCount: 0
-        });
+      // 1. Skill
+      if (item.type === 'Skill' || item.type === 'GitHub Repository') {
+        const alreadyExists = skills.some(s =>
+          s.id === item.id ||
+          s.id === generatedId ||
+          `content-${s.id}` === item.id ||
+          s.name.toLowerCase() === item.title.toLowerCase()
+        );
+        if (!alreadyExists) {
+          onAddSkill({
+            id: generatedId,
+            name: item.title,
+            description: item.description,
+            category: item.category,
+            tags: item.tags,
+            stars: item.githubStars || 50,
+            forks: item.githubForks || 10,
+            updated: item.publishDate || new Date().toISOString().split('T')[0],
+            author: item.githubName ? item.githubName.split('/')[0] : 'admin_curator',
+            repoUrl: item.githubUrl || `https://github.com/openskills/${item.title.toLowerCase().replace(/\s+/g, '-')}`,
+            installation: `npm install -g @openskills/${generatedId}\n# Run using:\n# npx -y @openskills/${generatedId}`,
+            usage: 'Use standard Model Context command cues.',
+            examples: [],
+            changelog: [],
+            featured: item.featured,
+            trendingToday: false,
+            trendingWeek: false,
+            trendingMonth: false,
+            status: 'approved',
+            bookmarksCount: 0,
+            seo: {
+              metaTitle: item.metaTitle,
+              metaDescription: item.metaDescription,
+              canonicalUrl: item.canonicalUrl
+            }
+          });
+        }
+      }
+      // 2. Category
+      else if (item.type === 'Category') {
+        const alreadyExists = categories.some(c =>
+          c.id === item.id ||
+          c.id === generatedId ||
+          `content-cat-${c.id}` === item.id ||
+          c.name.toLowerCase() === item.title.toLowerCase()
+        );
+        if (!alreadyExists) {
+          onAddCategory({
+            id: generatedId,
+            name: item.title,
+            iconName: item.tags[0] || 'Code2',
+            skillsCount: 0,
+            description: item.description,
+            seo: {
+              metaTitle: item.metaTitle,
+              metaDescription: item.metaDescription,
+              canonicalUrl: item.canonicalUrl
+            }
+          });
+        }
+      }
+      // 3. Collection
+      else if (item.type === 'Collection') {
+        const alreadyExists = collections.some(c =>
+          c.id === item.id ||
+          c.id === generatedId ||
+          `content-col-${c.id}` === item.id ||
+          c.name.toLowerCase() === item.title.toLowerCase()
+        );
+        if (!alreadyExists) {
+          onAddCollection({
+            id: generatedId,
+            name: item.title,
+            description: item.description,
+            colorTheme: item.githubLicense || 'blue',
+            skillsCount: item.tags.length,
+            skillIds: item.tags,
+            seo: {
+              metaTitle: item.metaTitle,
+              metaDescription: item.metaDescription,
+              canonicalUrl: item.canonicalUrl
+            }
+          });
+        }
+      }
+      // 4. Resource
+      else if (item.type === 'Resource') {
+        const alreadyExists = resources.some(r =>
+          r.id === item.id ||
+          r.id === generatedId ||
+          `content-res-${r.id}` === item.id ||
+          r.title.toLowerCase() === item.title.toLowerCase()
+        );
+        if (!alreadyExists) {
+          onAddResource({
+            id: generatedId,
+            title: item.title,
+            description: item.description,
+            type: item.tags[0] || 'Documentation',
+            readTime: item.githubLicense || '5 min read',
+            author: item.githubName || 'Admin Curator',
+            url: item.githubUrl || 'https://modelcontextprotocol.io/quickstart',
+            seo: {
+              metaTitle: item.metaTitle,
+              metaDescription: item.metaDescription,
+              canonicalUrl: item.canonicalUrl
+            }
+          });
+        }
+      }
+      // 5. Prompt
+      else if (item.type === 'Prompt') {
+        const alreadyExists = prompts.some(p =>
+          p.id === item.id ||
+          p.id === generatedId ||
+          `content-prompt-${p.id}` === item.id ||
+          p.title.toLowerCase() === item.title.toLowerCase()
+        );
+        if (!alreadyExists) {
+          onAddPrompt({
+            id: generatedId,
+            title: item.title,
+            description: item.description,
+            content: item.promptContent || '',
+            category: item.promptCategory || 'Coding',
+            tags: item.tags,
+            seo: {
+              metaTitle: item.metaTitle,
+              metaDescription: item.metaDescription,
+              canonicalUrl: item.canonicalUrl
+            }
+          });
+        }
       }
     });
   }, [contents]);
@@ -888,49 +1185,132 @@ export default function AdminContentEditor({
     
     // Check if this editing item is of type 'Skill' and should propagate back to main skills state!
     if (formType === 'Skill' || formType === 'GitHub Repository') {
-      const existingSkill = skills.find(s => s.name.toLowerCase() === formTitle.toLowerCase() || s.id === selectedContentId);
+      const existingSkill = skills.find(s => s.name.toLowerCase() === formTitle.toLowerCase() || s.id === selectedContentId || s.id === selectedContentId.replace('content-', ''));
+      const updatedSkillObj = {
+        id: existingSkill ? existingSkill.id : (selectedContentId.startsWith('content-') ? selectedContentId.replace('content-', '') : selectedContentId),
+        name: formTitle,
+        description: formDescription,
+        category: formCategory,
+        tags: formTags,
+        stars: formGithubStars || (existingSkill ? existingSkill.stars : 0),
+        forks: formGithubForks || (existingSkill ? existingSkill.forks : 0),
+        updated: formPublishDate || (existingSkill ? existingSkill.updated : new Date().toISOString().split('T')[0]),
+        repoUrl: formGithubUrl || (existingSkill ? existingSkill.repoUrl : ''),
+        author: formGithubName ? formGithubName.split('/')[0] : (existingSkill ? existingSkill.author : 'admin_curator'),
+        installation: `npm install -g @mcp/${formTitle.toLowerCase().replace(/\s+/g, '-')}\n# Or use via Claude config:\n{\n  "${formTitle.toLowerCase().replace(/\s+/g, '_')}": {\n    "command": "npx",\n    "args": ["-y", "${formGithubName || '@mcp/server'}", "${formVideoUrl}"]\n  }\n}`,
+        usage: 'Simply prompt Claude with: ' + formDescription,
+        examples: existingSkill ? existingSkill.examples : [],
+        changelog: existingSkill ? existingSkill.changelog : [],
+        featured: formFeatured,
+        trendingToday: existingSkill ? existingSkill.trendingToday : false,
+        trendingWeek: existingSkill ? existingSkill.trendingWeek : false,
+        trendingMonth: existingSkill ? existingSkill.trendingMonth : false,
+        status: formStatus === 'Published' ? 'approved' : 'pending',
+        bookmarksCount: existingSkill ? existingSkill.bookmarksCount : 0,
+        seo: {
+          metaTitle: formMetaTitle,
+          metaDescription: formMetaDescription,
+          canonicalUrl: formCanonicalUrl,
+          ogImages: existingSkill?.seo?.ogImages || [],
+          activeOgImage: existingSkill?.seo?.activeOgImage || '',
+        }
+      };
       if (existingSkill) {
-        onUpdateSkill({
-          ...existingSkill,
-          name: formTitle,
-          description: formDescription,
-          category: formCategory,
-          tags: formTags,
-          repoUrl: formGithubUrl || existingSkill.repoUrl,
-          author: formGithubName ? formGithubName.split('/')[0] : existingSkill.author,
-          installation: `npm install -g @mcp/${formTitle.toLowerCase().replace(/\s+/g, '-')}\n# Or use via Claude config:\n{\n  "${formTitle.toLowerCase().replace(/\s+/g, '_')}": {\n    "command": "npx",\n    "args": ["-y", "${formGithubName || '@mcp/server'}", "${formVideoUrl}"]\n  }\n}`,
-          usage: 'Simply prompt Claude with: ' + formDescription,
-          featured: formFeatured,
-          status: formStatus === 'Published' ? 'approved' : 'pending'
-        });
+        onUpdateSkill(updatedSkillObj);
       } else {
-        // Create new Skill directly mapped to our main page state
-        const generatedSkillId = selectedContentId.startsWith('content-') 
-          ? selectedContentId.replace('content-', '') 
-          : selectedContentId;
-          
-        onAddSkill({
-          id: generatedSkillId,
-          name: formTitle,
-          description: formDescription,
-          category: formCategory,
-          tags: formTags,
-          stars: formGithubStars || 50,
-          forks: formGithubForks || 10,
-          updated: formPublishDate || new Date().toISOString().split('T')[0],
-          author: formGithubName ? formGithubName.split('/')[0] : 'admin_curator',
-          repoUrl: formGithubUrl || 'https://github.com/openskills/' + formTitle.toLowerCase().replace(/\s+/g, '-'),
-          installation: `npm install -g @openskills/${generatedSkillId}\n# Run using:\n# npx -y @openskills/${generatedSkillId}`,
-          usage: 'Use standard Model Context command cues.',
-          examples: [],
-          changelog: [],
-          featured: formFeatured,
-          trendingToday: false,
-          trendingWeek: false,
-          trendingMonth: false,
-          status: 'approved',
-          bookmarksCount: 0
-        });
+        onAddSkill(updatedSkillObj);
+      }
+    }
+    // Check if Category
+    else if (formType === 'Category') {
+      const cleanedId = selectedContentId.replace('content-cat-', '').replace('content-', '');
+      const existingCat = categories.find(c => c.id === cleanedId || c.name.toLowerCase() === formTitle.toLowerCase());
+      const updatedCatObj = {
+        id: existingCat ? existingCat.id : (formSlug || cleanedId),
+        name: formTitle,
+        iconName: formTags[0] || 'Code2', // Use tags[0] for iconName
+        skillsCount: existingCat ? existingCat.skillsCount : 0,
+        description: formDescription,
+        seo: {
+          metaTitle: formMetaTitle,
+          metaDescription: formMetaDescription,
+          canonicalUrl: formCanonicalUrl
+        }
+      };
+      if (existingCat) {
+        onUpdateCategory(updatedCatObj);
+      } else {
+        onAddCategory(updatedCatObj);
+      }
+    }
+    // Check if Collection
+    else if (formType === 'Collection') {
+      const cleanedId = selectedContentId.replace('content-col-', '').replace('content-', '');
+      const existingCol = collections.find(c => c.id === cleanedId || c.name.toLowerCase() === formTitle.toLowerCase());
+      const updatedColObj = {
+        id: existingCol ? existingCol.id : (formSlug || cleanedId),
+        name: formTitle,
+        description: formDescription,
+        colorTheme: formGithubLicense || 'blue', // Use githubLicense for colorTheme
+        skillsCount: formTags.length,
+        skillIds: formTags, // Use tags for skillIds
+        seo: {
+          metaTitle: formMetaTitle,
+          metaDescription: formMetaDescription,
+          canonicalUrl: formCanonicalUrl
+        }
+      };
+      if (existingCol) {
+        onUpdateCollection(updatedColObj);
+      } else {
+        onAddCollection(updatedColObj);
+      }
+    }
+    // Check if Resource
+    else if (formType === 'Resource') {
+      const cleanedId = selectedContentId.replace('content-res-', '').replace('content-', '');
+      const existingRes = resources.find(r => r.id === cleanedId || r.title.toLowerCase() === formTitle.toLowerCase());
+      const updatedResObj = {
+        id: existingRes ? existingRes.id : (formSlug || cleanedId),
+        title: formTitle,
+        description: formDescription,
+        type: formTags[0] || 'Documentation', // Use tags[0] for type
+        readTime: formGithubLicense || '5 min read', // Use githubLicense for readTime
+        author: formGithubName || 'Admin Curator', // Use githubName for author
+        url: formGithubUrl || 'https://modelcontextprotocol.io/quickstart', // Use githubUrl for url
+        seo: {
+          metaTitle: formMetaTitle,
+          metaDescription: formMetaDescription,
+          canonicalUrl: formCanonicalUrl
+        }
+      };
+      if (existingRes) {
+        onUpdateResource(updatedResObj);
+      } else {
+        onAddResource(updatedResObj);
+      }
+    }
+    // Check if Prompt
+    else if (formType === 'Prompt') {
+      const cleanedId = selectedContentId.replace('content-prompt-', '').replace('content-', '');
+      const existingPrompt = prompts.find(p => p.id === cleanedId || p.title.toLowerCase() === formTitle.toLowerCase());
+      const updatedPromptObj = {
+        id: existingPrompt ? existingPrompt.id : (formSlug || cleanedId),
+        title: formTitle,
+        description: formDescription,
+        content: formPromptContent || '',
+        category: formPromptCategory || 'Coding',
+        tags: formTags,
+        seo: {
+          metaTitle: formMetaTitle,
+          metaDescription: formMetaDescription,
+          canonicalUrl: formCanonicalUrl
+        }
+      };
+      if (existingPrompt) {
+        onUpdatePrompt(updatedPromptObj);
+      } else {
+        onAddPrompt(updatedPromptObj);
       }
     }
 
@@ -1016,35 +1396,85 @@ export default function AdminContentEditor({
   };
 
   // Create new blank content asset template
-  const handleCreateNewContentAsset = () => {
+  const handleCreateNewContentAsset = (type: CMSContentItem['type'] = 'GitHub Repository') => {
     const newId = `content-${Date.now()}`;
+    
+    let title = 'Create new';
+    let markdownContent = `# Create new\n\nStart writing here...`;
+    let description = 'A new draft document in openskills CMS.';
+    let tags: string[] = ['new'];
+    let category = 'development';
+    let githubLicense = '';
+    let githubName = '';
+    let githubUrl = '';
+    let promptTitle = '';
+    let promptContent = '';
+    let promptCategory = '';
+    
+    if (type === 'Category') {
+      title = 'New Category';
+      markdownContent = `# New Category\n\nCategory description here.`;
+      description = 'A new Category.';
+      tags = ['Code2'];
+      category = 'development';
+    } else if (type === 'Collection') {
+      title = 'New Collection';
+      markdownContent = `# New Collection\n\nCollection description here.`;
+      description = 'A new Collection.';
+      tags = [];
+      category = 'development';
+      githubLicense = 'blue';
+    } else if (type === 'Resource') {
+      title = 'New Resource';
+      markdownContent = `# New Resource\n\nResource description here.`;
+      description = 'A new Resource.';
+      tags = ['Documentation'];
+      category = 'development';
+      githubLicense = '5 min read';
+      githubName = 'Admin Curator';
+      githubUrl = 'https://modelcontextprotocol.io/quickstart';
+    } else if (type === 'Prompt') {
+      title = 'New Prompt';
+      markdownContent = `# New Prompt\n\nPrompt description here.`;
+      description = 'A new Prompt.';
+      tags = ['new'];
+      category = 'development';
+      promptTitle = 'New Prompt';
+      promptContent = 'Enter prompt template here.';
+      promptCategory = 'Coding';
+    }
+
     const newAsset: CMSContentItem = {
       id: newId,
-      type: 'GitHub Repository',
-      title: 'Create new',
-      description: 'A new draft document in openskills CMS.',
-      markdownContent: `# Create new\n\nStart writing here...`,
+      type: type,
+      title: title,
+      description: description,
+      markdownContent: markdownContent,
       status: 'Draft',
-      category: 'development',
-      tags: ['new'],
+      category: category,
+      tags: tags,
       slug: `new-asset-${Date.now()}`,
-      metaTitle: 'Create new - openSkills Directory',
-      metaDescription: 'A newly created draft.',
-      canonicalUrl: 'https://openskills.in/skills/new',
-      keywords: 'new, asset',
+      metaTitle: `${title} - openSkills Directory`,
+      metaDescription: `A newly created ${type.toLowerCase()} draft.`,
+      canonicalUrl: `https://openskills.in/${type.toLowerCase()}/new`,
+      keywords: `new, ${type.toLowerCase()}`,
       featured: false,
       pinned: false,
       visibility: 'Public',
       publishDate: new Date().toISOString().split('T')[0],
       lastUpdated: new Date().toISOString(),
-      promptTitle: '',
-      promptContent: '',
-      promptVariables: []
+      promptTitle: promptTitle,
+      promptCategory: promptCategory,
+      promptContent: promptContent,
+      promptVariables: [],
+      githubLicense: githubLicense,
+      githubName: githubName,
+      githubUrl: githubUrl
     };
 
     setContents(prev => [newAsset, ...prev]);
     setSelectedContentId(newId);
-    showToast('📝 Created new empty drafting board workspace.');
+    showToast(`📝 Created new ${type} drafting board workspace.`);
   };
 
   // Duplicate current active item
@@ -1078,16 +1508,25 @@ export default function AdminContentEditor({
     showToast(`📁 Created folder "${newFolder.name}"`);
   };
 
-  // Helper to propagate deletions of Skill content items to top level App state
-  const propagateCmsDelete = (assetId: string, assetTitle: string) => {
-    const cleanedId = assetId.startsWith('content-') ? assetId.replace('content-', '') : assetId;
-    const matchedSkill = skills.find(s => 
-      s.id === assetId || 
-      s.id === cleanedId || 
-      s.name.toLowerCase() === assetTitle.toLowerCase()
-    );
-    if (matchedSkill) {
-      onDeleteSkill(matchedSkill.id);
+  // Helper to propagate deletions of Content items to top level App state
+  const propagateCmsDelete = (assetId: string, assetTitle: string, assetType?: string) => {
+    const cleanedId = assetId.replace('content-cat-', '').replace('content-col-', '').replace('content-res-', '').replace('content-prompt-', '').replace('content-', '');
+    const typeToCheck = assetType || formType;
+    if (typeToCheck === 'Skill' || typeToCheck === 'GitHub Repository') {
+      const matched = skills.find(s => s.id === assetId || s.id === cleanedId || s.name.toLowerCase() === assetTitle.toLowerCase());
+      if (matched) onDeleteSkill(matched.id);
+    } else if (typeToCheck === 'Category') {
+      const matched = categories.find(c => c.id === assetId || c.id === cleanedId || c.name.toLowerCase() === assetTitle.toLowerCase());
+      if (matched) onDeleteCategory(matched.id);
+    } else if (typeToCheck === 'Collection') {
+      const matched = collections.find(c => c.id === assetId || c.id === cleanedId || c.name.toLowerCase() === assetTitle.toLowerCase());
+      if (matched) onDeleteCollection(matched.id);
+    } else if (typeToCheck === 'Resource') {
+      const matched = resources.find(r => r.id === assetId || r.id === cleanedId || r.title.toLowerCase() === assetTitle.toLowerCase());
+      if (matched) onDeleteResource(matched.id);
+    } else if (typeToCheck === 'Prompt') {
+      const matched = prompts.find(p => p.id === assetId || p.id === cleanedId || p.title.toLowerCase() === assetTitle.toLowerCase());
+      if (matched) onDeletePrompt(matched.id);
     }
   };
 
@@ -1434,6 +1873,8 @@ export default function AdminContentEditor({
     if (asset.type === 'Prompt') FileIconComponent = Sparkles;
     if (asset.type === 'Tutorial') FileIconComponent = BookOpen;
     if (asset.type === 'Collection') FileIconComponent = Layers;
+    if (asset.type === 'Category') FileIconComponent = Tag;
+    if (asset.type === 'Resource') FileIconComponent = ExternalLink;
 
     const handleRenameFile = () => {
       const currentTitle = isSelected ? formTitle : asset.title;
@@ -1534,6 +1975,8 @@ export default function AdminContentEditor({
             type="button"
             onClick={(e) => {
               e.stopPropagation();
+              const confirmDelete = window.confirm(`Are you sure you want to delete "${asset.title}"?`);
+              if (!confirmDelete) return;
               const idx = contents.findIndex(c => c.id === asset.id);
               const filtered = contents.filter(c => c.id !== asset.id);
               setContents(filtered);
@@ -1541,7 +1984,7 @@ export default function AdminContentEditor({
                 const nextItem = filtered[idx === 0 ? 0 : idx - 1] || filtered[0];
                 setSelectedContentId(nextItem ? nextItem.id : '');
               }
-              propagateCmsDelete(asset.id, asset.title);
+              propagateCmsDelete(asset.id, asset.title, asset.type);
               showToast('🗑️ Asset moved to terminal archive.');
             }}
             className={`p-0.5 rounded transition-all opacity-0 group-hover:opacity-100 hover:scale-105 cursor-pointer ${
@@ -1895,7 +2338,7 @@ export default function AdminContentEditor({
             Filter by Type
           </div>
           <div className="space-y-0.5 text-xs text-zinc-600">
-            {['Skill', 'GitHub Repository', 'Prompt', 'Tutorial', 'Collection', 'Resource'].map((type) => (
+            {['Skill', 'GitHub Repository', 'Prompt', 'Tutorial', 'Collection', 'Resource', 'Category'].map((type) => (
               <button
                 key={type}
                 onClick={() => setSidebarFilter(type)}
@@ -1961,34 +2404,7 @@ export default function AdminContentEditor({
           </div>
         </div>
 
-        {/* Footer with curation prompt actions */}
-        <div className="p-3 border-t border-zinc-100 bg-white flex items-center gap-1.5">
-          <button
-            type="button"
-            onClick={handleCreateNewContentAsset}
-            className="flex-1 flex items-center justify-center space-x-1.5 h-9 bg-zinc-950 text-white rounded-md text-xs font-semibold hover:bg-zinc-800 cursor-pointer"
-            title="Create a new draft asset"
-          >
-            <Plus className="h-3.5 w-3.5" />
-            <span>Create New</span>
-          </button>
-          <button
-            type="button"
-            disabled={contents.length === 0}
-            onClick={() => {
-              handleDeleteCurrent();
-            }}
-            className={`flex-1 flex items-center justify-center space-x-1.5 h-9 border rounded-md text-xs font-semibold transition-colors ${
-              contents.length === 0
-                ? 'cursor-not-allowed text-zinc-400 border-zinc-200 bg-zinc-50'
-                : 'border-red-200 text-red-600 hover:bg-red-50 cursor-pointer'
-            }`}
-            title={contents.length === 0 ? "No active asset to delete" : "Delete currently active asset"}
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-            <span>Delete Active</span>
-          </button>
-        </div>
+
 
       </aside>
 
@@ -2004,14 +2420,83 @@ export default function AdminContentEditor({
               <p className="text-xs text-zinc-500 leading-relaxed">
                 There are no content items in your CMS database. Create a new draft asset to start writing documentation, prompts, or integrations.
               </p>
-              <button
-                type="button"
-                onClick={handleCreateNewContentAsset}
-                className="px-4 py-2 bg-zinc-950 text-white rounded-md text-xs font-semibold hover:bg-zinc-800 transition-colors cursor-pointer flex items-center gap-1.5 shadow-sm"
-              >
-                <Plus className="h-3.5 w-3.5" />
-                <span>Create New Draft</span>
-              </button>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setIsEmptyCreateDropdownOpen(!isEmptyCreateDropdownOpen)}
+                  className="px-4 py-2 bg-zinc-950 text-white rounded-md text-xs font-semibold hover:bg-zinc-800 transition-colors cursor-pointer flex items-center gap-1.5 shadow-sm"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  <span>Create New Draft</span>
+                  <ChevronDown className={`h-3.5 w-3.5 transition-transform ${isEmptyCreateDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {isEmptyCreateDropdownOpen && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-40 bg-transparent" 
+                      onClick={() => setIsEmptyCreateDropdownOpen(false)}
+                    />
+                    <div className="absolute top-11 left-1/2 -translate-x-1/2 w-48 bg-white border border-zinc-200 rounded-md shadow-lg py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleCreateNewContentAsset('GitHub Repository');
+                          setIsEmptyCreateDropdownOpen(false);
+                        }}
+                        className="w-full text-left px-3 py-2 text-xs text-zinc-700 hover:bg-zinc-50 flex items-center gap-2 cursor-pointer transition-colors"
+                      >
+                        <GitFork className="h-3.5 w-3.5 text-zinc-400" />
+                        <span>Create Skill</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleCreateNewContentAsset('Category');
+                          setIsEmptyCreateDropdownOpen(false);
+                        }}
+                        className="w-full text-left px-3 py-2 text-xs text-zinc-700 hover:bg-zinc-50 flex items-center gap-2 cursor-pointer transition-colors"
+                      >
+                        <Tag className="h-3.5 w-3.5 text-zinc-400" />
+                        <span>Create Category</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleCreateNewContentAsset('Collection');
+                          setIsEmptyCreateDropdownOpen(false);
+                        }}
+                        className="w-full text-left px-3 py-2 text-xs text-zinc-700 hover:bg-zinc-50 flex items-center gap-2 cursor-pointer transition-colors"
+                      >
+                        <Layers className="h-3.5 w-3.5 text-zinc-400" />
+                        <span>Create Collection</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleCreateNewContentAsset('Resource');
+                          setIsEmptyCreateDropdownOpen(false);
+                        }}
+                        className="w-full text-left px-3 py-2 text-xs text-zinc-700 hover:bg-zinc-50 flex items-center gap-2 cursor-pointer transition-colors"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5 text-zinc-400" />
+                        <span>Create Resource</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleCreateNewContentAsset('Prompt');
+                          setIsEmptyCreateDropdownOpen(false);
+                        }}
+                        className="w-full text-left px-3 py-2 text-xs text-zinc-700 hover:bg-zinc-50 flex items-center gap-2 cursor-pointer transition-colors"
+                      >
+                        <Sparkles className="h-3.5 w-3.5 text-zinc-400" />
+                        <span>Create Prompt</span>
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         ) : (
@@ -2033,6 +2518,7 @@ export default function AdminContentEditor({
                 <option value="Skill">Claude Skill</option>
                 <option value="GitHub Repository">GitHub Repository</option>
                 <option value="Prompt">AI Prompt template</option>
+                <option value="Category">Category Directory</option>
                 <option value="Tutorial">Development Tutorial</option>
                 <option value="Collection">Curated Collection</option>
                 <option value="Resource">External Resource</option>
@@ -2167,11 +2653,9 @@ export default function AdminContentEditor({
                 </button>
               </div>
             </div>
-
           </div>
-
         </header>
-
+        
         {/* WORKSPACE SUB-METADATA TOOLBAR */}
         <div className="h-10 bg-zinc-50/70 border-b border-zinc-150 px-4 flex items-center justify-between text-[11px] text-zinc-500 shrink-0 select-none">
           
@@ -2209,9 +2693,181 @@ export default function AdminContentEditor({
                   <option value="Private">Private Admin Only</option>
                   <option value="Internal">Internal Development Only</option>
                 </select>
-                <ChevronDown className="absolute right-1 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-455 text-zinc-500 pointer-events-none" />
+                <ChevronDown className="absolute right-1 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-500 pointer-events-none" />
               </div>
             </span>
+
+            <span>•</span>
+
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsToolbarCreateDropdownOpen(!isToolbarCreateDropdownOpen)}
+                className="flex items-center justify-center space-x-1.5 h-7 px-2.5 bg-zinc-950 text-white rounded-md text-[10px] font-semibold hover:bg-zinc-800 cursor-pointer transition-colors"
+                title="Create a new draft asset"
+              >
+                <Plus className="h-3 w-3" />
+                <span>Create New</span>
+                <ChevronDown className={`h-2.5 w-2.5 transition-transform ${isToolbarCreateDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {isToolbarCreateDropdownOpen && (
+                <>
+                  <div 
+                    className="fixed inset-0 z-40 bg-transparent" 
+                    onClick={() => setIsToolbarCreateDropdownOpen(false)}
+                  />
+                  <div className="absolute top-8 left-0 w-44 bg-white border border-zinc-200 rounded-md shadow-lg py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleCreateNewContentAsset('GitHub Repository');
+                        setIsToolbarCreateDropdownOpen(false);
+                      }}
+                      className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
+                    >
+                      <GitFork className="h-3 w-3 text-zinc-400" />
+                      <span>Create Skill</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleCreateNewContentAsset('Category');
+                        setIsToolbarCreateDropdownOpen(false);
+                      }}
+                      className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
+                    >
+                      <Tag className="h-3 w-3 text-zinc-400" />
+                      <span>Create Category</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleCreateNewContentAsset('Collection');
+                        setIsToolbarCreateDropdownOpen(false);
+                      }}
+                      className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
+                    >
+                      <Layers className="h-3 w-3 text-zinc-400" />
+                      <span>Create Collection</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleCreateNewContentAsset('Resource');
+                        setIsToolbarCreateDropdownOpen(false);
+                      }}
+                      className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
+                    >
+                      <ExternalLink className="h-3 w-3 text-zinc-400" />
+                      <span>Create Resource</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleCreateNewContentAsset('Prompt');
+                        setIsToolbarCreateDropdownOpen(false);
+                      }}
+                      className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
+                    >
+                      <Sparkles className="h-3 w-3 text-zinc-400" />
+                      <span>Create Prompt</span>
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
+            <button
+              type="button"
+              disabled={contents.length === 0}
+              onClick={() => {
+                handleDeleteCurrent();
+              }}
+              className={`flex items-center justify-center space-x-1.5 h-7 px-2.5 border rounded-md text-[10px] font-semibold transition-colors ${
+                contents.length === 0
+                  ? 'cursor-not-allowed text-zinc-400 border-zinc-200 bg-zinc-50'
+                  : 'border-red-200 text-red-650 hover:bg-red-50 hover:border-red-300 cursor-pointer'
+              }`}
+              title={contents.length === 0 ? "No active asset to delete" : "Delete currently active asset"}
+            >
+              <Trash2 className="h-3.5 w-3.5 text-red-500" />
+              <span className="text-red-600 font-medium">Delete Active</span>
+            </button>
+
+            <span>•</span>
+
+            <div className="flex items-center space-x-2">
+              <button
+                type="button"
+                onClick={() => {
+                  if (currentItem) {
+                    const newName = window.prompt("Rename file:", formTitle);
+                    if (newName && newName.trim()) {
+                      const trimmedName = newName.trim();
+                      setFormTitle(trimmedName);
+                      setFormSlug(trimmedName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''));
+                      setFormMetaTitle(`${trimmedName} - Curated openSkills`);
+                      const updatedMarkdown = updateMarkdownHeading(formMarkdown, trimmedName);
+                      setFormMarkdown(updatedMarkdown);
+                      setContents(prev => prev.map(c => {
+                        if (c.id === currentItem.id) {
+                          const updatedMd = updateMarkdownHeading(c.markdownContent || '', trimmedName);
+                          return {
+                            ...c,
+                            title: trimmedName,
+                            markdownContent: updatedMd
+                          };
+                        }
+                        return c;
+                      }));
+                      showToast(`✏️ Renamed file to "${trimmedName}"`);
+                    }
+                  }
+                }}
+                className="flex items-center space-x-1 hover:bg-zinc-250 active:bg-zinc-200/60 hover:bg-zinc-200 px-1.5 py-0.5 rounded cursor-pointer transition-colors text-zinc-650 text-zinc-600 hover:text-zinc-900"
+                title="Rename active file"
+              >
+                <Edit3 className="h-3 w-3" />
+                <span>Rename</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (currentItem) {
+                    setMoveItemModal({
+                      isOpen: true,
+                      itemType: 'file',
+                      itemId: currentItem.id,
+                      itemName: currentItem.title
+                    });
+                  }
+                }}
+                className="flex items-center space-x-1 hover:bg-zinc-250 active:bg-zinc-200/60 hover:bg-zinc-200 px-1.5 py-0.5 rounded cursor-pointer transition-colors text-zinc-650 text-zinc-600 hover:text-zinc-900"
+                title="Move active file to folder"
+              >
+                <ArrowUpDown className="h-3 w-3" />
+                <span>Move</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (currentItem) {
+                    const confirmDelete = window.confirm(`Are you sure you want to delete "${currentItem.title}"?`);
+                    if (confirmDelete) {
+                      handleDeleteCurrent();
+                    }
+                  }
+                }}
+                className="flex items-center space-x-1 hover:bg-red-50 active:bg-red-100 px-1.5 py-0.5 rounded cursor-pointer transition-colors text-red-500 hover:text-red-600"
+                title="Delete active file"
+              >
+                <Trash className="h-3 w-3" />
+                <span>Delete</span>
+              </button>
+            </div>
           </div>
 
           {/* Autosave simulated log text */}
@@ -2373,6 +3029,175 @@ export default function AdminContentEditor({
                             </button>
                           </div>
                         </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Category Directory Attributes */}
+                  {formType === 'Category' && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-zinc-500">Category ID / Slug</label>
+                        <input
+                          type="text"
+                          value={formSlug}
+                          onChange={(e) => handleFieldChange(() => setFormSlug(e.target.value.toLowerCase().replace(/\s+/g, '-')))}
+                          placeholder="e.g. development"
+                          className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-zinc-500">Lucide Icon Name</label>
+                        <div className="relative inline-flex items-center w-full">
+                          <select
+                            value={formTags[0] || 'Code2'}
+                            onChange={(e) => handleFieldChange(() => setFormTags([e.target.value]))}
+                            className="bg-zinc-50 border border-zinc-200 hover:border-zinc-300 rounded-md pl-2 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none w-full"
+                          >
+                            <option value="Code2">Code2 (Development)</option>
+                            <option value="PenTool">PenTool (Writing)</option>
+                            <option value="BookOpen">BookOpen (Research)</option>
+                            <option value="Megaphone">Megaphone (Marketing)</option>
+                            <option value="Palette">Palette (Design)</option>
+                            <option value="Clock">Clock (Productivity)</option>
+                            <option value="Cpu">Cpu (Automation)</option>
+                            <option value="GraduationCap">GraduationCap (Education)</option>
+                            <option value="Briefcase">Briefcase (Business)</option>
+                            <option value="Bot">Bot (Agents)</option>
+                          </select>
+                          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500 pointer-events-none" />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Collection Attributes */}
+                  {formType === 'Collection' && (
+                    <div className="space-y-2">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-zinc-500">Collection ID / Slug</label>
+                          <input
+                            type="text"
+                            value={formSlug}
+                            onChange={(e) => handleFieldChange(() => setFormSlug(e.target.value.toLowerCase().replace(/\s+/g, '-')))}
+                            placeholder="e.g. best-coding-skills"
+                            className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-zinc-500">Color Theme Badge</label>
+                          <div className="relative inline-flex items-center w-full">
+                            <select
+                              value={formGithubLicense || 'blue'}
+                              onChange={(e) => handleFieldChange(() => setFormGithubLicense(e.target.value))}
+                              className="bg-zinc-50 border border-zinc-200 hover:border-zinc-300 rounded-md pl-2 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none w-full"
+                            >
+                              <option value="blue">Blue</option>
+                              <option value="purple">Purple</option>
+                              <option value="zinc">Zinc</option>
+                              <option value="green">Green</option>
+                              <option value="indigo">Indigo</option>
+                              <option value="amber">Amber</option>
+                              <option value="rose">Rose</option>
+                              <option value="teal">Teal</option>
+                            </select>
+                            <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500 pointer-events-none" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-zinc-500">Select Included Skills</label>
+                        <div className="max-h-24 overflow-y-auto border border-zinc-200 rounded-lg p-2 space-y-1 bg-zinc-50">
+                          {skills.map(s => {
+                            const isChecked = formTags.includes(s.id);
+                            return (
+                              <label key={s.id} className="flex items-center space-x-2 text-[11px] font-medium text-zinc-700 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={isChecked}
+                                  onChange={() => {
+                                    handleFieldChange(() => {
+                                      if (isChecked) {
+                                        setFormTags(prev => prev.filter(t => t !== s.id));
+                                      } else {
+                                        setFormTags(prev => [...prev, s.id]);
+                                      }
+                                    });
+                                  }}
+                                  className="rounded text-blue-600 focus:ring-blue-500"
+                                />
+                                <span>{s.name}</span>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Resource Attributes */}
+                  {formType === 'Resource' && (
+                    <div className="space-y-2">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-zinc-500">Resource ID / Slug</label>
+                          <input
+                            type="text"
+                            value={formSlug}
+                            onChange={(e) => handleFieldChange(() => setFormSlug(e.target.value.toLowerCase().replace(/\s+/g, '-')))}
+                            placeholder="e.g. resource-mcp-guide"
+                            className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-zinc-500">Resource Type</label>
+                          <div className="relative inline-flex items-center w-full">
+                            <select
+                              value={formTags[0] || 'Documentation'}
+                              onChange={(e) => handleFieldChange(() => setFormTags([e.target.value]))}
+                              className="bg-zinc-50 border border-zinc-200 hover:border-zinc-300 rounded-md pl-2 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none w-full"
+                            >
+                              <option value="Documentation">Documentation</option>
+                              <option value="Guide">Guide</option>
+                              <option value="Article">Article</option>
+                              <option value="Video">Video</option>
+                            </select>
+                            <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500 pointer-events-none" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <div className="space-y-1 sm:col-span-2">
+                          <label className="text-[10px] font-bold text-zinc-500">External URL Link</label>
+                          <input
+                            type="text"
+                            value={formGithubUrl}
+                            onChange={(e) => handleFieldChange(() => setFormGithubUrl(e.target.value))}
+                            placeholder="https://..."
+                            className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-zinc-500">Read / Watch Time</label>
+                          <input
+                            type="text"
+                            value={formGithubLicense}
+                            onChange={(e) => handleFieldChange(() => setFormGithubLicense(e.target.value))}
+                            placeholder="e.g. 5 min read"
+                            className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-zinc-500">Author Name</label>
+                        <input
+                          type="text"
+                          value={formGithubName}
+                          onChange={(e) => handleFieldChange(() => setFormGithubName(e.target.value))}
+                          placeholder="e.g. Anthropic Developer Relations"
+                          className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                        />
                       </div>
                     </div>
                   )}

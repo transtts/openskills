@@ -89,7 +89,7 @@ export default function SearchSection({
   const isFiltered = searchQuery || selectedCategory !== 'all' || selectedTag !== 'all';
 
   return (
-    <div id="filter-hub-container" className="bg-white border-b border-zinc-200/80 px-4 py-6 sm:px-6 lg:px-8">
+    <div id="filter-hub-container" className="bg-white px-4 pt-0 pb-0 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         
         {/* Filter & Search Selection Panel Grid */}

@@ -22,8 +22,17 @@
   <meta property="og:url" content="https://www.openskills.in" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://www.openskills.in/og-image.png" />
-  <!-- Monetag ad integration tag -->
-  <script>(function(s){s.dataset.zone='11204099',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+  <!-- Monetag click-triggered & session-restricted tag -->
+  <script>
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('a') || e.target.closest('button')) {
+        if (!sessionStorage.getItem('monetag_shown')) {
+          sessionStorage.setItem('monetag_shown', 'true');
+          (function(s){s.dataset.zone='11204099',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+        }
+      }
+    });
+  </script>
 </head>
 
 <body>

@@ -1875,43 +1875,11 @@ export default function AdminContentEditor({
     if (asset.type === 'Category') FileIconComponent = Tag;
     if (asset.type === 'Resource') FileIconComponent = ExternalLink;
 
-    const handleRenameFile = () => {
-      const currentTitle = isSelected ? formTitle : asset.title;
-      const newName = window.prompt("Rename file:", currentTitle);
-      if (newName && newName.trim()) {
-        const trimmedName = newName.trim();
-        if (isSelected) {
-          setFormTitle(trimmedName);
-          setFormSlug(trimmedName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''));
-          setFormMetaTitle(`${trimmedName} - Curated openSkills`);
-
-          const updatedMarkdown = updateMarkdownHeading(formMarkdown, trimmedName);
-          setFormMarkdown(updatedMarkdown);
-        }
-        setContents(prev => prev.map(c => {
-          if (c.id === asset.id) {
-            const updatedMd = updateMarkdownHeading(c.markdownContent || '', trimmedName);
-            return {
-              ...c,
-              title: trimmedName,
-              markdownContent: updatedMd
-            };
-          }
-          return c;
-        }));
-        showToast(`✏️ Renamed file to "${trimmedName}"`);
-      }
-    };
-
     return (
       <div
         key={asset.id}
         onClick={() => {
           setSelectedContentId(asset.id);
-        }}
-        onDoubleClick={(e) => {
-          e.stopPropagation();
-          handleRenameFile();
         }}
         className={`group p-1.5 flex items-center justify-between rounded-md cursor-pointer transition-colors border border-transparent text-[11px] ${isSelected
             ? 'bg-blue-600 text-white font-semibold shadow-sm'
@@ -1931,20 +1899,6 @@ export default function AdminContentEditor({
                 ? 'bg-orange-500'
                 : 'bg-zinc-400 dark:bg-zinc-600'
             }`} title={asset.status} />
-
-          {/* Rename File Button */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleRenameFile();
-            }}
-            className={`p-0.5 rounded transition-all opacity-0 group-hover:opacity-100 hover:scale-105 cursor-pointer ${isSelected ? 'text-zinc-200 hover:bg-blue-700' : 'text-zinc-500 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-[#202028]'
-              }`}
-            title="Rename file"
-          >
-            <Edit3 className="h-2.5 w-2.5" />
-          </button>
 
           {/* Move File Button */}
           <button
@@ -1970,8 +1924,6 @@ export default function AdminContentEditor({
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              const confirmDelete = window.confirm(`Are you sure you want to delete "${asset.title}"?`);
-              if (!confirmDelete) return;
               const idx = contents.findIndex(c => c.id === asset.id);
               const filtered = contents.filter(c => c.id !== asset.id);
               setContents(filtered);
@@ -1998,14 +1950,6 @@ export default function AdminContentEditor({
     const folderFiles = filteredContents.filter(c => c.folderId === folder.id);
     const subfolders = folders.filter(f => f.parentId === folder.id);
 
-    const handleRenameFolder = () => {
-      const newName = window.prompt("Rename folder:", folder.name);
-      if (newName && newName.trim()) {
-        setFolders(prev => prev.map(f => f.id === folder.id ? { ...f, name: newName.trim() } : f));
-        showToast(`✏️ Renamed folder to "${newName.trim()}"`);
-      }
-    };
-
     return (
       <div key={folder.id} className="space-y-0.5">
         {/* Folder Header */}
@@ -2014,10 +1958,6 @@ export default function AdminContentEditor({
             setExpandedFolders(prev =>
               isExpanded ? prev.filter(id => id !== folder.id) : [...prev, folder.id]
             );
-          }}
-          onDoubleClick={(e) => {
-            e.stopPropagation();
-            handleRenameFolder();
           }}
           className="group flex items-center justify-between p-1.5 hover:bg-zinc-100 dark:hover:bg-[#16161a] rounded-md cursor-pointer text-xs font-semibold text-zinc-700 dark:text-zinc-300 select-none transition-colors"
         >
@@ -2034,18 +1974,6 @@ export default function AdminContentEditor({
             <span className="text-[9px] font-mono font-normal bg-zinc-200 dark:bg-[#202028] px-1 rounded text-zinc-550 dark:text-zinc-400">
               {folderFiles.length + subfolders.length}
             </span>
-            {/* Rename Folder trigger */}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleRenameFolder();
-              }}
-              className="p-0.5 rounded text-zinc-550 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-[#202028] cursor-pointer"
-              title="Rename Folder"
-            >
-              <Edit3 className="h-2.5 w-2.5" />
-            </button>
             {/* Move Folder trigger */}
             <button
               type="button"
@@ -2522,18 +2450,18 @@ export default function AdminContentEditor({
                 <span className="text-zinc-250 font-light">•</span>
 
                 {/* Quick status button indicators */}
-                <div className="relative inline-flex items-center">
+                <div className="relative inline-flex items-center ml-1">
                   <select
                     value={formStatus}
                     onChange={(e) => handleFieldChange(() => setFormStatus(e.target.value as any))}
-                    className="bg-transparent text-[11px] font-bold text-zinc-500 dark:text-zinc-400 uppercase pr-6 pl-1 focus:outline-none cursor-pointer appearance-none"
+                    className="bg-[#fafafa] dark:bg-[#16161a] border border-zinc-200 dark:border-[#22222a] hover:border-zinc-300 dark:hover:border-[#2e2e36] text-zinc-800 dark:text-zinc-200 rounded-md pl-2.5 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none min-w-[120px]"
                   >
                     <option value="Draft">Draft Mode</option>
                     <option value="Review">In Review</option>
                     <option value="Published">Published Live</option>
                     <option value="Archived">Archived Vault</option>
                   </select>
-                  <ChevronDown className="absolute right-1 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-405 text-zinc-400 pointer-events-none" />
+                  <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500 pointer-events-none" />
                 </div>
               </div>
 
@@ -2653,17 +2581,17 @@ export default function AdminContentEditor({
                 <span className="flex items-center">
                   <Tag className="h-3 w-3 text-zinc-400 mr-1 shrink-0" />
                   Category:
-                  <div className="relative inline-flex items-center ml-1">
+                  <div className="relative inline-flex items-center ml-1.5">
                     <select
                       value={formCategory}
                       onChange={(e) => handleFieldChange(() => setFormCategory(e.target.value))}
-                      className="bg-transparent border-0 font-bold text-zinc-700 dark:text-zinc-200 py-0 pl-1 pr-6 focus:outline-none focus:ring-0 cursor-pointer appearance-none text-[11px]"
+                      className="bg-[#fafafa] dark:bg-[#16161a] border border-zinc-200 dark:border-[#22222a] hover:border-zinc-300 dark:hover:border-[#2e2e36] text-zinc-850 dark:text-zinc-200 rounded-md pl-2.5 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none min-w-[110px]"
                     >
                       {categories.map(cat => (
                         <option key={cat.id} value={cat.id}>{cat.name}</option>
                       ))}
                     </select>
-                    <ChevronDown className="absolute right-1 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-450 pointer-events-none" />
+                    <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500 pointer-events-none" />
                   </div>
                 </span>
 
@@ -2672,17 +2600,17 @@ export default function AdminContentEditor({
                 <span className="flex items-center">
                   <Lock className="h-3 w-3 text-zinc-400 mr-1 shrink-0" />
                   Visibility:
-                  <div className="relative inline-flex items-center ml-1">
+                  <div className="relative inline-flex items-center ml-1.5">
                     <select
                       value={formVisibility}
                       onChange={(e) => handleFieldChange(() => setFormVisibility(e.target.value as any))}
-                      className="bg-transparent border-0 font-bold text-zinc-700 dark:text-zinc-200 py-0 pl-1 pr-6 focus:outline-none focus:ring-0 cursor-pointer text-[10px] appearance-none"
+                      className="bg-[#fafafa] dark:bg-[#16161a] border border-zinc-200 dark:border-[#22222a] hover:border-zinc-300 dark:hover:border-[#2e2e36] text-zinc-850 dark:text-zinc-200 rounded-md pl-2.5 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none min-w-[140px]"
                     >
                       <option value="Public">Public Access</option>
                       <option value="Private">Private Admin Only</option>
                       <option value="Internal">Internal Development Only</option>
                     </select>
-                    <ChevronDown className="absolute right-1 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-500 pointer-events-none" />
+                    <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500 pointer-events-none" />
                   </div>
                 </span>
 
@@ -2768,39 +2696,7 @@ export default function AdminContentEditor({
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (currentItem) {
-                        const newName = window.prompt("Rename file:", formTitle);
-                        if (newName && newName.trim()) {
-                          const trimmedName = newName.trim();
-                          setFormTitle(trimmedName);
-                          setFormSlug(trimmedName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''));
-                          setFormMetaTitle(`${trimmedName} - Curated openSkills`);
-                          const updatedMarkdown = updateMarkdownHeading(formMarkdown, trimmedName);
-                          setFormMarkdown(updatedMarkdown);
-                          setContents(prev => prev.map(c => {
-                            if (c.id === currentItem.id) {
-                              const updatedMd = updateMarkdownHeading(c.markdownContent || '', trimmedName);
-                              return {
-                                ...c,
-                                title: trimmedName,
-                                markdownContent: updatedMd
-                              };
-                            }
-                            return c;
-                          }));
-                          showToast(`✏️ Renamed file to "${trimmedName}"`);
-                        }
-                      }
-                    }}
-                    className="flex items-center space-x-1 hover:bg-zinc-200 dark:hover:bg-[#202028] px-1.5 py-0.5 rounded cursor-pointer transition-colors text-zinc-650 dark:text-zinc-400 text-zinc-600 hover:text-zinc-900 dark:hover:text-white"
-                    title="Rename active file"
-                  >
-                    <Edit3 className="h-3 w-3" />
-                    <span>Rename</span>
-                  </button>
+
 
                   <button
                     type="button"
@@ -2825,10 +2721,7 @@ export default function AdminContentEditor({
                     type="button"
                     onClick={() => {
                       if (currentItem) {
-                        const confirmDelete = window.confirm(`Are you sure you want to delete "${currentItem.title}"?`);
-                        if (confirmDelete) {
-                          handleDeleteCurrent();
-                        }
+                        handleDeleteCurrent();
                       }
                     }}
                     className="flex items-center space-x-1 hover:bg-red-50 dark:hover:bg-red-950/20 px-1.5 py-0.5 rounded cursor-pointer transition-colors text-red-500 hover:text-red-650"

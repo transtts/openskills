@@ -71,8 +71,8 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #d4d4d8;
   }
-  * {
-    @apply border-border outline-ring/50;
+  *, ::before, ::after {
+    border-color: var(--border);
   }
   html {
     @apply font-sans;

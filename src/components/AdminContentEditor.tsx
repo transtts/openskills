@@ -364,7 +364,7 @@ export default function AdminContentEditor({
     }
   ]);
   // Folder organization state
-  const [folders, setFolders] = useState<{ id: string; name: string }[]>(() => {
+  const [folders, setFolders] = useState<{ id: string; name: string; parentId?: string }[]>(() => {
     const saved = localStorage.getItem('openskills_cms_folders');
     if (saved) {
       try { return JSON.parse(saved); } catch (e) { }
@@ -921,7 +921,7 @@ export default function AdminContentEditor({
             id: generatedId,
             name: item.title,
             description: item.description,
-            colorTheme: item.githubLicense || 'blue',
+            colorTheme: (item.githubLicense as Collection['colorTheme']) || 'blue',
             skillsCount: item.tags.length,
             skillIds: item.tags,
             seo: {
@@ -945,7 +945,7 @@ export default function AdminContentEditor({
             id: generatedId,
             title: item.title,
             description: item.description,
-            type: item.tags[0] || 'Documentation',
+            type: (item.tags[0] as Resource['type']) || 'Documentation',
             readTime: item.githubLicense || '5 min read',
             author: item.githubName || 'Admin Curator',
             url: item.githubUrl || 'https://modelcontextprotocol.io/quickstart',
@@ -971,7 +971,7 @@ export default function AdminContentEditor({
             title: item.title,
             description: item.description,
             content: item.promptContent || '',
-            category: item.promptCategory || 'Coding',
+            category: (item.promptCategory as Prompt['category']) || 'Coding',
             tags: item.tags,
             seo: {
               metaTitle: item.metaTitle,
@@ -1205,7 +1205,7 @@ export default function AdminContentEditor({
         trendingToday: existingSkill ? existingSkill.trendingToday : false,
         trendingWeek: existingSkill ? existingSkill.trendingWeek : false,
         trendingMonth: existingSkill ? existingSkill.trendingMonth : false,
-        status: formStatus === 'Published' ? 'approved' : 'pending',
+        status: (formStatus === 'Published' ? 'approved' : 'pending') as 'approved' | 'pending',
         bookmarksCount: existingSkill ? existingSkill.bookmarksCount : 0,
         seo: {
           metaTitle: formMetaTitle,
@@ -1251,7 +1251,7 @@ export default function AdminContentEditor({
         id: existingCol ? existingCol.id : (formSlug || cleanedId),
         name: formTitle,
         description: formDescription,
-        colorTheme: formGithubLicense || 'blue', // Use githubLicense for colorTheme
+        colorTheme: (formGithubLicense as Collection['colorTheme']) || 'blue', // Use githubLicense for colorTheme
         skillsCount: formTags.length,
         skillIds: formTags, // Use tags for skillIds
         seo: {
@@ -1274,7 +1274,7 @@ export default function AdminContentEditor({
         id: existingRes ? existingRes.id : (formSlug || cleanedId),
         title: formTitle,
         description: formDescription,
-        type: formTags[0] || 'Documentation', // Use tags[0] for type
+        type: (formTags[0] as Resource['type']) || 'Documentation', // Use tags[0] for type
         readTime: formGithubLicense || '5 min read', // Use githubLicense for readTime
         author: formGithubName || 'Admin Curator', // Use githubName for author
         url: formGithubUrl || 'https://modelcontextprotocol.io/quickstart', // Use githubUrl for url
@@ -1299,7 +1299,7 @@ export default function AdminContentEditor({
         title: formTitle,
         description: formDescription,
         content: formPromptContent || '',
-        category: formPromptCategory || 'Coding',
+        category: (formPromptCategory as Prompt['category']) || 'Coding',
         tags: formTags,
         seo: {
           metaTitle: formMetaTitle,
@@ -1914,12 +1914,12 @@ export default function AdminContentEditor({
           handleRenameFile();
         }}
         className={`group p-1.5 flex items-center justify-between rounded-md cursor-pointer transition-colors border border-transparent text-[11px] ${isSelected
-            ? 'bg-zinc-900 text-white font-semibold'
-            : 'hover:bg-zinc-100 hover:border-zinc-200 text-zinc-700'
+            ? 'bg-blue-600 text-white font-semibold shadow-sm'
+            : 'hover:bg-zinc-100 dark:hover:bg-[#16161a] hover:border-zinc-200 dark:hover:border-[#222228] text-zinc-700 dark:text-zinc-300'
           }`}
       >
         <div className="flex items-center space-x-1.5 truncate flex-1 min-w-0" title={asset.title}>
-          <FileIconComponent className={`h-3.5 w-3.5 shrink-0 ${isSelected ? 'text-white' : 'text-zinc-400'}`} />
+          <FileIconComponent className={`h-3.5 w-3.5 shrink-0 ${isSelected ? 'text-white' : 'text-zinc-400 dark:text-zinc-500'}`} />
           <span className="truncate" title={asset.title}>{asset.title}</span>
         </div>
 
@@ -1929,7 +1929,7 @@ export default function AdminContentEditor({
               ? 'bg-emerald-500'
               : asset.status === 'Draft'
                 ? 'bg-orange-500'
-                : 'bg-zinc-400'
+                : 'bg-zinc-400 dark:bg-zinc-600'
             }`} title={asset.status} />
 
           {/* Rename File Button */}
@@ -1939,7 +1939,7 @@ export default function AdminContentEditor({
               e.stopPropagation();
               handleRenameFile();
             }}
-            className={`p-0.5 rounded transition-all opacity-0 group-hover:opacity-100 hover:scale-105 cursor-pointer ${isSelected ? 'text-zinc-300 hover:bg-zinc-800' : 'text-zinc-500 hover:bg-zinc-200'
+            className={`p-0.5 rounded transition-all opacity-0 group-hover:opacity-100 hover:scale-105 cursor-pointer ${isSelected ? 'text-zinc-200 hover:bg-blue-700' : 'text-zinc-500 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-[#202028]'
               }`}
             title="Rename file"
           >
@@ -1958,7 +1958,7 @@ export default function AdminContentEditor({
                 itemName: asset.title
               });
             }}
-            className={`p-0.5 rounded transition-all opacity-0 group-hover:opacity-100 hover:scale-105 cursor-pointer ${isSelected ? 'text-zinc-300 hover:bg-zinc-800' : 'text-zinc-500 hover:bg-zinc-200'
+            className={`p-0.5 rounded transition-all opacity-0 group-hover:opacity-100 hover:scale-105 cursor-pointer ${isSelected ? 'text-zinc-200 hover:bg-blue-700' : 'text-zinc-500 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-[#202028]'
               }`}
             title="Move file"
           >
@@ -1982,7 +1982,7 @@ export default function AdminContentEditor({
               propagateCmsDelete(asset.id, asset.title, asset.type);
               showToast('🗑️ Asset moved to terminal archive.');
             }}
-            className={`p-0.5 rounded transition-all opacity-0 group-hover:opacity-100 hover:scale-105 cursor-pointer ${isSelected ? 'text-red-300 hover:bg-zinc-800' : 'text-red-505 text-red-500 hover:bg-zinc-200'
+            className={`p-0.5 rounded transition-all opacity-0 group-hover:opacity-100 hover:scale-105 cursor-pointer ${isSelected ? 'text-red-200 hover:bg-blue-700' : 'text-red-500 dark:text-red-400 hover:bg-zinc-200 dark:hover:bg-[#202028]'
               }`}
             title="Delete file"
           >
@@ -2019,7 +2019,7 @@ export default function AdminContentEditor({
             e.stopPropagation();
             handleRenameFolder();
           }}
-          className="group flex items-center justify-between p-1.5 hover:bg-zinc-100 rounded-md cursor-pointer text-xs font-semibold text-zinc-700 select-none transition-colors"
+          className="group flex items-center justify-between p-1.5 hover:bg-zinc-100 dark:hover:bg-[#16161a] rounded-md cursor-pointer text-xs font-semibold text-zinc-700 dark:text-zinc-300 select-none transition-colors"
         >
           <div className="flex items-center space-x-1.5 truncate">
             {isExpanded ? (
@@ -2031,7 +2031,7 @@ export default function AdminContentEditor({
           </div>
 
           <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-            <span className="text-[9px] font-mono font-normal bg-zinc-200 px-1 rounded text-zinc-550">
+            <span className="text-[9px] font-mono font-normal bg-zinc-200 dark:bg-[#202028] px-1 rounded text-zinc-550 dark:text-zinc-400">
               {folderFiles.length + subfolders.length}
             </span>
             {/* Rename Folder trigger */}
@@ -2041,7 +2041,7 @@ export default function AdminContentEditor({
                 e.stopPropagation();
                 handleRenameFolder();
               }}
-              className="p-0.5 rounded text-zinc-550 hover:bg-zinc-200 cursor-pointer"
+              className="p-0.5 rounded text-zinc-550 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-[#202028] cursor-pointer"
               title="Rename Folder"
             >
               <Edit3 className="h-2.5 w-2.5" />
@@ -2058,7 +2058,7 @@ export default function AdminContentEditor({
                   itemName: folder.name
                 });
               }}
-              className="p-0.5 rounded text-zinc-550 hover:bg-zinc-200 cursor-pointer"
+              className="p-0.5 rounded text-zinc-550 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-[#202028] cursor-pointer"
               title="Move Folder"
             >
               <ArrowUpDown className="h-2.5 w-2.5" />
@@ -2074,7 +2074,7 @@ export default function AdminContentEditor({
                   showToast(`🗑️ Deleted folder "${folder.name}"`);
                 }
               }}
-              className="p-0.5 rounded text-red-500 hover:bg-zinc-200 cursor-pointer"
+              className="p-0.5 rounded text-red-500 dark:text-red-400 hover:bg-zinc-200 dark:hover:bg-[#202028] cursor-pointer"
               title="Delete Folder"
             >
               <Trash className="h-2.5 w-2.5" />
@@ -2084,13 +2084,13 @@ export default function AdminContentEditor({
 
         {/* Folder Children (Subfolders & Files, Indented) */}
         {isExpanded && (
-          <div className="ml-4 border-l border-zinc-200 pl-2 space-y-0.5 animate-in fade-in slide-in-from-left-1 duration-100">
+          <div className="ml-4 border-l border-zinc-200 dark:border-[#222228] pl-2 space-y-0.5 animate-in fade-in slide-in-from-left-1 duration-100">
             {/* Subfolders first */}
             {subfolders.map(sub => renderSidebarFolder(sub, depth + 1))}
             {/* Files in folder */}
             {folderFiles.map(asset => renderFileExplorerItem(asset))}
             {folderFiles.length === 0 && subfolders.length === 0 && (
-              <div className="py-1 pl-5 text-[10px] text-zinc-400 italic">
+              <div className="py-1 pl-5 text-[10px] text-zinc-400 dark:text-zinc-650 italic">
                 Empty folder
               </div>
             )}
@@ -2105,20 +2105,20 @@ export default function AdminContentEditor({
   // Authentic Authorization Box (Rendering before anything else if regular users enter)
   if (!isAuthenticated) {
     return (
-      <div className="mx-auto max-w-md my-16 bg-white border border-zinc-200 rounded-xl p-6.5 shadow-sm font-sans">
+      <div className="mx-auto max-w-md my-16 bg-[#ffffff] dark:bg-[#121214] border border-zinc-200 dark:border-[#1e1e24] rounded-xl p-6.5 shadow-sm font-sans text-zinc-950 dark:text-zinc-550">
         <div className="text-center mb-6">
-          <div className="mx-auto h-12 w-12 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 mb-3.5">
+          <div className="mx-auto h-12 w-12 rounded-full bg-amber-50/10 dark:bg-amber-500/10 border border-amber-200/30 flex items-center justify-center text-amber-600 dark:text-amber-400 mb-3.5">
             <Shield className="h-6 w-6" />
           </div>
-          <h2 className="text-lg font-bold text-zinc-950">CMS Admin Protection Shield</h2>
-          <p className="text-xs text-zinc-400 mt-1 max-w-xs mx-auto">
+          <h2 className="text-lg font-bold text-zinc-950 dark:text-zinc-50">CMS Admin Protection Shield</h2>
+          <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1 max-w-xs mx-auto">
             This module contains core publishing nodes. To update openSkills indices, authenticate with your administration ID.
           </p>
         </div>
 
         <form onSubmit={handleAdminAuthSubmit} className="space-y-4">
           <div>
-            <label className="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">
+            <label className="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-1">
               Administrator ID
             </label>
             <input
@@ -2126,13 +2126,13 @@ export default function AdminContentEditor({
               placeholder="e.g. admin"
               value={authUsername}
               onChange={(e) => setAuthUsername(e.target.value)}
-              className="w-full h-9 px-3 rounded-md border border-zinc-200 text-xs focus:ring-1 focus:ring-blue-600 focus:outline-none"
+              className="w-full h-9 px-3 rounded-md border border-zinc-200 dark:border-[#22222a] bg-[#ffffff] dark:bg-[#16161a] text-zinc-900 dark:text-zinc-100 text-xs focus:ring-1 focus:ring-blue-600 focus:outline-none"
               required
             />
           </div>
 
           <div>
-            <label className="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">
+            <label className="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-550 mb-1">
               Gateway Secret Password
             </label>
             <input
@@ -2140,34 +2140,34 @@ export default function AdminContentEditor({
               placeholder="openskills2026"
               value={authPassword}
               onChange={(e) => setAuthPassword(e.target.value)}
-              className="w-full h-9 px-3 rounded-md border border-zinc-200 text-xs focus:ring-1 focus:ring-blue-600 focus:outline-none"
+              className="w-full h-9 px-3 rounded-md border border-zinc-200 dark:border-[#22222a] bg-[#ffffff] dark:bg-[#16161a] text-zinc-900 dark:text-zinc-100 text-xs focus:ring-1 focus:ring-blue-600 focus:outline-none"
               required
             />
           </div>
 
           {authError && (
-            <div className="flex gap-2 p-2.5 rounded bg-red-50 border border-red-150 text-[11px] text-red-700">
+            <div className="flex gap-2 p-2.5 rounded bg-red-50 dark:bg-red-950/20 border border-red-150 dark:border-red-900/30 text-[11px] text-red-700 dark:text-red-400">
               <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
               <span>{authError}</span>
             </div>
           )}
 
-          <div className="flex items-center justify-between text-[11px] text-zinc-455 text-zinc-500 bg-zinc-50 rounded-lg p-2.5">
+          <div className="flex items-center justify-between text-[11px] text-zinc-500 dark:text-zinc-400 bg-zinc-50 dark:bg-[#16161a] border border-transparent dark:border-[#222228] rounded-lg p-2.5">
             <span>Demo credentials:</span>
-            <span className="font-mono bg-zinc-200 px-1 py-0.5 rounded font-bold">admin / openskills2026</span>
+            <span className="font-mono bg-zinc-200 dark:bg-[#22222a] text-zinc-700 dark:text-zinc-300 px-1 py-0.5 rounded font-bold">admin / openskills2026</span>
           </div>
 
           <div className="flex gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="w-1/2 h-9 p-2 border border-zinc-200 hover:bg-zinc-50 rounded-md text-xs font-semibold cursor-pointer"
+              className="w-1/2 h-9 p-2 border border-zinc-200 dark:border-[#222228] hover:bg-zinc-50 dark:hover:bg-[#1c1c22] bg-[#ffffff] dark:bg-[#16161a] text-zinc-700 dark:text-zinc-300 rounded-md text-xs font-semibold cursor-pointer transition-colors"
             >
               Exit Console
             </button>
             <button
               type="submit"
-              className="w-1/2 h-9 p-2 bg-zinc-950 text-white rounded-md text-xs font-semibold hover:bg-zinc-850 cursor-pointer"
+              className="w-1/2 h-9 p-2 bg-blue-600 text-white rounded-md text-xs font-semibold hover:bg-blue-700 cursor-pointer transition-colors shadow-md shadow-blue-600/10"
             >
               Unlock Terminal
             </button>
@@ -2237,7 +2237,7 @@ export default function AdminContentEditor({
 
 
   return (
-    <div className="w-full bg-zinc-50 h-full overflow-hidden flex select-none font-sans relative">
+    <div className="w-full bg-[#fafafa] dark:bg-[#09090b] h-screen overflow-hidden flex select-none font-sans relative text-zinc-900 dark:text-zinc-100">
 
       {/* Toast Notice rendering */}
       {toastMessage && (
@@ -2248,31 +2248,31 @@ export default function AdminContentEditor({
       )}
 
       {/* SIDEBAR NAVIGATION PANEL */}
-      <aside className="w-64 border-r border-zinc-200 bg-white flex flex-col shrink-0">
+      <aside className="w-64 border-r border-zinc-200 dark:border-[#1a1a20] bg-[#ffffff] dark:bg-[#0c0c0e] flex flex-col shrink-0">
 
         {/* Branding header in workspace */}
-        <div className="h-14 px-4 border-b border-zinc-150 flex items-center bg-zinc-50/50">
+        <div className="h-14 px-4 border-b border-zinc-150 dark:border-[#1a1a20] flex items-center bg-[#fcfcfd] dark:bg-[#0c0c0e]">
           <div className="flex items-center space-x-1.5 min-w-0">
-            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-zinc-950 text-[10px] text-white font-bold font-mono">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-blue-600 text-[10px] text-white font-bold font-mono">
               OS
             </span>
-            <span className="text-xs font-extrabold tracking-tight text-zinc-900 font-sans truncate">
+            <span className="text-xs font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100 font-sans truncate">
               openSkills CMS
             </span>
           </div>
         </div>
 
         {/* Profile metadata bar */}
-        <div className="h-10 px-3 border-b border-zinc-100 flex items-center justify-between text-[11px]">
+        <div className="h-10 px-3 border-b border-zinc-100 dark:border-[#1a1a20] flex items-center justify-between text-[11px]">
           <div className="flex items-center space-x-2">
-            <div className="h-5 w-5 rounded-full bg-zinc-950 flex items-center justify-center font-bold text-[9px] text-yellow-500 uppercase">
+            <div className="h-5 w-5 rounded-full bg-blue-600 flex items-center justify-center font-bold text-[9px] text-yellow-500 uppercase">
               A
             </div>
-            <span className="font-semibold text-zinc-700 truncate max-w-[120px]">admin@openskills.in</span>
+            <span className="font-semibold text-zinc-700 dark:text-zinc-300 truncate max-w-[120px]">admin@openskills.in</span>
           </div>
           <button
             onClick={handleAdminLogout}
-            className="text-[10px] text-red-500 hover:underline font-semibold"
+            className="text-[10px] text-red-500 hover:text-red-400 hover:underline font-semibold cursor-pointer"
           >
             Sign out
           </button>
@@ -2280,59 +2280,59 @@ export default function AdminContentEditor({
 
         {/* Categories / Organization Filters */}
         <div className="p-3">
-          <div className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 mb-2 px-1">
+          <div className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-550 mb-2 px-1">
             Library Catalog Filters
           </div>
-          <nav className="space-y-0.5 text-xs text-zinc-700">
+          <nav className="space-y-0.5 text-xs text-zinc-700 dark:text-zinc-300">
             <button
               onClick={() => setSidebarFilter('all')}
-              className={`w-full flex items-center justify-between p-2 rounded-md ${sidebarFilter === 'all' ? 'bg-zinc-100 font-bold text-zinc-950' : 'hover:bg-zinc-50'
+              className={`w-full flex items-center justify-between p-2 rounded-md cursor-pointer ${sidebarFilter === 'all' ? 'bg-zinc-100 dark:bg-[#1a1a20] font-bold text-zinc-950 dark:text-white' : 'hover:bg-zinc-50 dark:hover:bg-[#141418]'
                 }`}
             >
               <span className="flex items-center"><LayoutGrid className="mr-2 h-3.5 w-3.5 text-zinc-400" /> All Curated Files</span>
-              <span className="font-mono text-[10px] text-zinc-450 bg-zinc-100 px-1.5 rounded">{contents.length}</span>
+              <span className="font-mono text-[10px] text-zinc-450 dark:text-zinc-400 bg-zinc-100 dark:bg-[#202028] px-1.5 rounded">{contents.length}</span>
             </button>
 
             <button
               onClick={() => setSidebarFilter('drafts')}
-              className={`w-full flex items-center justify-between p-2 rounded-md ${sidebarFilter === 'drafts' ? 'bg-zinc-100 font-bold text-zinc-950' : 'hover:bg-zinc-50'
+              className={`w-full flex items-center justify-between p-2 rounded-md cursor-pointer ${sidebarFilter === 'drafts' ? 'bg-zinc-100 dark:bg-[#1a1a20] font-bold text-zinc-950 dark:text-white' : 'hover:bg-zinc-50 dark:hover:bg-[#141418]'
                 }`}
             >
               <span className="flex items-center"><Edit3 className="mr-2 h-3.5 w-3.5 text-orange-500" /> Drafts Queue</span>
-              <span className="font-mono text-[10px] text-zinc-450 bg-zinc-100 px-1.5 rounded">{contents.filter(c => c.status === 'Draft').length}</span>
+              <span className="font-mono text-[10px] text-zinc-450 dark:text-zinc-400 bg-zinc-100 dark:bg-[#202028] px-1.5 rounded">{contents.filter(c => c.status === 'Draft').length}</span>
             </button>
 
             <button
               onClick={() => setSidebarFilter('published')}
-              className={`w-full flex items-center justify-between p-2 rounded-md ${sidebarFilter === 'published' ? 'bg-zinc-100 font-bold text-zinc-950' : 'hover:bg-zinc-50'
+              className={`w-full flex items-center justify-between p-2 rounded-md cursor-pointer ${sidebarFilter === 'published' ? 'bg-zinc-100 dark:bg-[#1a1a20] font-bold text-zinc-950 dark:text-white' : 'hover:bg-zinc-50 dark:hover:bg-[#141418]'
                 }`}
             >
               <span className="flex items-center"><Globe className="mr-2 h-3.5 w-3.5 text-emerald-500" /> Live Published</span>
-              <span className="font-mono text-[10px] text-zinc-455 bg-zinc-100 px-1.5 rounded">{contents.filter(c => c.status === 'Published').length}</span>
+              <span className="font-mono text-[10px] text-zinc-455 dark:text-zinc-400 bg-zinc-100 dark:bg-[#202028] px-1.5 rounded">{contents.filter(c => c.status === 'Published').length}</span>
             </button>
 
             <button
               onClick={() => setSidebarFilter('archived')}
-              className={`w-full flex items-center justify-between p-2 rounded-md ${sidebarFilter === 'archived' ? 'bg-zinc-100 font-bold text-zinc-950' : 'hover:bg-zinc-50'
+              className={`w-full flex items-center justify-between p-2 rounded-md cursor-pointer ${sidebarFilter === 'archived' ? 'bg-zinc-100 dark:bg-[#1a1a20] font-bold text-zinc-950 dark:text-white' : 'hover:bg-zinc-50 dark:hover:bg-[#141418]'
                 }`}
             >
               <span className="flex items-center"><Lock className="mr-2 h-3.5 w-3.5 text-zinc-400" /> Archived Vault</span>
-              <span className="font-mono text-[10px] text-zinc-450 bg-zinc-100 px-1.5 rounded">{contents.filter(c => c.status === 'Archived').length}</span>
+              <span className="font-mono text-[10px] text-zinc-450 dark:text-zinc-400 bg-zinc-100 dark:bg-[#202028] px-1.5 rounded">{contents.filter(c => c.status === 'Archived').length}</span>
             </button>
           </nav>
         </div>
 
         {/* Content Type Filter sets */}
-        <div className="p-3 border-t border-zinc-100">
-          <div className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 mb-1.5 px-1">
+        <div className="p-3 border-t border-zinc-100 dark:border-[#1a1a20]">
+          <div className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-550 mb-1.5 px-1">
             Filter by Type
           </div>
-          <div className="space-y-0.5 text-xs text-zinc-600">
+          <div className="space-y-0.5 text-xs text-zinc-600 dark:text-zinc-400">
             {['Skill', 'GitHub Repository', 'Prompt', 'Tutorial', 'Collection', 'Resource', 'Category'].map((type) => (
               <button
                 key={type}
                 onClick={() => setSidebarFilter(type)}
-                className={`w-full flex items-center p-1.5 rounded-md text-left ${sidebarFilter === type ? 'bg-zinc-100 font-bold text-zinc-900' : 'hover:bg-zinc-50'
+                className={`w-full flex items-center p-1.5 rounded-md text-left cursor-pointer ${sidebarFilter === type ? 'bg-zinc-100 dark:bg-[#1a1a20] font-bold text-zinc-900 dark:text-white' : 'hover:bg-zinc-50 dark:hover:bg-[#141418]'
                   }`}
               >
                 <ChevronRight className="h-3 w-3 text-zinc-300 mr-1" />
@@ -2343,25 +2343,25 @@ export default function AdminContentEditor({
         </div>
 
         {/* Active documents listing space */}
-        <div className="flex-1 flex flex-col min-h-0 border-t border-zinc-100 bg-zinc-50/20">
-          <div className="p-3 border-b border-zinc-100 flex items-center justify-between gap-2 shrink-0 bg-white">
+        <div className="flex-1 flex flex-col min-h-0 border-t border-zinc-100 dark:border-[#1a1a20] bg-zinc-50/20 dark:bg-transparent">
+          <div className="p-3 border-b border-zinc-100 dark:border-[#1a1a20] flex items-center justify-between gap-2 shrink-0 bg-[#ffffff] dark:bg-[#0c0c0e]">
             <div className="relative flex-1">
               <input
                 type="text"
                 value={cmsSearch}
                 onChange={(e) => setCmsSearch(e.target.value)}
                 placeholder="Lookup records..."
-                className="w-full text-[11px] h-8 pl-6 bg-white border border-zinc-250 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md"
+                className="w-full text-[11px] h-8 pl-6 bg-[#ffffff] dark:bg-[#16161a] border border-zinc-250 dark:border-[#22222a] text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md animate-all"
               />
               <Search className="absolute left-2 top-2.5 h-3.5 w-3.5 text-zinc-400" />
             </div>
 
             <button
               onClick={handleCreateNewFolder}
-              className="h-8 px-2 border border-zinc-200 hover:border-zinc-300 bg-zinc-50 hover:bg-zinc-100 rounded-md flex items-center gap-1 text-[10px] font-bold text-zinc-650 cursor-pointer transition-colors"
+              className="h-8 px-2 border border-zinc-200 dark:border-[#222228] hover:border-zinc-300 dark:hover:border-[#2e2e36] bg-[#fafafa] dark:bg-[#16161a] hover:bg-zinc-100 dark:hover:bg-[#202028] rounded-md flex items-center gap-1 text-[10px] font-bold text-zinc-650 dark:text-zinc-300 cursor-pointer transition-colors"
               title="Create New Folder"
             >
-              <FolderPlus className="h-3.5 w-3.5 text-zinc-550" />
+              <FolderPlus className="h-3.5 w-3.5 text-zinc-550 dark:text-zinc-400" />
               <span>+ Folder</span>
             </button>
           </div>
@@ -2376,8 +2376,8 @@ export default function AdminContentEditor({
             </div>
 
             {/* 2. Root/Unassigned Files Render */}
-            <div className="space-y-0.5 pt-1.5 border-t border-zinc-200">
-              <div className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 px-1.5 py-0.5">
+            <div className="space-y-0.5 pt-1.5 border-t border-zinc-200 dark:border-[#1a1a20]">
+              <div className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-550 px-1.5 py-0.5">
                 Root Directory
               </div>
               {filteredContents.filter(c => !c.folderId || !folders.some(f => f.id === c.folderId)).map(asset =>
@@ -2398,22 +2398,22 @@ export default function AdminContentEditor({
       </aside>
 
       {/* CORE WORKSPACE PANEL */}
-      <main className="flex-1 flex flex-col bg-white overflow-hidden">
+      <main className="flex-1 flex flex-col bg-[#ffffff] dark:bg-[#0c0c0e] overflow-hidden">
         {contents.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center p-8 bg-zinc-50/10 text-center">
-            <div className="max-w-md p-8 bg-white border border-zinc-200 rounded-2xl shadow-sm flex flex-col items-center space-y-4">
-              <div className="h-12 w-12 rounded-full bg-zinc-50 border border-zinc-150 flex items-center justify-center text-zinc-400">
+          <div className="flex-1 flex flex-col items-center justify-center p-8 bg-[#fafafa]/50 dark:bg-[#0c0c0e]/50 text-center">
+            <div className="max-w-md p-8 bg-[#ffffff] dark:bg-[#121214] border border-zinc-200 dark:border-[#222228] rounded-2xl shadow-sm flex flex-col items-center space-y-4">
+              <div className="h-12 w-12 rounded-full bg-[#fafafa] dark:bg-[#16161a] border border-zinc-150 dark:border-[#222228] flex items-center justify-center text-zinc-400 dark:text-zinc-500">
                 <FileText className="h-6 w-6" />
               </div>
-              <h3 className="text-sm font-bold text-zinc-950">Your CMS catalog is empty</h3>
-              <p className="text-xs text-zinc-500 leading-relaxed">
+              <h3 className="text-sm font-bold text-zinc-950 dark:text-zinc-100">Your CMS catalog is empty</h3>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
                 There are no content items in your CMS database. Create a new draft asset to start writing documentation, prompts, or integrations.
               </p>
               <div className="relative">
                 <button
                   type="button"
                   onClick={() => setIsEmptyCreateDropdownOpen(!isEmptyCreateDropdownOpen)}
-                  className="px-4 py-2 bg-zinc-950 text-white rounded-md text-xs font-semibold hover:bg-zinc-800 transition-colors cursor-pointer flex items-center gap-1.5 shadow-sm"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5 shadow-md shadow-blue-600/10"
                 >
                   <Plus className="h-3.5 w-3.5" />
                   <span>Create New Draft</span>
@@ -2426,14 +2426,14 @@ export default function AdminContentEditor({
                       className="fixed inset-0 z-40 bg-transparent"
                       onClick={() => setIsEmptyCreateDropdownOpen(false)}
                     />
-                    <div className="absolute top-11 left-1/2 -translate-x-1/2 w-48 bg-white border border-zinc-200 rounded-md shadow-lg py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                    <div className="absolute top-11 left-1/2 -translate-x-1/2 w-48 bg-[#ffffff] dark:bg-[#121214] border border-zinc-200 dark:border-[#222228] rounded-md shadow-lg py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
                       <button
                         type="button"
                         onClick={() => {
                           handleCreateNewContentAsset('GitHub Repository');
                           setIsEmptyCreateDropdownOpen(false);
                         }}
-                        className="w-full text-left px-3 py-2 text-xs text-zinc-700 hover:bg-zinc-50 flex items-center gap-2 cursor-pointer transition-colors"
+                        className="w-full text-left px-3 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-[#1c1c22] flex items-center gap-2 cursor-pointer transition-colors"
                       >
                         <GitFork className="h-3.5 w-3.5 text-zinc-400" />
                         <span>Create Skill</span>
@@ -2444,7 +2444,7 @@ export default function AdminContentEditor({
                           handleCreateNewContentAsset('Category');
                           setIsEmptyCreateDropdownOpen(false);
                         }}
-                        className="w-full text-left px-3 py-2 text-xs text-zinc-700 hover:bg-zinc-50 flex items-center gap-2 cursor-pointer transition-colors"
+                        className="w-full text-left px-3 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-[#1c1c22] flex items-center gap-2 cursor-pointer transition-colors"
                       >
                         <Tag className="h-3.5 w-3.5 text-zinc-400" />
                         <span>Create Category</span>
@@ -2455,7 +2455,7 @@ export default function AdminContentEditor({
                           handleCreateNewContentAsset('Collection');
                           setIsEmptyCreateDropdownOpen(false);
                         }}
-                        className="w-full text-left px-3 py-2 text-xs text-zinc-700 hover:bg-zinc-50 flex items-center gap-2 cursor-pointer transition-colors"
+                        className="w-full text-left px-3 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-[#1c1c22] flex items-center gap-2 cursor-pointer transition-colors"
                       >
                         <Layers className="h-3.5 w-3.5 text-zinc-400" />
                         <span>Create Collection</span>
@@ -2466,7 +2466,7 @@ export default function AdminContentEditor({
                           handleCreateNewContentAsset('Resource');
                           setIsEmptyCreateDropdownOpen(false);
                         }}
-                        className="w-full text-left px-3 py-2 text-xs text-zinc-700 hover:bg-zinc-50 flex items-center gap-2 cursor-pointer transition-colors"
+                        className="w-full text-left px-3 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-[#1c1c22] flex items-center gap-2 cursor-pointer transition-colors"
                       >
                         <ExternalLink className="h-3.5 w-3.5 text-zinc-400" />
                         <span>Create Resource</span>
@@ -2477,7 +2477,7 @@ export default function AdminContentEditor({
                           handleCreateNewContentAsset('Prompt');
                           setIsEmptyCreateDropdownOpen(false);
                         }}
-                        className="w-full text-left px-3 py-2 text-xs text-zinc-700 hover:bg-zinc-50 flex items-center gap-2 cursor-pointer transition-colors"
+                        className="w-full text-left px-3 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-[#1c1c22] flex items-center gap-2 cursor-pointer transition-colors"
                       >
                         <Sparkles className="h-3.5 w-3.5 text-zinc-400" />
                         <span>Create Prompt</span>
@@ -2491,18 +2491,18 @@ export default function AdminContentEditor({
         ) : (
           <>
             {/* TOP TOOLBAR */}
-            <header className="h-14 border-b border-zinc-200 px-4 flex items-center justify-between bg-white shrink-0">
+            <header className="h-14 border-b border-zinc-200 dark:border-[#1a1a20] px-4 flex items-center justify-between bg-[#ffffff] dark:bg-[#121214] shrink-0">
 
               {/* Left panel: Type selection dropdown */}
               <div className="flex items-center space-x-2">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 hidden lg:inline">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-550 hidden lg:inline">
                   Type:
                 </label>
                 <div className="relative inline-flex items-center">
                   <select
                     value={formType}
                     onChange={(e) => handleFieldChange(() => setFormType(e.target.value as any))}
-                    className="bg-zinc-50 border border-zinc-200 hover:border-zinc-300 rounded-md pl-2 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none min-w-[140px]"
+                    className="bg-[#fafafa] dark:bg-[#16161a] border border-zinc-200 dark:border-[#22222a] hover:border-zinc-300 dark:hover:border-[#2e2e36] text-zinc-800 dark:text-zinc-200 rounded-md pl-2 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none min-w-[140px]"
                   >
                     <option value="Skill">Claude Skill</option>
                     <option value="GitHub Repository">GitHub Repository</option>
@@ -2526,7 +2526,7 @@ export default function AdminContentEditor({
                   <select
                     value={formStatus}
                     onChange={(e) => handleFieldChange(() => setFormStatus(e.target.value as any))}
-                    className="bg-transparent text-[11px] font-bold text-zinc-500 uppercase pr-6 pl-1 focus:outline-none cursor-pointer appearance-none"
+                    className="bg-transparent text-[11px] font-bold text-zinc-500 dark:text-zinc-400 uppercase pr-6 pl-1 focus:outline-none cursor-pointer appearance-none"
                   >
                     <option value="Draft">Draft Mode</option>
                     <option value="Review">In Review</option>
@@ -2552,7 +2552,7 @@ export default function AdminContentEditor({
                     setFormMarkdown(updatedMarkdown);
                   })}
                   placeholder="Give this content asset a title..."
-                  className="w-full text-center h-8 bg-zinc-50 focus:bg-white border-0 hover:border-zinc-200 focus:outline-none text-xs font-bold text-zinc-800 placeholder-zinc-400 font-mono rounded"
+                  className="w-full text-center h-8 bg-[#fafafa] dark:bg-[#16161a] focus:bg-[#ffffff] dark:focus:bg-[#1e1e24] border border-zinc-250 dark:border-[#222228] focus:border-zinc-300 dark:focus:border-[#2a2a32] focus:outline-none text-xs font-bold text-zinc-800 dark:text-zinc-100 placeholder-zinc-400 font-mono rounded transition-all"
                 />
               </div>
 
@@ -2560,24 +2560,24 @@ export default function AdminContentEditor({
               <div className="flex items-center space-x-2 font-sans">
 
                 {/* View Mode Switches */}
-                <div className="flex items-center bg-zinc-100 p-1 border border-zinc-150 rounded-lg text-zinc-400">
+                <div className="flex items-center bg-[#f0f0f2] dark:bg-[#16161a] p-1 border border-zinc-150 dark:border-[#222228] rounded-lg text-zinc-400">
                   <button
                     onClick={() => setViewMode('editor')}
-                    className={`p-1 rounded cursor-pointer ${viewMode === 'editor' ? 'bg-white text-zinc-800 shadow-sm' : 'hover:text-zinc-650'}`}
+                    className={`p-1 rounded cursor-pointer ${viewMode === 'editor' ? 'bg-[#ffffff] dark:bg-[#222228] text-zinc-800 dark:text-zinc-200 shadow-sm' : 'text-zinc-400 dark:text-zinc-550 hover:text-zinc-650 dark:hover:text-zinc-300'}`}
                     title="Editor Only View"
                   >
                     <Edit3 className="h-3 w-3" />
                   </button>
                   <button
                     onClick={() => setViewMode('split')}
-                    className={`p-1 rounded cursor-pointer ${viewMode === 'split' ? 'bg-white text-zinc-800 shadow-sm' : 'hover:text-zinc-650'}`}
+                    className={`p-1 rounded cursor-pointer ${viewMode === 'split' ? 'bg-[#ffffff] dark:bg-[#222228] text-zinc-800 dark:text-zinc-200 shadow-sm' : 'text-zinc-400 dark:text-zinc-550 hover:text-zinc-650 dark:hover:text-zinc-300'}`}
                     title="Split Side-by-Side Live View"
                   >
                     <Columns className="h-3 w-3" />
                   </button>
                   <button
                     onClick={() => setViewMode('preview')}
-                    className={`p-1 rounded cursor-pointer ${viewMode === 'preview' ? 'bg-white text-zinc-800 shadow-sm' : 'hover:text-zinc-650'}`}
+                    className={`p-1 rounded cursor-pointer ${viewMode === 'preview' ? 'bg-[#ffffff] dark:bg-[#222228] text-zinc-800 dark:text-zinc-200 shadow-sm' : 'text-zinc-400 dark:text-zinc-550 hover:text-zinc-650 dark:hover:text-zinc-300'}`}
                     title="Preview Only Mode"
                   >
                     <Eye className="h-3 w-3" />
@@ -2589,9 +2589,9 @@ export default function AdminContentEditor({
                 {/* Save trigger */}
                 <button
                   onClick={handleCmsSaveRaw}
-                  className="flex items-center space-x-1.5 h-8 px-3 rounded-md bg-zinc-950 text-white hover:bg-zinc-800 text-xs font-bold cursor-pointer transition-all shrink-0"
+                  className="flex items-center space-x-1.5 h-8 px-3 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold cursor-pointer transition-all shrink-0 shadow-md shadow-blue-600/10"
                 >
-                  <Save className="h-3 w-3 text-emerald-400" />
+                  <Save className="h-3 w-3 text-white" />
                   <span className="hidden sm:inline">Sync & Publish</span>
                 </button>
 
@@ -2602,20 +2602,20 @@ export default function AdminContentEditor({
                       const el = document.getElementById('cms-toolbar-actions-dropdown');
                       if (el) el.classList.toggle('hidden');
                     }}
-                    className="p-1 px-2 border border-zinc-200 rounded-md hover:bg-zinc-50 text-zinc-550 h-8 text-xs font-semibold select-none flex items-center justify-center shrink-0 cursor-pointer"
+                    className="p-1 px-2 border border-zinc-200 dark:border-[#222228] rounded-md bg-[#ffffff] dark:bg-[#16161a] hover:bg-zinc-50 dark:hover:bg-[#202028] text-zinc-650 dark:text-zinc-300 h-8 text-xs font-semibold select-none flex items-center justify-center shrink-0 cursor-pointer transition-colors"
                   >
                     Actions
                   </button>
                   <div
                     id="cms-toolbar-actions-dropdown"
-                    className="absolute right-0 mt-1.5 w-40 rounded-md bg-white border border-zinc-200 shadow-lg ring-1 ring-zinc-950/5 p-1 z-40 text-left hidden font-medium text-xs text-zinc-650"
+                    className="absolute right-0 mt-1.5 w-40 rounded-md bg-[#ffffff] dark:bg-[#16161a] border border-zinc-200 dark:border-[#222228] shadow-lg p-1 z-40 text-left hidden font-medium text-xs text-zinc-650 dark:text-zinc-300"
                   >
                     <button
                       onClick={() => {
                         handleDuplicateCurrent();
                         document.getElementById('cms-toolbar-actions-dropdown')?.classList.add('hidden');
                       }}
-                      className="w-full flex items-center px-2 py-1.5 hover:bg-zinc-50 text-zinc-700 rounded-md hover:text-zinc-950 text-left cursor-pointer"
+                      className="w-full flex items-center px-2 py-1.5 hover:bg-zinc-50 dark:hover:bg-[#202028] text-zinc-700 dark:text-zinc-300 rounded-md hover:text-zinc-950 dark:hover:text-white text-left cursor-pointer"
                     >
                       <Copy className="h-3.5 w-3.5 mr-2 text-zinc-400" />
                       <span>Duplicate Asset</span>
@@ -2625,7 +2625,7 @@ export default function AdminContentEditor({
                         setRevisionSidebarOpen(true);
                         document.getElementById('cms-toolbar-actions-dropdown')?.classList.add('hidden');
                       }}
-                      className="w-full flex items-center px-2 py-1.5 hover:bg-zinc-50 text-zinc-700 rounded-md hover:text-zinc-950 text-left cursor-pointer"
+                      className="w-full flex items-center px-2 py-1.5 hover:bg-zinc-50 dark:hover:bg-[#202028] text-zinc-700 dark:text-zinc-300 rounded-md hover:text-zinc-950 dark:hover:text-white text-left cursor-pointer"
                     >
                       <History className="h-3.5 w-3.5 mr-2 text-indigo-500" />
                       <span>Revisions History</span>
@@ -2635,7 +2635,7 @@ export default function AdminContentEditor({
                         handleDeleteCurrent();
                         document.getElementById('cms-toolbar-actions-dropdown')?.classList.add('hidden');
                       }}
-                      className="w-full flex items-center px-2 py-1.5 hover:bg-red-50 text-red-650 hover:text-red-750 rounded-md text-left cursor-pointer border-t border-zinc-100"
+                      className="w-full flex items-center px-2 py-1.5 hover:bg-red-50 dark:hover:bg-red-950/20 text-red-650 hover:text-red-750 rounded-md text-left cursor-pointer border-t border-zinc-100 dark:border-zinc-800"
                     >
                       <Trash2 className="h-3.5 w-3.5 mr-2 text-red-400" />
                       <span>Move to Trash</span>
@@ -2646,7 +2646,7 @@ export default function AdminContentEditor({
             </header>
 
             {/* WORKSPACE SUB-METADATA TOOLBAR */}
-            <div className="h-10 bg-zinc-50/70 border-b border-zinc-150 px-4 flex items-center justify-between text-[11px] text-zinc-500 shrink-0 select-none">
+            <div className="h-10 bg-[#fafafa] dark:bg-[#0c0c0e] border-b border-zinc-150 dark:border-[#1a1a20] px-4 flex items-center justify-between text-[11px] text-zinc-500 dark:text-zinc-400 shrink-0 select-none">
 
               {/* File category and visibility details */}
               <div className="flex items-center space-x-3.5">
@@ -2657,7 +2657,7 @@ export default function AdminContentEditor({
                     <select
                       value={formCategory}
                       onChange={(e) => handleFieldChange(() => setFormCategory(e.target.value))}
-                      className="bg-transparent border-0 font-bold text-zinc-700 py-0 pl-1 pr-6 focus:outline-none focus:ring-0 cursor-pointer appearance-none text-[11px]"
+                      className="bg-transparent border-0 font-bold text-zinc-700 dark:text-zinc-200 py-0 pl-1 pr-6 focus:outline-none focus:ring-0 cursor-pointer appearance-none text-[11px]"
                     >
                       {categories.map(cat => (
                         <option key={cat.id} value={cat.id}>{cat.name}</option>
@@ -2676,7 +2676,7 @@ export default function AdminContentEditor({
                     <select
                       value={formVisibility}
                       onChange={(e) => handleFieldChange(() => setFormVisibility(e.target.value as any))}
-                      className="bg-transparent border-0 font-bold text-zinc-700 py-0 pl-1 pr-6 focus:outline-none focus:ring-0 cursor-pointer text-[10px] appearance-none"
+                      className="bg-transparent border-0 font-bold text-zinc-700 dark:text-zinc-200 py-0 pl-1 pr-6 focus:outline-none focus:ring-0 cursor-pointer text-[10px] appearance-none"
                     >
                       <option value="Public">Public Access</option>
                       <option value="Private">Private Admin Only</option>
@@ -2692,7 +2692,7 @@ export default function AdminContentEditor({
                   <button
                     type="button"
                     onClick={() => setIsToolbarCreateDropdownOpen(!isToolbarCreateDropdownOpen)}
-                    className="flex items-center justify-center space-x-1.5 h-7 px-2.5 bg-zinc-950 text-white rounded-md text-[10px] font-semibold hover:bg-zinc-800 cursor-pointer transition-colors"
+                    className="flex items-center justify-center space-x-1.5 h-7 px-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-[10px] font-semibold cursor-pointer transition-colors shadow-sm"
                     title="Create a new draft asset"
                   >
                     <Plus className="h-3 w-3" />
@@ -2706,14 +2706,14 @@ export default function AdminContentEditor({
                         className="fixed inset-0 z-40 bg-transparent"
                         onClick={() => setIsToolbarCreateDropdownOpen(false)}
                       />
-                      <div className="absolute top-8 left-0 w-44 bg-white border border-zinc-200 rounded-md shadow-lg py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                      <div className="absolute top-8 left-0 w-44 bg-[#ffffff] dark:bg-[#16161a] border border-zinc-200 dark:border-[#222228] rounded-md shadow-lg py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
                         <button
                           type="button"
                           onClick={() => {
                             handleCreateNewContentAsset('GitHub Repository');
                             setIsToolbarCreateDropdownOpen(false);
                           }}
-                          className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
+                          className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-[#202028] flex items-center gap-1.5 cursor-pointer transition-colors"
                         >
                           <GitFork className="h-3 w-3 text-zinc-400" />
                           <span>Create Skill</span>
@@ -2724,7 +2724,7 @@ export default function AdminContentEditor({
                             handleCreateNewContentAsset('Category');
                             setIsToolbarCreateDropdownOpen(false);
                           }}
-                          className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
+                          className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-[#202028] flex items-center gap-1.5 cursor-pointer transition-colors"
                         >
                           <Tag className="h-3 w-3 text-zinc-400" />
                           <span>Create Category</span>
@@ -2735,7 +2735,7 @@ export default function AdminContentEditor({
                             handleCreateNewContentAsset('Collection');
                             setIsToolbarCreateDropdownOpen(false);
                           }}
-                          className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
+                          className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-[#202028] flex items-center gap-1.5 cursor-pointer transition-colors"
                         >
                           <Layers className="h-3 w-3 text-zinc-400" />
                           <span>Create Collection</span>
@@ -2746,7 +2746,7 @@ export default function AdminContentEditor({
                             handleCreateNewContentAsset('Resource');
                             setIsToolbarCreateDropdownOpen(false);
                           }}
-                          className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
+                          className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-[#202028] flex items-center gap-1.5 cursor-pointer transition-colors"
                         >
                           <ExternalLink className="h-3 w-3 text-zinc-400" />
                           <span>Create Resource</span>
@@ -2757,7 +2757,7 @@ export default function AdminContentEditor({
                             handleCreateNewContentAsset('Prompt');
                             setIsToolbarCreateDropdownOpen(false);
                           }}
-                          className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
+                          className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-[#202028] flex items-center gap-1.5 cursor-pointer transition-colors"
                         >
                           <Sparkles className="h-3 w-3 text-zinc-400" />
                           <span>Create Prompt</span>
@@ -2795,7 +2795,7 @@ export default function AdminContentEditor({
                         }
                       }
                     }}
-                    className="flex items-center space-x-1 hover:bg-zinc-250 active:bg-zinc-200/60 hover:bg-zinc-200 px-1.5 py-0.5 rounded cursor-pointer transition-colors text-zinc-650 text-zinc-600 hover:text-zinc-900"
+                    className="flex items-center space-x-1 hover:bg-zinc-200 dark:hover:bg-[#202028] px-1.5 py-0.5 rounded cursor-pointer transition-colors text-zinc-650 dark:text-zinc-400 text-zinc-600 hover:text-zinc-900 dark:hover:text-white"
                     title="Rename active file"
                   >
                     <Edit3 className="h-3 w-3" />
@@ -2814,7 +2814,7 @@ export default function AdminContentEditor({
                         });
                       }
                     }}
-                    className="flex items-center space-x-1 hover:bg-zinc-250 active:bg-zinc-200/60 hover:bg-zinc-200 px-1.5 py-0.5 rounded cursor-pointer transition-colors text-zinc-650 text-zinc-600 hover:text-zinc-900"
+                    className="flex items-center space-x-1 hover:bg-zinc-200 dark:hover:bg-[#202028] px-1.5 py-0.5 rounded cursor-pointer transition-colors text-zinc-650 dark:text-zinc-400 text-zinc-600 hover:text-zinc-900 dark:hover:text-white"
                     title="Move active file to folder"
                   >
                     <ArrowUpDown className="h-3 w-3" />
@@ -2831,7 +2831,7 @@ export default function AdminContentEditor({
                         }
                       }
                     }}
-                    className="flex items-center space-x-1 hover:bg-red-50 active:bg-red-100 px-1.5 py-0.5 rounded cursor-pointer transition-colors text-red-500 hover:text-red-600"
+                    className="flex items-center space-x-1 hover:bg-red-50 dark:hover:bg-red-950/20 px-1.5 py-0.5 rounded cursor-pointer transition-colors text-red-500 hover:text-red-650"
                     title="Delete active file"
                   >
                     <Trash className="h-3 w-3" />
@@ -2846,7 +2846,7 @@ export default function AdminContentEditor({
                 {autosaveStatus === 'saving' && <span className="flex h-2 w-2 rounded-full bg-blue-500 animate-ping" />}
                 {autosaveStatus === 'saved' && <span className="flex h-2 w-2 rounded-full bg-emerald-500" />}
 
-                <span className="font-semibold text-zinc-400">
+                <span className="font-semibold text-zinc-400 dark:text-zinc-500">
                   {autosaveStatus === 'unsaved' && 'Unsaved modifications'}
                   {autosaveStatus === 'saving' && 'Syncing client draft...'}
                   {autosaveStatus === 'saved' && `Cloud Synced at ${lastSavedTime}`}
@@ -2859,41 +2859,41 @@ export default function AdminContentEditor({
 
               {/* EDITOR AREA (LEFT/SPLIT PANEL) */}
               {(viewMode === 'editor' || viewMode === 'split') && (
-                <div className="flex-1 flex flex-col border-r border-zinc-200 bg-white min-w-0 h-full relative">
+                <div className="flex-1 flex flex-col border-r border-zinc-200 dark:border-[#1a1a20] bg-[#ffffff] dark:bg-[#121214] min-w-0 h-full relative">
 
-                  <div className="p-4.5 border-b border-zinc-100 bg-zinc-50/10 space-y-3 shrink-0 max-h-[320px] overflow-y-auto">
+                  <div className="p-4.5 border-b border-zinc-100 dark:border-[#1a1a20] bg-[#fafafa] dark:bg-[#0c0c0e] space-y-3 shrink-0 max-h-[320px] overflow-y-auto">
                     <input
                       type="text"
                       value={formDescription}
                       onChange={(e) => handleFieldChange(() => setFormDescription(e.target.value))}
                       placeholder="Insert bullet points summarizing this tool integration capability..."
-                      className="w-full text-xs font-medium text-zinc-600 bg-transparent border-b border-transparent hover:border-zinc-150 focus:border-blue-600 focus:outline-none pb-1 font-sans"
+                      className="w-full text-xs font-medium text-zinc-600 dark:text-zinc-300 bg-transparent border-b border-transparent hover:border-zinc-150 dark:hover:border-zinc-800 focus:border-blue-600 dark:focus:border-blue-500 focus:outline-none pb-1 font-sans"
                     />
 
                     {/* Sub-block based on active Content Type */}
-                    <div className="border border-zinc-200/80 rounded-lg p-3 bg-white space-y-2 text-xs">
-                      <div className="flex items-center justify-between font-bold text-zinc-400 text-[10px] uppercase mb-1">
+                    <div className="border border-zinc-200/80 dark:border-[#222228] rounded-lg p-3 bg-[#ffffff] dark:bg-[#16161a] space-y-2 text-xs">
+                      <div className="flex items-center justify-between font-bold text-zinc-400 dark:text-zinc-500 text-[10px] uppercase mb-1">
                         <span>{formType} Rich attributes & components</span>
-                        <span className="text-[9px] bg-indigo-50 text-indigo-700 px-1 py-0.5 rounded font-bold font-mono">Custom Input Node</span>
+                        <span className="text-[9px] bg-indigo-50/10 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-200/20 px-1 py-0.5 rounded font-bold font-mono">Custom Input Node</span>
                       </div>
 
                       {/* GitHub Repo Details form */}
                       {(formType === 'Skill' || formType === 'GitHub Repository') && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           <div className="space-y-1">
-                            <label className="text-[10px] font-bold text-zinc-500">Repository URL</label>
+                            <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400">Repository URL</label>
                             <div className="flex gap-1.5">
                               <input
                                 type="text"
                                 value={formGithubUrl}
                                 onChange={(e) => handleFieldChange(() => setFormGithubUrl(e.target.value))}
                                 placeholder="https://github.com/anthropics/skills/blob/main/skills/algorithmic-art/SKILL.md"
-                                className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                                className="bg-[#fafafa] dark:bg-[#1c1c22] px-2 py-1 border border-zinc-200 dark:border-[#2a2a32] rounded text-xs w-full text-zinc-800 dark:text-zinc-200 focus:bg-[#ffffff] dark:focus:bg-[#16161a] focus:outline-none"
                               />
                               <button
                                 type="button"
                                 onClick={simulateGithubMetadataFetch}
-                                className="px-2 py-1 bg-zinc-200 hover:bg-zinc-300 rounded text-[10px] font-bold cursor-pointer text-zinc-700 inline-flex items-center gap-1"
+                                className="px-2 py-1 bg-zinc-200 dark:bg-[#2c2c35] hover:bg-zinc-300 dark:hover:bg-[#383842] rounded text-[10px] font-bold cursor-pointer text-zinc-700 dark:text-zinc-200 inline-flex items-center gap-1 border border-transparent dark:border-[#3c3c45]"
                                 title="Auto Fetch stars/forks from api"
                               >
                                 <RefreshCw className="h-3 w-3 shrink-0" />
@@ -2904,30 +2904,30 @@ export default function AdminContentEditor({
 
                           <div className="grid grid-cols-3 gap-1">
                             <div className="space-y-1">
-                              <label className="text-[10px] font-bold text-zinc-500">Stars</label>
+                              <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400">Stars</label>
                               <input
                                 type="number"
                                 value={formGithubStars}
                                 onChange={(e) => handleFieldChange(() => setFormGithubStars(Number(e.target.value)))}
-                                className="bg-zinc-50 px-1 py-1 border border-zinc-200 rounded text-xs w-full text-center"
+                                className="bg-[#fafafa] dark:bg-[#1c1c22] px-1 py-1 border border-zinc-200 dark:border-[#2a2a32] rounded text-xs w-full text-center text-zinc-850 dark:text-zinc-200 focus:outline-none"
                               />
                             </div>
                             <div className="space-y-1">
-                              <label className="text-[10px] font-bold text-zinc-500">Forks</label>
+                              <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400">Forks</label>
                               <input
                                 type="number"
                                 value={formGithubForks}
                                 onChange={(e) => handleFieldChange(() => setFormGithubForks(Number(e.target.value)))}
-                                className="bg-zinc-50 px-1 py-1 border border-zinc-200 rounded text-xs w-full text-center"
+                                className="bg-[#fafafa] dark:bg-[#1c1c22] px-1 py-1 border border-zinc-200 dark:border-[#2a2a32] rounded text-xs w-full text-center text-zinc-850 dark:text-zinc-200 focus:outline-none"
                               />
                             </div>
                             <div className="space-y-1">
-                              <label className="text-[10px] font-bold text-zinc-500">License</label>
+                              <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400">License</label>
                               <input
                                 type="text"
                                 value={formGithubLicense}
                                 onChange={(e) => handleFieldChange(() => setFormGithubLicense(e.target.value))}
-                                className="bg-zinc-50 px-1.5 py-1 border border-zinc-200 rounded text-xs w-full text-center"
+                                className="bg-[#fafafa] dark:bg-[#1c1c22] px-1.5 py-1 border border-zinc-200 dark:border-[#2a2a32] rounded text-xs w-full text-center text-zinc-850 dark:text-zinc-200 focus:outline-none"
                               />
                             </div>
                           </div>
@@ -2943,13 +2943,13 @@ export default function AdminContentEditor({
                               value={formPromptTitle}
                               onChange={(e) => handleFieldChange(() => setFormPromptTitle(e.target.value))}
                               placeholder="Prompt template name..."
-                              className="w-1/2 bg-zinc-50 p-1 px-1.5 border border-zinc-200 rounded text-xs"
+                              className="w-1/2 bg-[#fafafa] dark:bg-[#1c1c22] p-1 px-1.5 border border-zinc-200 dark:border-[#2a2a32] text-zinc-800 dark:text-zinc-200 rounded text-xs focus:outline-none"
                             />
                             <div className="relative w-1/2 inline-flex items-center">
                               <select
                                 value={formPromptCategory}
                                 onChange={(e) => handleFieldChange(() => setFormPromptCategory(e.target.value))}
-                                className="w-full bg-zinc-50 p-1 pl-2 pr-7 border border-zinc-200 rounded text-xs focus:outline-none cursor-pointer appearance-none"
+                                className="w-full bg-[#fafafa] dark:bg-[#1c1c22] border border-zinc-200 dark:border-[#2a2a32] text-zinc-800 dark:text-zinc-200 p-1 pl-2 pr-7 rounded text-xs focus:outline-none cursor-pointer appearance-none"
                               >
                                 <option value="Coding">Coding</option>
                                 <option value="Writing">Writing</option>
@@ -2962,15 +2962,15 @@ export default function AdminContentEditor({
                           </div>
 
                           <div className="space-y-1">
-                            <label className="text-[10px] font-bold text-zinc-450 flex items-center justify-between">
+                            <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 flex items-center justify-between">
                               <span>Prompt Variable Injectors</span>
-                              <span className="text-[9px] text-zinc-400 lowercase">use double curly braces {"{{variable}}"}</span>
+                              <span className="text-[9px] text-zinc-400 dark:text-zinc-550 lowercase">use double curly braces {"{{variable}}"}</span>
                             </label>
-                            <div className="flex flex-wrap items-center gap-1.5 bg-zinc-50 border border-zinc-200 p-1.5 rounded-lg">
+                            <div className="flex flex-wrap items-center gap-1.5 bg-[#fafafa] dark:bg-[#1c1c22] border border-zinc-200 dark:border-[#2a2a32] p-1.5 rounded-lg">
                               {formPromptVariables.map((v) => (
                                 <span
                                   key={v}
-                                  className="font-mono text-[9px] font-semibold text-blue-800 bg-blue-10/10 border border-blue-200 px-1.5 py-0.5 rounded-md flex items-center gap-1 bg-amber-50"
+                                  className="font-mono text-[9px] font-semibold text-blue-800 dark:text-blue-300 bg-blue-50/10 dark:bg-blue-500/10 border border-blue-200/30 dark:border-blue-800/30 px-1.5 py-0.5 rounded-md flex items-center gap-1"
                                 >
                                   <span>{`{{${v}}}`}</span>
                                   <button
@@ -2988,12 +2988,12 @@ export default function AdminContentEditor({
                                   value={newVariableInput}
                                   onChange={(e) => setNewVariableInput(e.target.value)}
                                   placeholder="e.g. query"
-                                  className="w-16 h-5 p-0.5 px-1 font-mono text-[9px] bg-white border border-zinc-300 rounded"
+                                  className="w-16 h-5 p-0.5 px-1 font-mono text-[9px] bg-white dark:bg-[#121214] border border-zinc-300 dark:border-[#2c2c35] text-zinc-800 dark:text-zinc-200 rounded focus:outline-none"
                                 />
                                 <button
                                   type="button"
                                   onClick={handleAddPromptVariable}
-                                  className="p-1 px-1.5 bg-zinc-250 hover:bg-zinc-300 hover:text-zinc-950 font-bold text-[9px] border border-zinc-300 rounded cursor-pointer"
+                                  className="p-1 px-1.5 bg-zinc-200 dark:bg-[#2c2c35] hover:bg-zinc-300 dark:hover:bg-[#383842] hover:text-zinc-950 dark:hover:text-white font-bold text-[9px] border border-zinc-300 dark:border-[#3c3c45] rounded cursor-pointer"
                                 >
                                   Add
                                 </button>
@@ -3007,22 +3007,22 @@ export default function AdminContentEditor({
                       {formType === 'Category' && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           <div className="space-y-1">
-                            <label className="text-[10px] font-bold text-zinc-500">Category ID / Slug</label>
+                            <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400">Category ID / Slug</label>
                             <input
                               type="text"
                               value={formSlug}
                               onChange={(e) => handleFieldChange(() => setFormSlug(e.target.value.toLowerCase().replace(/\s+/g, '-')))}
                               placeholder="e.g. development"
-                              className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                              className="bg-[#fafafa] dark:bg-[#1c1c22] px-2 py-1 border border-zinc-200 dark:border-[#2a2a32] rounded text-xs w-full text-zinc-800 dark:text-zinc-200 focus:bg-[#ffffff] dark:focus:bg-[#16161a] focus:outline-none"
                             />
                           </div>
                           <div className="space-y-1">
-                            <label className="text-[10px] font-bold text-zinc-500">Lucide Icon Name</label>
+                            <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400">Lucide Icon Name</label>
                             <div className="relative inline-flex items-center w-full">
                               <select
                                 value={formTags[0] || 'Code2'}
                                 onChange={(e) => handleFieldChange(() => setFormTags([e.target.value]))}
-                                className="bg-zinc-50 border border-zinc-200 hover:border-zinc-300 rounded-md pl-2 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none w-full"
+                                className="bg-[#fafafa] dark:bg-[#1c1c22] border border-zinc-200 dark:border-[#2a2a32] text-zinc-800 dark:text-zinc-200 hover:border-zinc-300 dark:hover:border-[#383842] rounded-md pl-2 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none w-full"
                               >
                                 <option value="Code2">Code2 (Development)</option>
                                 <option value="PenTool">PenTool (Writing)</option>
@@ -3046,22 +3046,22 @@ export default function AdminContentEditor({
                         <div className="space-y-2">
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <div className="space-y-1">
-                              <label className="text-[10px] font-bold text-zinc-500">Collection ID / Slug</label>
+                              <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400">Collection ID / Slug</label>
                               <input
                                 type="text"
                                 value={formSlug}
                                 onChange={(e) => handleFieldChange(() => setFormSlug(e.target.value.toLowerCase().replace(/\s+/g, '-')))}
                                 placeholder="e.g. best-coding-skills"
-                                className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                                className="bg-[#fafafa] dark:bg-[#1c1c22] px-2 py-1 border border-zinc-200 dark:border-[#2a2a32] rounded text-xs w-full text-zinc-800 dark:text-zinc-200 focus:bg-[#ffffff] dark:focus:bg-[#16161a] focus:outline-none"
                               />
                             </div>
                             <div className="space-y-1">
-                              <label className="text-[10px] font-bold text-zinc-500">Color Theme Badge</label>
+                              <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400">Color Theme Badge</label>
                               <div className="relative inline-flex items-center w-full">
                                 <select
                                   value={formGithubLicense || 'blue'}
                                   onChange={(e) => handleFieldChange(() => setFormGithubLicense(e.target.value))}
-                                  className="bg-zinc-50 border border-zinc-200 hover:border-zinc-300 rounded-md pl-2 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none w-full"
+                                  className="bg-[#fafafa] dark:bg-[#1c1c22] border border-zinc-200 dark:border-[#2a2a32] text-zinc-800 dark:text-zinc-200 hover:border-zinc-300 dark:hover:border-[#383842] rounded-md pl-2 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none w-full"
                                 >
                                   <option value="blue">Blue</option>
                                   <option value="purple">Purple</option>
@@ -3077,12 +3077,12 @@ export default function AdminContentEditor({
                             </div>
                           </div>
                           <div className="space-y-1">
-                            <label className="text-[10px] font-bold text-zinc-500">Select Included Skills</label>
-                            <div className="max-h-24 overflow-y-auto border border-zinc-200 rounded-lg p-2 space-y-1 bg-zinc-50">
+                            <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400">Select Included Skills</label>
+                            <div className="max-h-24 overflow-y-auto border border-zinc-200 dark:border-[#222228] rounded-lg p-2 space-y-1 bg-[#fafafa] dark:bg-[#16161a] text-zinc-850 dark:text-zinc-200">
                               {skills.map(s => {
                                 const isChecked = formTags.includes(s.id);
                                 return (
-                                  <label key={s.id} className="flex items-center space-x-2 text-[11px] font-medium text-zinc-700 cursor-pointer">
+                                  <label key={s.id} className="flex items-center space-x-2 text-[11px] font-medium text-zinc-700 dark:text-zinc-300 cursor-pointer">
                                     <input
                                       type="checkbox"
                                       checked={isChecked}
@@ -3095,7 +3095,7 @@ export default function AdminContentEditor({
                                           }
                                         });
                                       }}
-                                      className="rounded text-blue-600 focus:ring-blue-500"
+                                      className="rounded border-zinc-300 dark:border-zinc-700 bg-transparent text-blue-600 focus:ring-blue-500"
                                     />
                                     <span>{s.name}</span>
                                   </label>
@@ -3111,22 +3111,22 @@ export default function AdminContentEditor({
                         <div className="space-y-2">
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <div className="space-y-1">
-                              <label className="text-[10px] font-bold text-zinc-500">Resource ID / Slug</label>
+                              <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400">Resource ID / Slug</label>
                               <input
                                 type="text"
                                 value={formSlug}
                                 onChange={(e) => handleFieldChange(() => setFormSlug(e.target.value.toLowerCase().replace(/\s+/g, '-')))}
                                 placeholder="e.g. resource-mcp-guide"
-                                className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                                className="bg-[#fafafa] dark:bg-[#1c1c22] px-2 py-1 border border-zinc-200 dark:border-[#2a2a32] rounded text-xs w-full text-zinc-800 dark:text-zinc-200 focus:bg-[#ffffff] dark:focus:bg-[#16161a] focus:outline-none"
                               />
                             </div>
                             <div className="space-y-1">
-                              <label className="text-[10px] font-bold text-zinc-500">Resource Type</label>
+                              <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400">Resource Type</label>
                               <div className="relative inline-flex items-center w-full">
                                 <select
                                   value={formTags[0] || 'Documentation'}
                                   onChange={(e) => handleFieldChange(() => setFormTags([e.target.value]))}
-                                  className="bg-zinc-50 border border-zinc-200 hover:border-zinc-300 rounded-md pl-2 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none w-full"
+                                  className="bg-[#fafafa] dark:bg-[#1c1c22] border border-zinc-200 dark:border-[#2a2a32] text-zinc-800 dark:text-zinc-200 hover:border-zinc-300 dark:hover:border-[#383842] rounded-md pl-2 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none w-full"
                                 >
                                   <option value="Documentation">Documentation</option>
                                   <option value="Guide">Guide</option>
@@ -3139,58 +3139,58 @@ export default function AdminContentEditor({
                           </div>
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                             <div className="space-y-1 sm:col-span-2">
-                              <label className="text-[10px] font-bold text-zinc-500">External URL Link</label>
+                              <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400">External URL Link</label>
                               <input
                                 type="text"
                                 value={formGithubUrl}
                                 onChange={(e) => handleFieldChange(() => setFormGithubUrl(e.target.value))}
                                 placeholder="https://..."
-                                className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                                className="bg-[#fafafa] dark:bg-[#1c1c22] px-2 py-1 border border-zinc-200 dark:border-[#2a2a32] rounded text-xs w-full text-zinc-800 dark:text-zinc-200 focus:bg-[#ffffff] dark:focus:bg-[#16161a] focus:outline-none"
                               />
                             </div>
                             <div className="space-y-1">
-                              <label className="text-[10px] font-bold text-zinc-500">Read / Watch Time</label>
+                              <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400">Read / Watch Time</label>
                               <input
                                 type="text"
                                 value={formGithubLicense}
                                 onChange={(e) => handleFieldChange(() => setFormGithubLicense(e.target.value))}
                                 placeholder="e.g. 5 min read"
-                                className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                                className="bg-[#fafafa] dark:bg-[#1c1c22] px-2 py-1 border border-zinc-200 dark:border-[#2a2a32] rounded text-xs w-full text-zinc-800 dark:text-zinc-200 focus:bg-[#ffffff] dark:focus:bg-[#16161a] focus:outline-none"
                               />
                             </div>
                           </div>
                           <div className="space-y-1">
-                            <label className="text-[10px] font-bold text-zinc-500">Author Name</label>
+                            <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400">Author Name</label>
                             <input
                               type="text"
                               value={formGithubName}
                               onChange={(e) => handleFieldChange(() => setFormGithubName(e.target.value))}
                               placeholder="e.g. Anthropic Developer Relations"
-                              className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                              className="bg-[#fafafa] dark:bg-[#1c1c22] px-2 py-1 border border-zinc-200 dark:border-[#2a2a32] rounded text-xs w-full text-zinc-800 dark:text-zinc-200 focus:bg-[#ffffff] dark:focus:bg-[#16161a] focus:outline-none"
                             />
                           </div>
                         </div>
                       )}
 
                       {/* Image Blocks and embed video elements */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-zinc-100">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-zinc-100 dark:border-[#222228]">
                         <div className="space-y-1">
-                          <label className="text-[10px] font-bold text-zinc-500 flex items-center justify-between">
+                          <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 flex items-center justify-between">
                             <span>Image Attachments (Drag/Drop)</span>
-                            {formImageUrl && <button onClick={() => { setFormImageUrl(''); setFormImageCaption(''); }} className="text-red-500 font-bold text-[9px] hover:underline">Clear</button>}
+                            {formImageUrl && <button onClick={() => { setFormImageUrl(''); setFormImageCaption(''); }} className="text-red-500 dark:text-red-400 font-bold text-[9px] hover:underline cursor-pointer">Clear</button>}
                           </label>
 
                           {imageUploadProgress !== null ? (
-                            <div className="w-full bg-zinc-100 h-8 rounded border border-dashed border-zinc-300 flex items-center px-3 gap-2">
+                            <div className="w-full bg-[#fafafa] dark:bg-[#16161a] h-8 rounded border border-dashed border-zinc-250 dark:border-[#2a2a32] flex items-center px-3 gap-2">
                               <span className="animate-spin h-3.5 w-3.5 border-2 border-zinc-500 border-t-transparent rounded-full" />
-                              <div className="flex-1 bg-zinc-200 rounded-full h-1.5">
+                              <div className="flex-1 bg-zinc-200 dark:bg-[#202028] rounded-full h-1.5">
                                 <div className="bg-blue-600 h-1.5 rounded-full" style={{ width: `${imageUploadProgress}%` }} />
                               </div>
-                              <span className="text-[9px] font-mono font-bold text-zinc-500">{imageUploadProgress}%</span>
+                              <span className="text-[9px] font-mono font-bold text-zinc-500 dark:text-zinc-400">{imageUploadProgress}%</span>
                             </div>
                           ) : formImageUrl ? (
-                            <div className="flex flex-col gap-2 bg-zinc-50 border border-zinc-200 rounded-lg p-2.5 shadow-sm animate-in fade-in duration-200">
-                              <div className="aspect-[16/10] w-full overflow-hidden rounded-md border border-zinc-150 bg-zinc-100">
+                            <div className="flex flex-col gap-2 bg-[#fafafa] dark:bg-[#16161a] border border-zinc-200 dark:border-[#222228] rounded-lg p-2.5 shadow-sm animate-in fade-in duration-200">
+                              <div className="aspect-[16/10] w-full overflow-hidden rounded-md border border-zinc-150 dark:border-zinc-800 bg-zinc-100 dark:bg-[#0c0c0e]">
                                 <img
                                   src={formImageUrl}
                                   alt="preview"
@@ -3199,120 +3199,119 @@ export default function AdminContentEditor({
                                 />
                               </div>
                               <div className="flex items-center gap-2 px-0.5">
-                                <span className="text-[9px] uppercase tracking-wider font-extrabold text-zinc-400 shrink-0">Caption:</span>
+                                <span className="text-[9px] uppercase tracking-wider font-extrabold text-zinc-400 dark:text-zinc-500 shrink-0">Caption:</span>
                                 <input
                                   type="text"
                                   value={formImageCaption}
                                   onChange={(e) => handleFieldChange(() => setFormImageCaption(e.target.value))}
                                   placeholder="Captions text..."
-                                  className="bg-transparent border-0 p-0 text-[10px] w-full focus:ring-0 focus:outline-none italic text-zinc-700 font-medium"
+                                  className="bg-transparent border-0 p-0 text-[10px] w-full focus:ring-0 focus:outline-none italic text-zinc-700 dark:text-zinc-300 font-medium"
                                 />
                               </div>
                             </div>
                           ) : (
                             <div
                               onClick={simulateImageDrop}
-                              className="h-8 border border-dashed border-zinc-250 hover:border-zinc-400 bg-zinc-50 rounded flex items-center justify-center gap-1 text-[10px] text-zinc-450 cursor-pointer select-none transition-colors"
+                              className="h-8 border border-dashed border-zinc-250 dark:border-[#2a2a32] hover:border-zinc-400 dark:hover:border-[#3c3c45] bg-[#fafafa] dark:bg-[#16161a] rounded flex items-center justify-center gap-1 text-[10px] text-zinc-450 dark:text-zinc-500 cursor-pointer select-none transition-colors"
                             >
-                              <ImageIcon className="h-3.5 w-3.5 text-zinc-400" />
+                              <ImageIcon className="h-3.5 w-3.5 text-zinc-405 text-zinc-400" />
                               <span>Drag screenshot / click to load</span>
                             </div>
                           )}
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[10px] font-bold text-zinc-500">Video Demonstration Link Embed (Vimeo/Yt)</label>
+                          <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400">Video Demonstration Link Embed (Vimeo/Yt)</label>
                           <input
                             type="text"
                             value={formVideoUrl}
                             onChange={(e) => handleFieldChange(() => setFormVideoUrl(e.target.value))}
                             placeholder="https://youtube.com/watch?v=..."
-                            className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-[10px] w-full focus:bg-white"
+                            className="bg-[#fafafa] dark:bg-[#1c1c22] px-2 py-1 border border-zinc-200 dark:border-[#2a2a32] text-zinc-800 dark:text-zinc-250 rounded text-[10px] w-full focus:bg-[#ffffff] dark:focus:bg-[#16161a] focus:outline-none"
                           />
                         </div>
                       </div>
-
                     </div>
                   </div>
 
-                  {/* Slash Command floating helper menu */}
-                  {slashMenuOpen && (
-                    <div
-                      className="absolute left-6 bottom-40 w-52 rounded-lg border border-zinc-200 bg-white shadow-xl ring-1 ring-zinc-950/5 p-1.5 z-55 text-left animate-in slide-in-from-bottom-2 duration-100"
-                    >
-                      <div className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 px-2 py-1 border-b border-zinc-100">
-                        Notion Slash commands
-                      </div>
-                      <div className="max-h-52 overflow-y-auto mt-1 text-xs">
-                        <button
-                          onClick={() => insertSlashCommand('heading-1')}
-                          className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
-                        >
-                          <span className="font-bold text-zinc-500">H1</span>
-                          <span className="font-semibold text-zinc-805">Heading Large</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => insertSlashCommand('heading-2')}
-                          className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
-                        >
-                          <span className="font-bold text-zinc-500 text-[10px]">H2</span>
-                          <span className="font-semibold text-zinc-800">Heading Section</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => insertSlashCommand('callout-info')}
-                          className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
-                        >
-                          <Info className="h-3.5 w-3.5 text-blue-500 shrink-0" />
-                          <span className="font-semibold text-zinc-800">Callout Tip Box</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => insertSlashCommand('callout-warning')}
-                          className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
-                        >
-                          <AlertCircle className="h-3.5 w-3.5 text-amber-500 shrink-0" />
-                          <span className="font-semibold text-zinc-800">Callout Caution</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => insertSlashCommand('code')}
-                          className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
-                        >
-                          <FileCode className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
-                          <span className="font-semibold text-zinc-800">TS Code Block</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => insertSlashCommand('table')}
-                          className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
-                        >
-                          <TableIcon className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
-                          <span className="font-semibold text-zinc-800">Markdown Table</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => insertSlashCommand('checklist')}
-                          className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
-                        >
-                          <CheckCircle className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
-                          <span className="font-semibold text-zinc-800">Task Checklist</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => insertSlashCommand('image')}
-                          className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
-                        >
-                          <ImageIcon className="h-3.5 w-3.5 text-purple-500 shrink-0" />
-                          <span className="font-semibold text-zinc-800">Card Showcase Image</span>
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
                   {/* EDITOR TEXTAREA WORKSPACE */}
-                  <div className="flex-1 flex flex-col p-4 bg-zinc-50/10 relative">
+                  <div className="flex-1 flex flex-col p-4 bg-[#fafafa] dark:bg-[#0c0c0e] relative">
+
+                    {/* Slash Command floating helper menu */}
+                    {slashMenuOpen && (
+                      <div
+                        className="absolute left-6 bottom-40 w-52 rounded-lg border border-zinc-200 dark:border-[#222228] bg-[#ffffff] dark:bg-[#121214] shadow-xl ring-1 ring-zinc-950/5 p-1.5 z-55 text-left animate-in slide-in-from-bottom-2 duration-100"
+                      >
+                        <div className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 px-2 py-1 border-b border-zinc-100 dark:border-[#222228]">
+                          Notion Slash commands
+                        </div>
+                        <div className="max-h-52 overflow-y-auto mt-1 text-xs">
+                          <button
+                            onClick={() => insertSlashCommand('heading-1')}
+                            className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 dark:hover:bg-[#1c1c22] text-zinc-700 dark:text-zinc-300 rounded text-left gap-2 cursor-pointer transition-colors"
+                          >
+                            <span className="font-bold text-zinc-500">H1</span>
+                            <span className="font-semibold text-zinc-800 dark:text-zinc-200">Heading Large</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => insertSlashCommand('heading-2')}
+                            className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 dark:hover:bg-[#1c1c22] text-zinc-700 dark:text-zinc-300 rounded text-left gap-2 cursor-pointer transition-colors"
+                          >
+                            <span className="font-bold text-zinc-500 text-[10px]">H2</span>
+                            <span className="font-semibold text-zinc-800 dark:text-zinc-200">Heading Section</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => insertSlashCommand('callout-info')}
+                            className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 dark:hover:bg-[#1c1c22] text-zinc-700 dark:text-zinc-300 rounded text-left gap-2 cursor-pointer transition-colors"
+                          >
+                            <Info className="h-3.5 w-3.5 text-blue-500 shrink-0" />
+                            <span className="font-semibold text-zinc-800 dark:text-zinc-200">Callout Tip Box</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => insertSlashCommand('callout-warning')}
+                            className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 dark:hover:bg-[#1c1c22] text-zinc-700 dark:text-zinc-300 rounded text-left gap-2 cursor-pointer transition-colors"
+                          >
+                            <AlertCircle className="h-3.5 w-3.5 text-amber-500 shrink-0" />
+                            <span className="font-semibold text-zinc-800 dark:text-zinc-200">Callout Caution</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => insertSlashCommand('code')}
+                            className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 dark:hover:bg-[#1c1c22] text-zinc-700 dark:text-zinc-300 rounded text-left gap-2 cursor-pointer transition-colors"
+                          >
+                            <FileCode className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
+                            <span className="font-semibold text-zinc-800 dark:text-zinc-200">TS Code Block</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => insertSlashCommand('table')}
+                            className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 dark:hover:bg-[#1c1c22] text-zinc-700 dark:text-zinc-300 rounded text-left gap-2 cursor-pointer transition-colors"
+                          >
+                            <TableIcon className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
+                            <span className="font-semibold text-zinc-800 dark:text-zinc-200">Markdown Table</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => insertSlashCommand('checklist')}
+                            className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 dark:hover:bg-[#1c1c22] text-zinc-700 dark:text-zinc-300 rounded text-left gap-2 cursor-pointer transition-colors"
+                          >
+                            <CheckCircle className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                            <span className="font-semibold text-zinc-800 dark:text-zinc-200">Task Checklist</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => insertSlashCommand('image')}
+                            className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 dark:hover:bg-[#1c1c22] text-zinc-700 dark:text-zinc-300 rounded text-left gap-2 cursor-pointer transition-colors"
+                          >
+                            <ImageIcon className="h-3.5 w-3.5 text-purple-500 shrink-0" />
+                            <span className="font-semibold text-zinc-800 dark:text-zinc-200">Card Showcase Image</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
 
                     <div className="flex items-center justify-between text-[11px] text-zinc-400 mb-1 font-mono px-1">
                       <div className="flex items-center space-x-3">
@@ -3354,7 +3353,7 @@ export default function AdminContentEditor({
                       onChange={(e) => handleFieldChange(() => setFormMarkdown(e.target.value))}
                       onKeyDown={handleTextareaKeyDown}
                       placeholder="Type '/' to trigger Notion Commands menu instantly..."
-                      className="w-full flex-1 p-4 rounded-xl border border-zinc-200/90 focus:border-zinc-400 focus:outline-none focus:ring-1 focus:ring-zinc-300 text-xs text-zinc-800 leading-relaxed font-mono resize-y bg-white shadow-inner"
+                      className="w-full flex-1 p-4 rounded-xl border border-zinc-200/90 dark:border-[#2a2a32] focus:border-zinc-400 focus:outline-none focus:ring-1 focus:ring-zinc-300 text-xs text-zinc-800 dark:text-zinc-100 leading-relaxed font-mono resize-y bg-[#ffffff] dark:bg-[#16161a] shadow-inner"
                     />
 
                     <div className="text-[10px] text-zinc-400 mt-2 italic px-1 flex justify-between">
@@ -3369,22 +3368,22 @@ export default function AdminContentEditor({
 
               {/* SPLIT LIVE PREVIEW / MARKDOWN RENDER PANEL */}
               {(viewMode === 'split' || viewMode === 'preview') && (
-                <div className="flex-1 overflow-y-auto p-6 bg-white min-w-0 h-full">
+                <div className="flex-1 overflow-y-auto p-6 bg-[#ffffff] dark:bg-[#121214] border-l border-zinc-200 dark:border-[#1e1e24] min-w-0 h-full">
 
                   <div className="max-w-2xl mx-auto space-y-6">
 
                     {/* Visual Document Heading card */}
-                    <span className="text-[9px] font-extrabold uppercase bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 text-zinc-700 px-2 py-1 rounded">
+                    <span className="text-[9px] font-extrabold uppercase bg-[#fafafa] dark:bg-[#1c1c22] border border-zinc-250 dark:border-[#2a2a32] text-zinc-700 dark:text-zinc-300 px-2 py-1 rounded">
                       Live View: {formType}
                     </span>
 
                     <div className="space-y-2 mt-2">
-                      <h1 className="font-sans font-black tracking-tight text-xl sm:text-3xl text-zinc-950 leading-tight">
-                        {formTitle || <span className="text-zinc-302 text-zinc-300">Untitled Core Module</span>}
+                      <h1 className="font-sans font-black tracking-tight text-xl sm:text-3xl text-zinc-950 dark:text-zinc-50 leading-tight">
+                        {formTitle || <span className="text-zinc-300 dark:text-zinc-700">Untitled Core Module</span>}
                       </h1>
 
                       {formDescription && (
-                        <p className="text-xs sm:text-sm text-zinc-500 leading-relaxed max-w-xl italic">
+                        <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-xl italic">
                           {formDescription}
                         </p>
                       )}
@@ -3394,47 +3393,47 @@ export default function AdminContentEditor({
 
                     {/* Custom Block: GitHub style repo card */}
                     {formGithubUrl && (
-                      <div className="border border-zinc-200/90 rounded-xl overflow-hidden bg-zinc-50 p-4 font-sans hover:shadow-sm transition-all duration-200">
+                      <div className="border border-zinc-200/90 dark:border-[#222228] rounded-xl overflow-hidden bg-[#fafafa] dark:bg-[#16161a] p-4 font-sans hover:shadow-sm transition-all duration-205">
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-2">
-                            <span className="flex h-6 w-6 items-center justify-center bg-zinc-950 rounded text-white text-[10px] font-bold uppercase font-mono">
+                            <span className="flex h-6 w-6 items-center justify-center bg-zinc-950 dark:bg-zinc-800 rounded text-white text-[10px] font-bold uppercase font-mono">
                               GH
                             </span>
                             <div>
-                              <div className="text-xs font-bold text-zinc-950 hover:underline hover:text-blue-600 truncate max-w-xs flex items-center">
+                              <div className="text-xs font-bold text-zinc-950 dark:text-zinc-50 hover:underline hover:text-blue-600 dark:hover:text-blue-400 truncate max-w-xs flex items-center">
                                 {formGithubName || 'claudelabs/repository'}
-                                <ExternalLink className="h-2.5 w-2.5 ml-1 inline text-zinc-400" />
+                                <ExternalLink className="h-2.5 w-2.5 ml-1 inline text-zinc-450 dark:text-zinc-500" />
                               </div>
-                              <span className="text-[10px] text-zinc-400 block -mt-0.5 font-mono">MIT license configured</span>
+                              <span className="text-[10px] text-zinc-400 dark:text-zinc-550 block -mt-0.5 font-mono">MIT license configured</span>
                             </div>
                           </div>
 
-                          <span className="text-[10px] font-bold bg-white text-zinc-650 px-2.5 py-1 rounded-md border border-zinc-150 flex items-center gap-1 shrink-0 font-mono">
+                          <span className="text-[10px] font-bold bg-[#ffffff] dark:bg-[#121214] text-zinc-650 dark:text-zinc-350 px-2.5 py-1 rounded-md border border-zinc-150 dark:border-[#222228] flex items-center gap-1 shrink-0 font-mono">
                             <CheckCircle className="h-3 w-3 text-emerald-500 mr-0.5" />
                             Verified Repo
                           </span>
                         </div>
 
-                        <div className="grid grid-cols-3 gap-2 py-2 text-center text-zinc-700 border-t border-zinc-150">
+                        <div className="grid grid-cols-3 gap-2 py-2 text-center text-zinc-700 dark:text-zinc-300 border-t border-zinc-150 dark:border-[#222228]">
                           <div>
-                            <div className="font-mono text-xs font-black text-zinc-900 flex items-center justify-center gap-0.5">
+                            <div className="font-mono text-xs font-black text-zinc-900 dark:text-zinc-100 flex items-center justify-center gap-0.5">
                               <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500 shrink-0" />
                               <span>{(formGithubStars ?? 142).toLocaleString()}</span>
                             </div>
-                            <span className="text-[9px] text-zinc-450 uppercase font-semibold">Stars repository</span>
+                            <span className="text-[9px] text-zinc-450 dark:text-zinc-500 uppercase font-semibold">Stars repository</span>
                           </div>
-                          <div className="border-x border-zinc-150">
-                            <div className="font-mono text-xs font-black text-zinc-900 flex items-center justify-center gap-0.5">
-                              <GitFork className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
+                          <div className="border-x border-zinc-150 dark:border-[#222228]">
+                            <div className="font-mono text-xs font-black text-zinc-900 dark:text-zinc-100 flex items-center justify-center gap-0.5">
+                              <GitFork className="h-3.5 w-3.5 text-zinc-550 dark:text-zinc-500 shrink-0" />
                               <span>{(formGithubForks ?? 24).toLocaleString()}</span>
                             </div>
-                            <span className="text-[9px] text-zinc-450 uppercase font-semibold">Forks branch</span>
+                            <span className="text-[9px] text-zinc-450 dark:text-zinc-500 uppercase font-semibold">Forks branch</span>
                           </div>
                           <div>
-                            <div className="font-mono text-[10px] font-black text-zinc-900 text-zinc-700 truncate px-1">
+                            <div className="font-mono text-[10px] font-black text-zinc-900 dark:text-zinc-100 truncate px-1">
                               {formGithubLicense}
                             </div>
-                            <span className="text-[9px] text-zinc-450 uppercase font-semibold">Usage License</span>
+                            <span className="text-[9px] text-zinc-450 dark:text-zinc-500 uppercase font-semibold">Usage License</span>
                           </div>
                         </div>
                       </div>
@@ -3446,10 +3445,10 @@ export default function AdminContentEditor({
                         <img
                           src={formImageUrl}
                           alt="Curated preview graphic"
-                          className="w-full h-44 object-cover rounded-xl border border-zinc-100 shadow"
+                          className="w-full h-44 object-cover rounded-xl border border-zinc-100 dark:border-[#222228] shadow"
                         />
                         {formImageCaption && (
-                          <figcaption className="text-center text-[10px] text-zinc-400 italic">
+                          <figcaption className="text-center text-[10px] text-zinc-400 dark:text-zinc-550 italic">
                             {formImageCaption}
                           </figcaption>
                         )}
@@ -3458,10 +3457,10 @@ export default function AdminContentEditor({
 
                     {/* Custom Block: Special prompt card block */}
                     {formType === 'Prompt' && (
-                      <div className="border border-zinc-200/90 rounded-xl overflow-hidden bg-zinc-50 font-sans shadow-sm">
-                        <div className="bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-2 flex items-center justify-between border-b border-zinc-150">
-                          <span className="text-[10px] font-bold text-zinc-700 tracking-wider flex items-center">
-                            <Sparkles className="h-3.5 w-3.5 text-blue-600 mr-1 shrink-0" />
+                      <div className="border border-zinc-200/90 dark:border-[#222228] rounded-xl overflow-hidden bg-[#fafafa] dark:bg-[#16161a] font-sans shadow-sm">
+                        <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 px-4 py-2 flex items-center justify-between border-b border-zinc-150 dark:border-[#222228]">
+                          <span className="text-[10px] font-bold text-zinc-700 dark:text-zinc-300 tracking-wider flex items-center">
+                            <Sparkles className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400 mr-1 shrink-0" />
                             AI MODEL INTEGRATOR PANEL
                           </span>
                           <button
@@ -3469,29 +3468,29 @@ export default function AdminContentEditor({
                               navigator.clipboard.writeText(formPromptContent || '');
                               showToast('📋 Prompt instruction copied to clipboard!');
                             }}
-                            className="text-[10px] font-bold text-blue-700 hover:underline flex items-center gap-1 cursor-pointer bg-white px-2 py-0.5 border border-blue-200 rounded"
+                            className="text-[10px] font-bold text-blue-700 dark:text-blue-400 hover:underline flex items-center gap-1 cursor-pointer bg-white dark:bg-[#121214] px-2 py-0.5 border border-blue-200 dark:border-blue-900/50 rounded"
                           >
                             <Copy className="h-2.5 w-2.5" />
                             Copy template
                           </button>
                         </div>
 
-                        <div className="p-4 bg-white space-y-3">
+                        <div className="p-4 bg-[#ffffff] dark:bg-[#121214] space-y-3">
                           <div>
-                            <span className="font-mono font-bold text-zinc-900 text-xs block">{formPromptTitle || 'Standard General Assistant instruction'}</span>
-                            <span className="text-[9px] text-zinc-400 block -mt-0.5">Category: {formPromptCategory} prompt guidelines</span>
+                            <span className="font-mono font-bold text-zinc-900 dark:text-zinc-100 text-xs block">{formPromptTitle || 'Standard General Assistant instruction'}</span>
+                            <span className="text-[9px] text-zinc-405 dark:text-zinc-500 block -mt-0.5">Category: {formPromptCategory} prompt guidelines</span>
                           </div>
 
-                          <div className="bg-zinc-50 rounded-lg p-3 text-xs leading-relaxed border border-zinc-200 text-zinc-700 whitespace-pre-wrap font-mono">
-                            {formPromptContent || <span className="text-zinc-402 text-zinc-300">Set prompt content variables in editor...</span>}
+                          <div className="bg-[#fafafa] dark:bg-[#16161a] rounded-lg p-3 text-xs leading-relaxed border border-zinc-200 dark:border-[#222228] text-zinc-700 dark:text-zinc-300 whitespace-pre-wrap font-mono">
+                            {formPromptContent || <span className="text-zinc-300 dark:text-zinc-700">Set prompt content variables in editor...</span>}
                           </div>
 
                           {formPromptVariables.length > 0 && (
-                            <div className="pt-2 border-t border-zinc-100 space-y-2">
-                              <span className="text-[10px] font-bold text-zinc-450 uppercase tracking-wide">Interactive variables checklist:</span>
+                            <div className="pt-2 border-t border-zinc-100 dark:border-[#222228] space-y-2">
+                              <span className="text-[10px] font-bold text-zinc-450 dark:text-zinc-550 uppercase tracking-wide">Interactive variables checklist:</span>
                               <div className="flex flex-wrap gap-1.5">
                                 {formPromptVariables.map(v => (
-                                  <span key={v} className="px-2 py-0.5 rounded text-[10px] font-mono font-bold text-zinc-700 bg-zinc-100 border border-zinc-200">
+                                  <span key={v} className="px-2 py-0.5 rounded text-[10px] font-mono font-bold text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-[#1c1c22] border border-zinc-200 dark:border-[#2a2a32]">
                                     {v}
                                   </span>
                                 ))}
@@ -3503,18 +3502,18 @@ export default function AdminContentEditor({
                     )}
 
                     {/* Markdown text elements wrapper */}
-                    <article id="rendered-markdown-root" className="prose prose-zinc dark:prose-invert max-w-none prose-sm text-zinc-800">
+                    <article id="rendered-markdown-root" className="prose prose-zinc dark:prose-invert max-w-none prose-sm text-zinc-800 dark:text-zinc-100">
                       {formatMarkdownPreviewHTML(formMarkdown)}
                     </article>
 
                     {/* Tags cluster */}
                     {formTags.length > 0 && (
-                      <div className="pt-4 border-t border-zinc-100 flex flex-wrap items-center gap-1.5 text-xs text-zinc-650">
-                        <span className="font-bold text-[10px] uppercase text-zinc-400">Attached tags:</span>
+                      <div className="pt-4 border-t border-zinc-100 dark:border-[#222228] flex flex-wrap items-center gap-1.5 text-xs text-zinc-650 dark:text-zinc-400">
+                        <span className="font-bold text-[10px] uppercase text-zinc-400 dark:text-zinc-500">Attached tags:</span>
                         {formTags.map(tag => (
                           <span
                             key={tag}
-                            className="font-mono text-[10px] font-bold text-zinc-600 bg-zinc-100 py-0.5 px-2 rounded border border-zinc-200 flex items-center gap-1"
+                            className="font-mono text-[10px] font-bold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-[#16161a] py-0.5 px-2 rounded border border-zinc-200 dark:border-[#222228] flex items-center gap-1"
                           >
                             <span>{tag}</span>
                           </span>
@@ -3524,13 +3523,13 @@ export default function AdminContentEditor({
 
                     {/* Fictitious Embedded video preview widget layout */}
                     {formVideoUrl && (
-                      <div className="border border-zinc-150 rounded-lg overflow-hidden bg-zinc-950 p-2 font-sans relative my-4">
+                      <div className="border border-zinc-150 dark:border-[#222228] rounded-lg overflow-hidden bg-zinc-950 p-2 font-sans relative my-4">
                         <div className="aspect-video w-full rounded bg-zinc-900 flex items-center justify-center border border-zinc-800 text-center flex-col shrink-0">
                           <div className="h-10 w-10 bg-red-600 text-white rounded-full flex items-center justify-center animate-pulse mb-2 shadow cursor-pointer">
                             <Play className="h-5 w-5 fill-white text-white ml-0.5" />
                           </div>
-                          <span className="text-[10px] font-bold text-zinc-400 uppercase font-mono">Dynamic Video Embed Player Block</span>
-                          <span className="text-[9px] text-zinc-500 truncate max-w-xs mt-0.5">{formVideoUrl}</span>
+                          <span className="text-[10px] font-bold text-zinc-450 dark:text-zinc-400 uppercase font-mono">Dynamic Video Embed Player Block</span>
+                          <span className="text-[9px] text-zinc-550 dark:text-zinc-500 truncate max-w-xs mt-0.5">{formVideoUrl}</span>
                         </div>
                       </div>
                     )}
@@ -3541,12 +3540,12 @@ export default function AdminContentEditor({
               )}
 
               {/* EDIT SIDEBAR / SEO / SETTINGS ACCORDION */}
-              <aside className="w-80 border-l border-zinc-200 bg-zinc-50/50 flex flex-col shrink-0 overflow-y-auto">
+              <aside className="w-80 border-l border-zinc-200 dark:border-[#1e1e24] bg-[#fafafa] dark:bg-[#0c0c0e] flex flex-col shrink-0 overflow-y-auto">
 
                 {/* SEO SETTINGS HEADER */}
-                <div className="p-4 border-b border-zinc-200 bg-white shadow-sm flex items-center justify-between">
-                  <span className="text-xs font-bold text-zinc-950 uppercase flex items-center">
-                    <Settings className="h-4 w-4 mr-1.5 text-zinc-500 shrink-0" />
+                <div className="p-4 border-b border-zinc-200 dark:border-[#1e1e24] bg-[#ffffff] dark:bg-[#121214] shadow-sm flex items-center justify-between">
+                  <span className="text-xs font-bold text-zinc-950 dark:text-zinc-550 uppercase flex items-center">
+                    <Settings className="h-4 w-4 mr-1.5 text-zinc-550 dark:text-zinc-400 shrink-0" />
                     SEO & Release Controls
                   </span>
                   <span className={`text-[10px] font-bold text-white px-2 py-0.5 rounded ${getScoreColor(seoScore)}`}>
@@ -3557,29 +3556,29 @@ export default function AdminContentEditor({
                 {/* SEO Side panel Inputs card */}
                 <div className="p-4 space-y-4 text-xs font-sans">
 
-                  <div className="bg-white border border-zinc-200 rounded-lg p-3 space-y-3">
-                    <div className="text-[9px] font-bold uppercase tracking-wider text-zinc-450 mb-1 flex justify-between">
+                  <div className="bg-[#ffffff] dark:bg-[#121214] border border-zinc-200 dark:border-[#222228] rounded-lg p-3 space-y-3">
+                    <div className="text-[9px] font-bold uppercase tracking-wider text-zinc-450 dark:text-zinc-500 mb-1 flex justify-between">
                       <span>SEO Score Diagnostics</span>
-                      <span className="font-mono text-zinc-400 font-normal">{getScoreLabel(seoScore)}</span>
+                      <span className="font-mono text-zinc-400 dark:text-zinc-500 font-normal">{getScoreLabel(seoScore)}</span>
                     </div>
-                    <div className="w-full bg-zinc-100 rounded-full h-1.5 overflow-hidden">
+                    <div className="w-full bg-zinc-100 dark:bg-zinc-800 rounded-full h-1.5 overflow-hidden">
                       <div className={`h-1.5 rounded-full ${getScoreColor(seoScore)}`} style={{ width: `${seoScore}%` }} />
                     </div>
                   </div>
 
                   {/* Tag Selection suggestions panel */}
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
+                    <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
                       Tags system keywords
                     </label>
-                    <div className="flex flex-wrap gap-1 bg-white p-2 border border-zinc-200 rounded-lg min-h-12 items-center">
+                    <div className="flex flex-wrap gap-1 bg-[#ffffff] dark:bg-[#121214] p-2 border border-zinc-200 dark:border-[#222228] rounded-lg min-h-12 items-center">
                       {formTags.map(t => (
-                        <span key={t} className="bg-zinc-100 border border-zinc-200 rounded text-[10px] font-mono px-1.5 py-0.5 flex items-center gap-1 text-zinc-700">
+                        <span key={t} className="bg-zinc-100 dark:bg-zinc-800/40 border border-zinc-200 dark:border-[#2a2a32] rounded text-[10px] font-mono px-1.5 py-0.5 flex items-center gap-1 text-zinc-700 dark:text-zinc-300">
                           <span>{t}</span>
                           <button onClick={() => handleRemoveTag(t)} className="text-red-500 hover:text-red-750 font-bold font-sans">&times;</button>
                         </span>
                       ))}
-                      {formTags.length === 0 && <span className="text-[10px] text-zinc-400 italic">No tags selected.</span>}
+                      {formTags.length === 0 && <span className="text-[10px] text-zinc-400 dark:text-zinc-500 italic">No tags selected.</span>}
                     </div>
 
                     <div className="flex gap-1.5 pt-0.5">
@@ -3588,7 +3587,7 @@ export default function AdminContentEditor({
                         value={newTagInput}
                         onChange={(e) => setNewTagInput(e.target.value)}
                         placeholder="Add tags, e.g. sql"
-                        className="w-full bg-white px-1.5 py-1 border border-zinc-250 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded text-xs"
+                        className="w-full bg-[#ffffff] dark:bg-[#121214] text-zinc-805 dark:text-zinc-100 px-1.5 py-1 border border-zinc-250 dark:border-[#2a2a32] focus:outline-none focus:ring-1 focus:ring-blue-600 rounded text-xs"
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
                             e.preventDefault();
@@ -3599,7 +3598,7 @@ export default function AdminContentEditor({
                       <button
                         type="button"
                         onClick={handleAddNewTag}
-                        className="px-2 py-1 bg-zinc-200 hover:bg-zinc-300 rounded text-[10px] font-extrabold cursor-pointer border border-zinc-300"
+                        className="px-2 py-1 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 rounded text-[10px] font-extrabold cursor-pointer border border-zinc-300 dark:border-[#2a2a32]"
                       >
                         Add
                       </button>
@@ -3615,7 +3614,7 @@ export default function AdminContentEditor({
                               handleFieldChange(() => setFormTags(prev => [...prev, tag]));
                             }
                           }}
-                          className="text-[9px] font-mono bg-zinc-100 border border-zinc-200 rounded hover:bg-zinc-200 text-zinc-650 px-1 py-0.5"
+                          className="text-[9px] font-mono bg-zinc-100 dark:bg-zinc-800/40 border border-zinc-200 dark:border-[#2a2a32] rounded hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-650 dark:text-zinc-300 px-1 py-0.5"
                         >
                           +{tag}
                         </button>
@@ -3625,131 +3624,131 @@ export default function AdminContentEditor({
 
                   {/* Parent Folder Selector */}
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
+                    <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
                       Parent Folder
                     </label>
                     <div className="relative inline-flex items-center w-full">
                       <select
                         value={formFolderId}
                         onChange={(e) => handleFieldChange(() => setFormFolderId(e.target.value))}
-                        className="w-full bg-white px-3 py-1.5 pr-8 border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-xs appearance-none cursor-pointer"
+                        className="w-full bg-[#ffffff] dark:bg-[#121214] text-zinc-800 dark:text-zinc-100 px-3 py-1.5 pr-8 border border-zinc-200 dark:border-[#2a2a32] focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-xs appearance-none cursor-pointer"
                       >
                         <option value="">(Root Directory)</option>
                         {folders.map(f => (
                           <option key={f.id} value={f.id}>{f.name}</option>
                         ))}
                       </select>
-                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-550 pointer-events-none" />
+                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-550 dark:text-zinc-500 pointer-events-none" />
                     </div>
                   </div>
 
                   {/* Dynamic URL parameters Slug box */}
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
+                    <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
                       Metadata URL Slug
                     </label>
                     <input
                       type="text"
                       value={formSlug}
                       onChange={(e) => handleFieldChange(() => setFormSlug(e.target.value.toLowerCase().replace(/\s+/g, '-')))}
-                      className="w-full bg-white px-3 py-1.5 border border-zinc-205 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md font-mono text-[11px]"
+                      className="w-full bg-[#ffffff] dark:bg-[#121214] text-zinc-805 dark:text-zinc-100 px-3 py-1.5 border border-zinc-205 dark:border-[#2a2a32] focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md font-mono text-[11px]"
                       placeholder="e.g. sequential-thinking-skill"
                     />
                   </div>
 
                   {/* Dynamic SEO Meta Title */}
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
+                    <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
                       SEO Meta Title Value
                     </label>
                     <input
                       type="text"
                       value={formMetaTitle}
                       onChange={(e) => handleFieldChange(() => setFormMetaTitle(e.target.value))}
-                      className="w-full bg-white px-3 py-1.5 border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-xs font-semibold"
+                      className="w-full bg-[#ffffff] dark:bg-[#121214] text-zinc-805 dark:text-zinc-100 px-3 py-1.5 border border-zinc-200 dark:border-[#2a2a32] focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-xs font-semibold"
                       placeholder="Insert meta tag title..."
                     />
-                    <span className="text-[9px] text-zinc-400 block text-right">{formMetaTitle.length}/60 chars recommended</span>
+                    <span className="text-[9px] text-zinc-400 dark:text-zinc-500 block text-right">{formMetaTitle.length}/60 chars recommended</span>
                   </div>
 
                   {/* Dynamic SEO Description */}
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
+                    <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
                       SEO Meta Description guidelines
                     </label>
                     <textarea
                       value={formMetaDescription}
                       onChange={(e) => handleFieldChange(() => setFormMetaDescription(e.target.value))}
                       rows={3}
-                      className="w-full bg-white px-3 py-1.5 border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-xs leading-relaxed resize-none"
+                      className="w-full bg-[#ffffff] dark:bg-[#121214] text-zinc-805 dark:text-zinc-100 px-3 py-1.5 border border-zinc-200 dark:border-[#2a2a32] focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-xs leading-relaxed resize-none"
                       placeholder="Enter detailed description summarizing search query items..."
                     />
-                    <span className="text-[9px] text-zinc-400 block text-right">{formMetaDescription.length}/160 chars</span>
+                    <span className="text-[9px] text-zinc-400 dark:text-zinc-500 block text-right">{formMetaDescription.length}/160 chars</span>
                   </div>
 
                   {/* Canonical URL address */}
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
+                    <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
                       Canonical URL Address
                     </label>
                     <input
                       type="text"
                       value={formCanonicalUrl}
                       onChange={(e) => handleFieldChange(() => setFormCanonicalUrl(e.target.value))}
-                      className="w-full bg-white px-3 py-1.5 border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md font-mono text-[10px]"
+                      className="w-full bg-[#ffffff] dark:bg-[#121214] text-zinc-805 dark:text-zinc-100 px-3 py-1.5 border border-zinc-200 dark:border-[#2a2a32] focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md font-mono text-[10px]"
                       placeholder="https://openskills.in/skill/..."
                     />
                   </div>
 
                   {/* Canonical Keywords */}
                   <div className="space-y-1 animate-in fade-in">
-                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
+                    <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
                       Target Search Keywords
                     </label>
                     <input
                       type="text"
                       value={formKeywords}
                       onChange={(e) => handleFieldChange(() => setFormKeywords(e.target.value))}
-                      className="w-full bg-white px-3 py-1.5 border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-[11px]"
+                      className="w-full bg-[#ffffff] dark:bg-[#121214] text-zinc-805 dark:text-zinc-100 px-3 py-1.5 border border-zinc-200 dark:border-[#2a2a32] focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-[11px]"
                       placeholder="postgres, sql, mcp, claude"
                     />
                   </div>
 
                   {/* Publishing Schedule Parameters */}
-                  <div className="pt-3 border-t border-zinc-250 space-y-2">
-                    <div className="text-[10px] font-bold uppercase tracking-wide text-zinc-500 mb-1">
+                  <div className="pt-3 border-t border-zinc-250 dark:border-[#222228] space-y-2">
+                    <div className="text-[10px] font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400 mb-1">
                       Scheduled release targets
                     </div>
 
                     <div className="space-y-1">
-                      <span className="text-[10px] text-zinc-450 block">Scheduled Publication Date</span>
+                      <span className="text-[10px] text-zinc-450 dark:text-zinc-500 block">Scheduled Publication Date</span>
                       <div className="relative">
                         <input
                           type="date"
                           value={formPublishDate}
                           onChange={(e) => handleFieldChange(() => setFormPublishDate(e.target.value))}
-                          className="w-full bg-white px-3 py-1.5 border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-xs font-mono text-zinc-600"
+                          className="w-full bg-[#ffffff] dark:bg-[#121214] text-zinc-600 dark:text-zinc-300 px-3 py-1.5 border border-zinc-200 dark:border-[#2a2a32] focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-xs font-mono"
                         />
                       </div>
                     </div>
 
                     <div className="flex gap-4 pt-2">
-                      <label className="flex items-center space-x-2 text-[11px] text-zinc-700 font-semibold cursor-pointer">
+                      <label className="flex items-center space-x-2 text-[11px] text-zinc-700 dark:text-zinc-300 font-semibold cursor-pointer">
                         <input
                           type="checkbox"
                           checked={formFeatured}
                           onChange={(e) => handleFieldChange(() => setFormFeatured(e.target.checked))}
-                          className="rounded border-zinc-300 text-blue-600 focus:ring-blue-500 h-3.5 w-3.5"
+                          className="rounded border-zinc-300 dark:border-zinc-700 bg-transparent text-blue-600 focus:ring-blue-500 h-3.5 w-3.5"
                         />
                         <span>Featured Content</span>
                       </label>
 
-                      <label className="flex items-center space-x-2 text-[11px] text-zinc-700 font-semibold cursor-pointer">
+                      <label className="flex items-center space-x-2 text-[11px] text-zinc-700 dark:text-zinc-300 font-semibold cursor-pointer">
                         <input
                           type="checkbox"
                           checked={formPinned}
                           onChange={(e) => handleFieldChange(() => setFormPinned(e.target.checked))}
-                          className="rounded border-zinc-300 text-blue-600 focus:ring-blue-500 h-3.5 w-3.5"
+                          className="rounded border-zinc-300 dark:border-zinc-700 bg-transparent text-blue-600 focus:ring-blue-500 h-3.5 w-3.5"
                         />
                         <span>Pin to top</span>
                       </label>
@@ -3757,11 +3756,11 @@ export default function AdminContentEditor({
                   </div>
 
                   {/* GOOGLE WEB SNIPPET CARD SIMULATOR */}
-                  <div className="bg-white border border-zinc-200 rounded-xl p-3 space-y-1 text-xs">
-                    <span className="text-[9px] font-bold uppercase text-zinc-400">Google SERP Preview simulation</span>
-                    <span className="text-blue-700 font-sans font-bold hover:underline block truncate max-w-xs">{formMetaTitle || formTitle || 'openSkills Curated Guides'}</span>
-                    <span className="text-zinc-650 text-[10px] text-zinc-400 block font-mono">openskills.in/skill/{formSlug || 'new-slug'}</span>
-                    <span className="text-zinc-600 text-[10px] line-clamp-2 leading-normal">{formMetaDescription || 'Equip your local Sonnet setups with database inspectors, web servers, and automation logic...'}</span>
+                  <div className="bg-[#ffffff] dark:bg-[#121214] border border-zinc-200 dark:border-[#222228] rounded-xl p-3 space-y-1 text-xs">
+                    <span className="text-[9px] font-bold uppercase text-zinc-400 dark:text-zinc-550">Google SERP Preview simulation</span>
+                    <span className="text-blue-700 dark:text-blue-400 font-sans font-bold hover:underline block truncate max-w-xs">{formMetaTitle || formTitle || 'openSkills Curated Guides'}</span>
+                    <span className="text-zinc-650 dark:text-zinc-450 text-[10px] block font-mono">openskills.in/skill/{formSlug || 'new-slug'}</span>
+                    <span className="text-zinc-600 dark:text-zinc-400 text-[10px] line-clamp-2 leading-normal">{formMetaDescription || 'Equip your local Sonnet setups with database inspectors, web servers, and automation logic...'}</span>
                   </div>
 
                 </div>

@@ -75,11 +75,11 @@ export default function Hero({
         <div className="mt-14 max-w-5xl mx-auto border border-zinc-200/60 bg-zinc-50/50 rounded-2xl grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-zinc-200/60">
           
           <div className="p-5 flex flex-col items-center justify-center text-center">
-            <div className="flex items-center space-x-1 px-2.5 py-1 text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-100 rounded-full mb-1">
+            <div className="flex items-center space-x-1 px-2.5 py-1 text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-100 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-900/30 rounded-full mb-1">
               <CheckCircle2 className="h-3 w-3 text-blue-500 mr-1" />
               <span>{t.active}</span>
             </div>
-            <span className="font-mono text-3xl font-extrabold text-zinc-900 tracking-tight">
+            <span className="font-mono text-3xl font-extrabold text-zinc-900 dark:text-zinc-100 tracking-tight">
               {totalSkills}
             </span>
             <span className="text-xs font-medium text-zinc-400 mt-0.5 uppercase tracking-wider">
@@ -88,11 +88,11 @@ export default function Hero({
           </div>
 
           <div className="p-5 flex flex-col items-center justify-center text-center">
-            <div className="flex items-center space-x-1 px-2.5 py-1 text-xs font-semibold text-zinc-700 bg-zinc-100 border border-zinc-200 rounded-full mb-1">
+            <div className="flex items-center space-x-1 px-2.5 py-1 text-xs font-semibold text-zinc-700 bg-zinc-100 border border-zinc-200 dark:bg-zinc-800/40 dark:text-zinc-300 dark:border-zinc-700/30 rounded-full mb-1">
               <FolderGit2 className="h-3 w-3 text-zinc-500 mr-1" />
               <span>{t.verified}</span>
             </div>
-            <span className="font-mono text-3xl font-extrabold text-zinc-900 tracking-tight">
+            <span className="font-mono text-3xl font-extrabold text-zinc-900 dark:text-zinc-100 tracking-tight">
               {totalSkills}
             </span>
             <span className="text-xs font-medium text-zinc-400 mt-0.5 uppercase tracking-wider">
@@ -101,11 +101,11 @@ export default function Hero({
           </div>
 
           <div className="p-5 flex flex-col items-center justify-center text-center">
-            <div className="flex items-center space-x-1 px-2.5 py-1 text-xs font-semibold text-purple-700 bg-purple-50 border border-purple-100 rounded-full mb-1">
+            <div className="flex items-center space-x-1 px-2.5 py-1 text-xs font-semibold text-purple-700 bg-purple-50 border border-purple-100 dark:bg-purple-950/40 dark:text-purple-400 dark:border-purple-900/30 rounded-full mb-1">
               <Tags className="h-3 w-3 text-purple-500 mr-1" />
               <span>{t.curated}</span>
             </div>
-            <span className="font-mono text-3xl font-extrabold text-zinc-900 tracking-tight">
+            <span className="font-mono text-3xl font-extrabold text-zinc-900 dark:text-zinc-100 tracking-tight">
               {totalCategories}
             </span>
             <span className="text-xs font-medium text-zinc-400 mt-0.5 uppercase tracking-wider">
@@ -114,11 +114,11 @@ export default function Hero({
           </div>
 
           <div className="p-5 flex flex-col items-center justify-center text-center">
-            <div className="flex items-center space-x-1 px-2.5 py-1 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full mb-1">
+            <div className="flex items-center space-x-1 px-2.5 py-1 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-900/30 rounded-full mb-1">
               <Users2 className="h-3 w-3 text-emerald-500 mr-1" />
               <span>{t.openSource}</span>
             </div>
-            <span className="font-mono text-3xl font-extrabold text-zinc-900 tracking-tight">
+            <span className="font-mono text-3xl font-extrabold text-zinc-900 dark:text-zinc-100 tracking-tight">
               {(totalSkills * 1.5).toFixed(0)}
             </span>
             <span className="text-xs font-medium text-zinc-400 mt-0.5 uppercase tracking-wider">

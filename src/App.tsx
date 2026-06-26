@@ -838,9 +838,9 @@ export default function App() {
 
                               {/* Title description block info */}
                               <div>
-                                <h3 className="text-sm font-extrabold text-zinc-950 group-hover:text-blue-600 transition-colors flex items-center">
+                                <h2 className="text-sm font-extrabold text-zinc-950 group-hover:text-blue-600 transition-colors flex items-center">
                                   <span>{skill.name}</span>
-                                </h3>
+                                </h2>
                                 <p className="text-xs text-zinc-500 leading-relaxed font-sans mt-1.5 line-clamp-2">
                                   {skill.description}
                                 </p>

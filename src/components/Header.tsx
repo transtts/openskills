@@ -169,6 +169,7 @@ export default function Header({
             <DropdownMenuTrigger asChild>
               <Button
                 id="toolbar-bookmarks-btn"
+                aria-label="View saved bookmarks"
                 variant="outline"
                 size="icon"
                 className={`relative h-9 w-9 cursor-pointer transition-colors ${
@@ -294,6 +295,7 @@ export default function Header({
               <Button
                 variant="ghost"
                 size="icon"
+                aria-label="View saved bookmarks"
                 className="p-2 text-zinc-500 hover:text-zinc-900 relative cursor-pointer"
               >
                 <Bookmark className={`h-4.5 w-4.5 ${bookmarks.length > 0 ? 'fill-blue-500 text-blue-500' : ''}`} />
@@ -332,6 +334,7 @@ export default function Header({
             id="theme-toggle-btn-mobile"
             variant="ghost"
             size="icon"
+            aria-label="Toggle theme mode"
             onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
             className="p-2 text-zinc-550 hover:text-zinc-900 cursor-pointer shrink-0"
             title={theme === 'light' ? (language === 'en' ? "Switch to Dark Mode" : "डार्क मोड चालू करें") : (language === 'en' ? "Switch to Light Mode" : "लाइट मोड चालू करें")}
@@ -349,6 +352,7 @@ export default function Header({
               <Button
                 variant="ghost"
                 size="icon"
+                aria-label="Open navigation menu"
                 className="p-2 text-zinc-500 hover:text-zinc-950 cursor-pointer"
               >
                 <Menu className="h-5 w-5" />

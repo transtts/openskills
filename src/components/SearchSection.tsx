@@ -105,7 +105,7 @@ export default function SearchSection({
                 value={selectedCategory}
                 onValueChange={(val) => setSelectedCategory(val)}
               >
-                <SelectTrigger id="filter-category" className="w-full !h-9 text-xs font-medium cursor-pointer bg-white">
+                <SelectTrigger id="filter-category" aria-label="Filter by category" className="w-full !h-9 text-xs font-medium cursor-pointer bg-white">
                   <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
@@ -130,7 +130,7 @@ export default function SearchSection({
                 value={selectedTag}
                 onValueChange={(val) => setSelectedTag(val)}
               >
-                <SelectTrigger id="filter-tag" className="w-full !h-9 text-xs font-medium cursor-pointer bg-white">
+                <SelectTrigger id="filter-tag" aria-label="Filter by tag" className="w-full !h-9 text-xs font-medium cursor-pointer bg-white">
                   <SelectValue placeholder="All Tags" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
@@ -155,7 +155,7 @@ export default function SearchSection({
                 value={sortBy}
                 onValueChange={(val) => setSortBy(val)}
               >
-                <SelectTrigger id="filter-sort" className="w-full !h-9 text-xs font-medium cursor-pointer bg-white">
+                <SelectTrigger id="filter-sort" aria-label="Sort skills list" className="w-full !h-9 text-xs font-medium cursor-pointer bg-white">
                   <SelectValue placeholder="Sort Order" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">

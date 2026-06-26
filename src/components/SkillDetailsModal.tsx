@@ -67,7 +67,7 @@ export default function SkillDetailsModal({
         {/* Modal Top Header Bar */}
         <div className="flex items-center justify-between border-b border-zinc-200 bg-zinc-50/50 px-6 py-4">
           <div className="flex items-center space-x-3 text-sm">
-            <span className="capitalize px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 border border-blue-100 text-blue-700">
+            <span className="capitalize px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 border border-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-900/30">
               {skill.category}
             </span>
             <span className="text-zinc-400">/</span>
@@ -82,8 +82,8 @@ export default function SkillDetailsModal({
               size="sm"
               className={`h-8.5 px-3 text-xs font-medium border transition-colors ${
                 isBookmarked 
-                  ? 'border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800' 
-                  : 'border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 hover:text-zinc-900'
+                  ? 'border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800 dark:border-blue-900/30 dark:bg-blue-950/40 dark:text-blue-300 dark:hover:bg-blue-900/60 dark:hover:text-blue-200' 
+                  : 'border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white'
               }`}
             >
               <Star className={`h-3.5 w-3.5 ${isBookmarked ? 'fill-blue-500 text-blue-500' : ''}`} />

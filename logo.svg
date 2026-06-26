@@ -1,0 +1,86 @@
+ise animated banao
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 760 120"
+     width="760"
+     height="120"
+     role="img"
+     aria-labelledby="title desc">
+
+  <title id="title">Animated /openSkills Logo</title>
+  <desc id="desc">Minimal animated SVG logo for /openSkills</desc>
+
+  <style>
+    svg{
+      background:transparent;
+    }
+
+    .slash{
+      fill:#2563EB;
+      transform-origin:58px 60px;
+      animation:
+        slashDraw 0.9s ease-out forwards,
+        slashPulse 2.8s ease-in-out infinite 1s;
+    }
+
+    .word{
+      fill:#111111;
+      font-family:Inter,"SF Pro Display","Segoe UI",Helvetica,Arial,sans-serif;
+      font-size:52px;
+      font-weight:600;
+      letter-spacing:-0.8px;
+      opacity:0;
+      animation:textReveal .9s ease .35s forwards;
+    }
+
+    @keyframes slashDraw{
+      from{
+        transform:translateY(-12px) rotate(-10deg) scale(.75);
+        opacity:0;
+      }
+      to{
+        transform:translateY(0) rotate(0deg) scale(1);
+        opacity:1;
+      }
+    }
+
+    @keyframes textReveal{
+      from{
+        opacity:0;
+        transform:translateX(14px);
+      }
+      to{
+        opacity:1;
+        transform:translateX(0);
+      }
+    }
+
+    @keyframes slashPulse{
+      0%,100%{
+        transform:scale(1);
+      }
+      50%{
+        transform:scale(1.08);
+      }
+    }
+  </style>
+
+  <g>
+
+    <path class="slash"
+      d="M42 92
+         L60 28
+         C61 24 64 22 68 22
+         C73 22 76 25 76 29
+         C76 30 76 31 75 33
+         L57 97
+         C56 101 53 103 49 103
+         C44 103 41 100 41 96
+         C41 95 41 94 42 92Z"/>
+
+    <text class="word" x="96" y="78">
+      openSkills
+    </text>
+
+  </g>
+
+</svg>

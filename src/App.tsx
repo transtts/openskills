@@ -607,21 +607,23 @@ export default function App() {
       
 
       {/* Dynamic Header Component */}
-      <Header 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
-        bookmarks={bookmarks}
-        onOpenBookmark={(sk) => {
-          setSelectedSkill(sk);
-          window.scrollTo({ top: 0, behavior: 'instant' });
-        }}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        language={language}
-        setLanguage={setLanguage}
-        theme={theme}
-        setTheme={setTheme}
-      />
+      {activeTab !== 'admin' && (
+        <Header 
+          activeTab={activeTab} 
+          setActiveTab={setActiveTab} 
+          bookmarks={bookmarks}
+          onOpenBookmark={(sk) => {
+            setSelectedSkill(sk);
+            window.scrollTo({ top: 0, behavior: 'instant' });
+          }}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          language={language}
+          setLanguage={setLanguage}
+          theme={theme}
+          setTheme={setTheme}
+        />
+      )}
 
       {/* Main Container Core */}
       <main className="flex-1">
@@ -641,7 +643,7 @@ export default function App() {
         )}
 
         {/* Dynamic Pages wrapper */}
-        <div className={activeTab === 'admin' ? "w-full max-w-[98%] mx-auto px-4 py-4 sm:px-6 lg:px-8 h-[calc(100vh-6.5rem)] flex flex-col min-h-0" : "mx-auto max-w-7xl px-4 pt-8 pb-10 sm:px-6 lg:px-8"}>
+        <div className={activeTab === 'admin' ? "fixed inset-0 z-50 w-screen h-screen bg-white flex flex-col min-h-0" : "mx-auto max-w-7xl px-4 pt-8 pb-10 sm:px-6 lg:px-8"}>
           
           {selectedSkill ? (
             <div id="skill-details-container" className="scroll-mt-20 animate-in fade-in duration-200">

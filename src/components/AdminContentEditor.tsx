@@ -1,37 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  FileText, 
-  GitFork, 
-  Star, 
-  Layers, 
-  BookOpen, 
-  FileCode, 
+import {
+  FileText,
+  GitFork,
+  Star,
+  Layers,
+  BookOpen,
+  FileCode,
   CornerDownRight,
-  Eye, 
-  Edit3, 
-  Columns, 
-  PlusCircle, 
-  Save, 
-  Trash2, 
-  Copy, 
-  Check, 
-  Sparkles, 
-  Globe, 
-  Lock, 
+  Eye,
+  Edit3,
+  Columns,
+  PlusCircle,
+  Save,
+  Trash2,
+  Copy,
+  Check,
+  Sparkles,
+  Globe,
+  Lock,
   EyeOff,
-  Search, 
-  RefreshCw, 
-  History, 
-  AlertCircle, 
-  CheckCircle, 
+  Search,
+  RefreshCw,
+  History,
+  AlertCircle,
+  CheckCircle,
   ChevronRight,
   ChevronDown,
-  Play, 
+  Play,
   Table as TableIcon,
   Image as ImageIcon,
-  Tag, 
-  Info, 
-  AlertTriangle, 
+  Tag,
+  Info,
+  AlertTriangle,
   ThumbsUp,
   LayoutGrid,
   Trash,
@@ -98,14 +98,14 @@ interface CMSContentItem {
   visibility: 'Public' | 'Private' | 'Internal';
   publishDate: string;
   lastUpdated: string;
-  
+
   // GitHub Block Fields
   githubName?: string;
   githubUrl?: string;
   githubStars?: number;
   githubForks?: number;
   githubLicense?: string;
-  
+
   // Prompt Block Fields
   promptTitle?: string;
   promptCategory?: string;
@@ -116,7 +116,7 @@ interface CMSContentItem {
   videoEmbedUrl?: string;
   imageUrl?: string;
   imageCaption?: string;
-  
+
   // Folder organization
   folderId?: string;
 }
@@ -367,7 +367,7 @@ export default function AdminContentEditor({
   const [folders, setFolders] = useState<{ id: string; name: string }[]>(() => {
     const saved = localStorage.getItem('openskills_cms_folders');
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try { return JSON.parse(saved); } catch (e) { }
     }
     return [
       { id: 'folder-mcp', name: 'MCP Servers' },
@@ -533,7 +533,7 @@ export default function AdminContentEditor({
       setFormVideoUrl(currentItem.videoEmbedUrl || '');
       setFormImageUrl(currentItem.imageUrl || '');
       setFormImageCaption(currentItem.imageCaption || '');
-      
+
       // Initialize undo/redo history for the newly selected item
       setHistory([currentItem.markdownContent || '']);
       setHistoryIndex(0);
@@ -636,9 +636,9 @@ export default function AdminContentEditor({
       let changed = false;
 
       skills.forEach(skill => {
-        const hasMatch = updated.some(c => 
-          c.id === skill.id || 
-          c.id === `content-${skill.id}` || 
+        const hasMatch = updated.some(c =>
+          c.id === skill.id ||
+          c.id === `content-${skill.id}` ||
           (c.type === 'Skill' && c.title.toLowerCase() === skill.name.toLowerCase())
         );
 
@@ -682,9 +682,9 @@ export default function AdminContentEditor({
       const updated = [...prev];
       let changed = false;
       categories.forEach(cat => {
-        const hasMatch = updated.some(c => 
-          c.id === cat.id || 
-          c.id === `content-cat-${cat.id}` || 
+        const hasMatch = updated.some(c =>
+          c.id === cat.id ||
+          c.id === `content-cat-${cat.id}` ||
           (c.type === 'Category' && c.title.toLowerCase() === cat.name.toLowerCase())
         );
         if (!hasMatch) {
@@ -721,9 +721,9 @@ export default function AdminContentEditor({
       const updated = [...prev];
       let changed = false;
       collections.forEach(col => {
-        const hasMatch = updated.some(c => 
-          c.id === col.id || 
-          c.id === `content-col-${col.id}` || 
+        const hasMatch = updated.some(c =>
+          c.id === col.id ||
+          c.id === `content-col-${col.id}` ||
           (c.type === 'Collection' && c.title.toLowerCase() === col.name.toLowerCase())
         );
         if (!hasMatch) {
@@ -761,9 +761,9 @@ export default function AdminContentEditor({
       const updated = [...prev];
       let changed = false;
       resources.forEach(res => {
-        const hasMatch = updated.some(c => 
-          c.id === res.id || 
-          c.id === `content-res-${res.id}` || 
+        const hasMatch = updated.some(c =>
+          c.id === res.id ||
+          c.id === `content-res-${res.id}` ||
           (c.type === 'Resource' && c.title.toLowerCase() === res.title.toLowerCase())
         );
         if (!hasMatch) {
@@ -803,9 +803,9 @@ export default function AdminContentEditor({
       const updated = [...prev];
       let changed = false;
       prompts.forEach(p => {
-        const hasMatch = updated.some(c => 
-          c.id === p.id || 
-          c.id === `content-prompt-${p.id}` || 
+        const hasMatch = updated.some(c =>
+          c.id === p.id ||
+          c.id === `content-prompt-${p.id}` ||
           (c.type === 'Prompt' && c.title.toLowerCase() === p.title.toLowerCase())
         );
         if (!hasMatch) {
@@ -1028,7 +1028,7 @@ export default function AdminContentEditor({
     if (!selectedContentId || !currentItem) return;
 
     // Check if the form state actually differs from the database item to prevent infinite state updates
-    const hasChanges = 
+    const hasChanges =
       currentItem.type !== formType ||
       currentItem.title !== formTitle ||
       currentItem.description !== formDescription ||
@@ -1136,18 +1136,18 @@ export default function AdminContentEditor({
                 featured: formFeatured,
                 pinned: formPinned,
                 publishDate: formPublishDate,
-                
+
                 githubName: formGithubName,
                 githubUrl: formGithubUrl,
                 githubStars: formGithubStars,
                 githubForks: formGithubForks,
                 githubLicense: formGithubLicense,
-                
+
                 promptTitle: formPromptTitle,
                 promptCategory: formPromptCategory,
                 promptContent: formPromptContent,
                 promptVariables: formPromptVariables,
-                
+
                 videoEmbedUrl: formVideoUrl,
                 imageUrl: formImageUrl,
                 imageCaption: formImageCaption,
@@ -1157,7 +1157,7 @@ export default function AdminContentEditor({
             }
             return c;
           }));
-          
+
           setLastSavedTime(new Date().toLocaleTimeString());
           setAutosaveStatus('saved');
         }, 800);
@@ -1182,7 +1182,7 @@ export default function AdminContentEditor({
   const handleCmsSaveRaw = () => {
     if (!currentItem) return;
     setAutosaveStatus('saving');
-    
+
     // Check if this editing item is of type 'Skill' and should propagate back to main skills state!
     if (formType === 'Skill' || formType === 'GitHub Repository') {
       const existingSkill = skills.find(s => s.name.toLowerCase() === formTitle.toLowerCase() || s.id === selectedContentId || s.id === selectedContentId.replace('content-', ''));
@@ -1398,7 +1398,7 @@ export default function AdminContentEditor({
   // Create new blank content asset template
   const handleCreateNewContentAsset = (type: CMSContentItem['type'] = 'GitHub Repository') => {
     const newId = `content-${Date.now()}`;
-    
+
     let title = 'Create new';
     let markdownContent = `# Create new\n\nStart writing here...`;
     let description = 'A new draft document in openskills CMS.';
@@ -1410,7 +1410,7 @@ export default function AdminContentEditor({
     let promptTitle = '';
     let promptContent = '';
     let promptCategory = '';
-    
+
     if (type === 'Category') {
       title = 'New Category';
       markdownContent = `# New Category\n\nCategory description here.`;
@@ -1497,12 +1497,12 @@ export default function AdminContentEditor({
   const handleCreateNewFolder = () => {
     const folderName = window.prompt("Enter new folder name:");
     if (!folderName || !folderName.trim()) return;
-    
+
     const newFolder = {
       id: `folder-${Date.now()}`,
       name: folderName.trim()
     };
-    
+
     setFolders(prev => [...prev, newFolder]);
     setExpandedFolders(prev => [...prev, newFolder.id]);
     showToast(`📁 Created folder "${newFolder.name}"`);
@@ -1540,11 +1540,11 @@ export default function AdminContentEditor({
     const idx = contents.findIndex(c => c.id === deletingId);
     const filtered = contents.filter(c => c.id !== deletingId);
     setContents(filtered);
-    
+
     // select another item
     const nextItem = filtered[idx === 0 ? 0 : idx - 1] || filtered[0];
     setSelectedContentId(nextItem ? nextItem.id : '');
-    
+
     // Propagate deletion to top level state so skills lists are accurate
     propagateCmsDelete(deletingId, deletingTitle);
 
@@ -1726,17 +1726,17 @@ export default function AdminContentEditor({
   // Render simulated callouts or grids cleanly in Preview Mode
   const formatMarkdownPreviewHTML = (text: string) => {
     if (!text) return <p className="text-zinc-400 italic">No instructions curated.</p>;
-    
+
     // Split into lines and parse standard blocks simply (Markdown simulator)
     const lines = text.split('\n');
     let parsedLines: React.ReactNode[] = [];
-    
+
     let inCode = false;
     let codeBlockText: string[] = [];
-    
+
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      
+
       if (line.startsWith('```')) {
         if (inCode) {
           // Closed code block
@@ -1745,7 +1745,7 @@ export default function AdminContentEditor({
             <div key={`code-${i}`} className="my-4 border border-zinc-200 rounded-md overflow-hidden bg-zinc-950 text-zinc-100 font-mono text-xs">
               <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-800 bg-zinc-900 text-[10px] text-zinc-400">
                 <span>TS/JSON CONFIG</span>
-                <button 
+                <button
                   onClick={() => {
                     navigator.clipboard.writeText(blockContent);
                     showToast('📋 Copied instructions code block!');
@@ -1768,7 +1768,7 @@ export default function AdminContentEditor({
         }
         continue;
       }
-      
+
       if (inCode) {
         codeBlockText.push(line);
         continue;
@@ -1792,11 +1792,10 @@ export default function AdminContentEditor({
           i++;
         }
         parsedLines.push(
-          <div key={i} className={`p-3.5 my-3.5 border-l-3 rounded-r-lg font-sans text-xs ${
-            type === 'info' 
-              ? 'bg-blue-50 border-blue-500 text-blue-900' 
+          <div key={i} className={`p-3.5 my-3.5 border-l-3 rounded-r-lg font-sans text-xs ${type === 'info'
+              ? 'bg-blue-50 border-blue-500 text-blue-900'
               : 'bg-amber-50 border-amber-500 text-amber-900'
-          }`}>
+            }`}>
             <div className="flex">
               {type === 'info' ? <Info className="h-4 w-4 shrink-0 mr-2 mt-0.5" /> : <AlertTriangle className="h-4 w-4 shrink-0 mr-2 mt-0.5" />}
               <div className="space-y-1">
@@ -1831,23 +1830,23 @@ export default function AdminContentEditor({
         parsedLines.push(<p key={i} className="text-xs text-zinc-700 leading-relaxed font-sans mt-1">{line}</p>);
       }
     }
-    
+
     return <div className="space-y-1.5">{parsedLines}</div>;
   };
 
   // Filter content items by category / status
   const filteredContents = contents.filter(c => {
     const s = cmsSearch.toLowerCase();
-    const matchesSearch = c.title.toLowerCase().includes(s) || 
-                          c.tags.some(t => t.includes(s)) || 
-                          (c.githubName || '').toLowerCase().includes(s);
+    const matchesSearch = c.title.toLowerCase().includes(s) ||
+      c.tags.some(t => t.includes(s)) ||
+      (c.githubName || '').toLowerCase().includes(s);
     if (!matchesSearch) return false;
     if (sidebarFilter === 'all') return true;
     if (sidebarFilter === 'drafts') return c.status === 'Draft';
     if (sidebarFilter === 'published') return c.status === 'Published';
     if (sidebarFilter === 'archived') return c.status === 'Archived';
-    return c.type.toLowerCase() === sidebarFilter.toLowerCase() || 
-           c.category.toLowerCase() === sidebarFilter.toLowerCase();
+    return c.type.toLowerCase() === sidebarFilter.toLowerCase() ||
+      c.category.toLowerCase() === sidebarFilter.toLowerCase();
   });
 
   // SEO dynamic color meter
@@ -1866,7 +1865,7 @@ export default function AdminContentEditor({
 
   const renderFileExplorerItem = (asset: CMSContentItem) => {
     const isSelected = asset.id === selectedContentId;
-    
+
     // Choose file icon based on type
     let FileIconComponent = FileText;
     if (asset.type === 'GitHub Repository' || asset.type === 'Skill') FileIconComponent = GitFork;
@@ -1885,7 +1884,7 @@ export default function AdminContentEditor({
           setFormTitle(trimmedName);
           setFormSlug(trimmedName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''));
           setFormMetaTitle(`${trimmedName} - Curated openSkills`);
-          
+
           const updatedMarkdown = updateMarkdownHeading(formMarkdown, trimmedName);
           setFormMarkdown(updatedMarkdown);
         }
@@ -1914,26 +1913,24 @@ export default function AdminContentEditor({
           e.stopPropagation();
           handleRenameFile();
         }}
-        className={`group p-1.5 flex items-center justify-between rounded-md cursor-pointer transition-colors border border-transparent text-[11px] ${
-          isSelected 
-            ? 'bg-zinc-900 text-white font-semibold' 
+        className={`group p-1.5 flex items-center justify-between rounded-md cursor-pointer transition-colors border border-transparent text-[11px] ${isSelected
+            ? 'bg-zinc-900 text-white font-semibold'
             : 'hover:bg-zinc-100 hover:border-zinc-200 text-zinc-700'
-        }`}
+          }`}
       >
         <div className="flex items-center space-x-1.5 truncate flex-1 min-w-0" title={asset.title}>
           <FileIconComponent className={`h-3.5 w-3.5 shrink-0 ${isSelected ? 'text-white' : 'text-zinc-400'}`} />
           <span className="truncate" title={asset.title}>{asset.title}</span>
         </div>
-        
+
         <div className="flex items-center space-x-1 shrink-0">
           {/* Small status dot instead of large status text */}
-          <span className={`h-1.5 w-1.5 rounded-full ${
-            asset.status === 'Published' 
-              ? 'bg-emerald-500' 
-              : asset.status === 'Draft' 
-                ? 'bg-orange-500' 
+          <span className={`h-1.5 w-1.5 rounded-full ${asset.status === 'Published'
+              ? 'bg-emerald-500'
+              : asset.status === 'Draft'
+                ? 'bg-orange-500'
                 : 'bg-zinc-400'
-          }`} title={asset.status} />
+            }`} title={asset.status} />
 
           {/* Rename File Button */}
           <button
@@ -1942,9 +1939,8 @@ export default function AdminContentEditor({
               e.stopPropagation();
               handleRenameFile();
             }}
-            className={`p-0.5 rounded transition-all opacity-0 group-hover:opacity-100 hover:scale-105 cursor-pointer ${
-              isSelected ? 'text-zinc-300 hover:bg-zinc-800' : 'text-zinc-500 hover:bg-zinc-200'
-            }`}
+            className={`p-0.5 rounded transition-all opacity-0 group-hover:opacity-100 hover:scale-105 cursor-pointer ${isSelected ? 'text-zinc-300 hover:bg-zinc-800' : 'text-zinc-500 hover:bg-zinc-200'
+              }`}
             title="Rename file"
           >
             <Edit3 className="h-2.5 w-2.5" />
@@ -1962,9 +1958,8 @@ export default function AdminContentEditor({
                 itemName: asset.title
               });
             }}
-            className={`p-0.5 rounded transition-all opacity-0 group-hover:opacity-100 hover:scale-105 cursor-pointer ${
-              isSelected ? 'text-zinc-300 hover:bg-zinc-800' : 'text-zinc-500 hover:bg-zinc-200'
-            }`}
+            className={`p-0.5 rounded transition-all opacity-0 group-hover:opacity-100 hover:scale-105 cursor-pointer ${isSelected ? 'text-zinc-300 hover:bg-zinc-800' : 'text-zinc-500 hover:bg-zinc-200'
+              }`}
             title="Move file"
           >
             <ArrowUpDown className="h-2.5 w-2.5" />
@@ -1987,9 +1982,8 @@ export default function AdminContentEditor({
               propagateCmsDelete(asset.id, asset.title, asset.type);
               showToast('🗑️ Asset moved to terminal archive.');
             }}
-            className={`p-0.5 rounded transition-all opacity-0 group-hover:opacity-100 hover:scale-105 cursor-pointer ${
-              isSelected ? 'text-red-300 hover:bg-zinc-800' : 'text-red-505 text-red-500 hover:bg-zinc-200'
-            }`}
+            className={`p-0.5 rounded transition-all opacity-0 group-hover:opacity-100 hover:scale-105 cursor-pointer ${isSelected ? 'text-red-300 hover:bg-zinc-800' : 'text-red-505 text-red-500 hover:bg-zinc-200'
+              }`}
             title="Delete file"
           >
             <Trash className="h-2.5 w-2.5" />
@@ -2015,9 +2009,9 @@ export default function AdminContentEditor({
     return (
       <div key={folder.id} className="space-y-0.5">
         {/* Folder Header */}
-        <div 
+        <div
           onClick={() => {
-            setExpandedFolders(prev => 
+            setExpandedFolders(prev =>
               isExpanded ? prev.filter(id => id !== folder.id) : [...prev, folder.id]
             );
           }}
@@ -2035,7 +2029,7 @@ export default function AdminContentEditor({
             )}
             <span className="truncate">{folder.name}</span>
           </div>
-          
+
           <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
             <span className="text-[9px] font-mono font-normal bg-zinc-200 px-1 rounded text-zinc-550">
               {folderFiles.length + subfolders.length}
@@ -2243,8 +2237,8 @@ export default function AdminContentEditor({
 
 
   return (
-    <div className="w-full bg-zinc-50 h-full border border-zinc-200 rounded-xl overflow-hidden shadow-md flex select-none font-sans relative">
-      
+    <div className="w-full bg-zinc-50 h-full overflow-hidden flex select-none font-sans relative">
+
       {/* Toast Notice rendering */}
       {toastMessage && (
         <div className="fixed bottom-5 right-5 z-[100] max-w-sm bg-zinc-900 text-white px-4 py-3 rounded-lg shadow-xl flex items-center space-x-3 text-xs font-sans">
@@ -2255,7 +2249,7 @@ export default function AdminContentEditor({
 
       {/* SIDEBAR NAVIGATION PANEL */}
       <aside className="w-64 border-r border-zinc-200 bg-white flex flex-col shrink-0">
-        
+
         {/* Branding header in workspace */}
         <div className="h-14 px-4 border-b border-zinc-150 flex items-center bg-zinc-50/50">
           <div className="flex items-center space-x-1.5 min-w-0">
@@ -2276,8 +2270,8 @@ export default function AdminContentEditor({
             </div>
             <span className="font-semibold text-zinc-700 truncate max-w-[120px]">admin@openskills.in</span>
           </div>
-          <button 
-            onClick={handleAdminLogout} 
+          <button
+            onClick={handleAdminLogout}
             className="text-[10px] text-red-500 hover:underline font-semibold"
           >
             Sign out
@@ -2292,9 +2286,8 @@ export default function AdminContentEditor({
           <nav className="space-y-0.5 text-xs text-zinc-700">
             <button
               onClick={() => setSidebarFilter('all')}
-              className={`w-full flex items-center justify-between p-2 rounded-md ${
-                sidebarFilter === 'all' ? 'bg-zinc-100 font-bold text-zinc-950' : 'hover:bg-zinc-50'
-              }`}
+              className={`w-full flex items-center justify-between p-2 rounded-md ${sidebarFilter === 'all' ? 'bg-zinc-100 font-bold text-zinc-950' : 'hover:bg-zinc-50'
+                }`}
             >
               <span className="flex items-center"><LayoutGrid className="mr-2 h-3.5 w-3.5 text-zinc-400" /> All Curated Files</span>
               <span className="font-mono text-[10px] text-zinc-450 bg-zinc-100 px-1.5 rounded">{contents.length}</span>
@@ -2302,9 +2295,8 @@ export default function AdminContentEditor({
 
             <button
               onClick={() => setSidebarFilter('drafts')}
-              className={`w-full flex items-center justify-between p-2 rounded-md ${
-                sidebarFilter === 'drafts' ? 'bg-zinc-100 font-bold text-zinc-950' : 'hover:bg-zinc-50'
-              }`}
+              className={`w-full flex items-center justify-between p-2 rounded-md ${sidebarFilter === 'drafts' ? 'bg-zinc-100 font-bold text-zinc-950' : 'hover:bg-zinc-50'
+                }`}
             >
               <span className="flex items-center"><Edit3 className="mr-2 h-3.5 w-3.5 text-orange-500" /> Drafts Queue</span>
               <span className="font-mono text-[10px] text-zinc-450 bg-zinc-100 px-1.5 rounded">{contents.filter(c => c.status === 'Draft').length}</span>
@@ -2312,9 +2304,8 @@ export default function AdminContentEditor({
 
             <button
               onClick={() => setSidebarFilter('published')}
-              className={`w-full flex items-center justify-between p-2 rounded-md ${
-                sidebarFilter === 'published' ? 'bg-zinc-100 font-bold text-zinc-950' : 'hover:bg-zinc-50'
-              }`}
+              className={`w-full flex items-center justify-between p-2 rounded-md ${sidebarFilter === 'published' ? 'bg-zinc-100 font-bold text-zinc-950' : 'hover:bg-zinc-50'
+                }`}
             >
               <span className="flex items-center"><Globe className="mr-2 h-3.5 w-3.5 text-emerald-500" /> Live Published</span>
               <span className="font-mono text-[10px] text-zinc-455 bg-zinc-100 px-1.5 rounded">{contents.filter(c => c.status === 'Published').length}</span>
@@ -2322,9 +2313,8 @@ export default function AdminContentEditor({
 
             <button
               onClick={() => setSidebarFilter('archived')}
-              className={`w-full flex items-center justify-between p-2 rounded-md ${
-                sidebarFilter === 'archived' ? 'bg-zinc-100 font-bold text-zinc-950' : 'hover:bg-zinc-50'
-              }`}
+              className={`w-full flex items-center justify-between p-2 rounded-md ${sidebarFilter === 'archived' ? 'bg-zinc-100 font-bold text-zinc-950' : 'hover:bg-zinc-50'
+                }`}
             >
               <span className="flex items-center"><Lock className="mr-2 h-3.5 w-3.5 text-zinc-400" /> Archived Vault</span>
               <span className="font-mono text-[10px] text-zinc-450 bg-zinc-100 px-1.5 rounded">{contents.filter(c => c.status === 'Archived').length}</span>
@@ -2342,9 +2332,8 @@ export default function AdminContentEditor({
               <button
                 key={type}
                 onClick={() => setSidebarFilter(type)}
-                className={`w-full flex items-center p-1.5 rounded-md text-left ${
-                  sidebarFilter === type ? 'bg-zinc-100 font-bold text-zinc-900' : 'hover:bg-zinc-50'
-                }`}
+                className={`w-full flex items-center p-1.5 rounded-md text-left ${sidebarFilter === type ? 'bg-zinc-100 font-bold text-zinc-900' : 'hover:bg-zinc-50'
+                  }`}
               >
                 <ChevronRight className="h-3 w-3 text-zinc-300 mr-1" />
                 <span>{type}s</span>
@@ -2366,7 +2355,7 @@ export default function AdminContentEditor({
               />
               <Search className="absolute left-2 top-2.5 h-3.5 w-3.5 text-zinc-400" />
             </div>
-            
+
             <button
               onClick={handleCreateNewFolder}
               className="h-8 px-2 border border-zinc-200 hover:border-zinc-300 bg-zinc-50 hover:bg-zinc-100 rounded-md flex items-center gap-1 text-[10px] font-bold text-zinc-650 cursor-pointer transition-colors"
@@ -2378,10 +2367,10 @@ export default function AdminContentEditor({
           </div>
 
           <div className="flex-1 overflow-y-auto p-2 space-y-2 select-none">
-            
+
             {/* 1. Folders Render */}
             <div className="space-y-1">
-              {folders.filter(f => !f.parentId).map(folder => 
+              {folders.filter(f => !f.parentId).map(folder =>
                 renderSidebarFolder(folder, 0)
               )}
             </div>
@@ -2391,7 +2380,7 @@ export default function AdminContentEditor({
               <div className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 px-1.5 py-0.5">
                 Root Directory
               </div>
-              {filteredContents.filter(c => !c.folderId || !folders.some(f => f.id === c.folderId)).map(asset => 
+              {filteredContents.filter(c => !c.folderId || !folders.some(f => f.id === c.folderId)).map(asset =>
                 renderFileExplorerItem(asset)
               )}
               {filteredContents.length === 0 && (
@@ -2430,11 +2419,11 @@ export default function AdminContentEditor({
                   <span>Create New Draft</span>
                   <ChevronDown className={`h-3.5 w-3.5 transition-transform ${isEmptyCreateDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
-                
+
                 {isEmptyCreateDropdownOpen && (
                   <>
-                    <div 
-                      className="fixed inset-0 z-40 bg-transparent" 
+                    <div
+                      className="fixed inset-0 z-40 bg-transparent"
                       onClick={() => setIsEmptyCreateDropdownOpen(false)}
                     />
                     <div className="absolute top-11 left-1/2 -translate-x-1/2 w-48 bg-white border border-zinc-200 rounded-md shadow-lg py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
@@ -2503,1306 +2492,1285 @@ export default function AdminContentEditor({
           <>
             {/* TOP TOOLBAR */}
             <header className="h-14 border-b border-zinc-200 px-4 flex items-center justify-between bg-white shrink-0">
-          
-          {/* Left panel: Type selection dropdown */}
-          <div className="flex items-center space-x-2">
-            <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 hidden lg:inline">
-              Type:
-            </label>
-            <div className="relative inline-flex items-center">
-              <select
-                value={formType}
-                onChange={(e) => handleFieldChange(() => setFormType(e.target.value as any))}
-                className="bg-zinc-50 border border-zinc-200 hover:border-zinc-300 rounded-md pl-2 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none min-w-[140px]"
-              >
-                <option value="Skill">Claude Skill</option>
-                <option value="GitHub Repository">GitHub Repository</option>
-                <option value="Prompt">AI Prompt template</option>
-                <option value="Category">Category Directory</option>
-                <option value="Tutorial">Development Tutorial</option>
-                <option value="Collection">Curated Collection</option>
-                <option value="Resource">External Resource</option>
-                <option value="Documentation">Technical Docs</option>
-                <option value="Workflow">Automations Workflow</option>
-                <option value="AI Agent">Autonomous Node</option>
-                <option value="Template">Starter template</option>
-              </select>
-              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500 pointer-events-none" />
-            </div>
 
-            <span className="text-zinc-250 font-light">•</span>
+              {/* Left panel: Type selection dropdown */}
+              <div className="flex items-center space-x-2">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 hidden lg:inline">
+                  Type:
+                </label>
+                <div className="relative inline-flex items-center">
+                  <select
+                    value={formType}
+                    onChange={(e) => handleFieldChange(() => setFormType(e.target.value as any))}
+                    className="bg-zinc-50 border border-zinc-200 hover:border-zinc-300 rounded-md pl-2 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none min-w-[140px]"
+                  >
+                    <option value="Skill">Claude Skill</option>
+                    <option value="GitHub Repository">GitHub Repository</option>
+                    <option value="Prompt">AI Prompt template</option>
+                    <option value="Category">Category Directory</option>
+                    <option value="Tutorial">Development Tutorial</option>
+                    <option value="Collection">Curated Collection</option>
+                    <option value="Resource">External Resource</option>
+                    <option value="Documentation">Technical Docs</option>
+                    <option value="Workflow">Automations Workflow</option>
+                    <option value="AI Agent">Autonomous Node</option>
+                    <option value="Template">Starter template</option>
+                  </select>
+                  <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500 pointer-events-none" />
+                </div>
 
-            {/* Quick status button indicators */}
-            <div className="relative inline-flex items-center">
-              <select
-                value={formStatus}
-                onChange={(e) => handleFieldChange(() => setFormStatus(e.target.value as any))}
-                className="bg-transparent text-[11px] font-bold text-zinc-500 uppercase pr-6 pl-1 focus:outline-none cursor-pointer appearance-none"
-              >
-                <option value="Draft">Draft Mode</option>
-                <option value="Review">In Review</option>
-                <option value="Published">Published Live</option>
-                <option value="Archived">Archived Vault</option>
-              </select>
-              <ChevronDown className="absolute right-1 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-405 text-zinc-400 pointer-events-none" />
-            </div>
-          </div>
+                <span className="text-zinc-250 font-light">•</span>
 
-          {/* Center Dynamic Content Title input box */}
-          <div className="flex-1 max-w-md mx-4">
-            <input
-              type="text"
-              value={formTitle}
-              onChange={(e) => handleFieldChange(() => {
-                const newTitle = e.target.value;
-                setFormTitle(newTitle);
-                setFormSlug(newTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''));
-                setFormMetaTitle(`${newTitle} - Curated openSkills`);
-                
-                const updatedMarkdown = updateMarkdownHeading(formMarkdown, newTitle);
-                setFormMarkdown(updatedMarkdown);
-              })}
-              placeholder="Give this content asset a title..."
-              className="w-full text-center h-8 bg-zinc-50 focus:bg-white border-0 hover:border-zinc-200 focus:outline-none text-xs font-bold text-zinc-800 placeholder-zinc-400 font-mono rounded"
-            />
-          </div>
-
-          {/* Right Action panel */}
-          <div className="flex items-center space-x-2 font-sans">
-            
-            {/* View Mode Switches */}
-            <div className="flex items-center bg-zinc-100 p-1 border border-zinc-150 rounded-lg text-zinc-400">
-              <button
-                onClick={() => setViewMode('editor')}
-                className={`p-1 rounded cursor-pointer ${viewMode === 'editor' ? 'bg-white text-zinc-800 shadow-sm' : 'hover:text-zinc-650'}`}
-                title="Editor Only View"
-              >
-                <Edit3 className="h-3 w-3" />
-              </button>
-              <button
-                onClick={() => setViewMode('split')}
-                className={`p-1 rounded cursor-pointer ${viewMode === 'split' ? 'bg-white text-zinc-800 shadow-sm' : 'hover:text-zinc-650'}`}
-                title="Split Side-by-Side Live View"
-              >
-                <Columns className="h-3 w-3" />
-              </button>
-              <button
-                onClick={() => setViewMode('preview')}
-                className={`p-1 rounded cursor-pointer ${viewMode === 'preview' ? 'bg-white text-zinc-800 shadow-sm' : 'hover:text-zinc-650'}`}
-                title="Preview Only Mode"
-              >
-                <Eye className="h-3 w-3" />
-              </button>
-            </div>
-
-            <span className="text-zinc-250 font-light">•</span>
-
-            {/* Save trigger */}
-            <button
-              onClick={handleCmsSaveRaw}
-              className="flex items-center space-x-1.5 h-8 px-3 rounded-md bg-zinc-950 text-white hover:bg-zinc-800 text-xs font-bold cursor-pointer transition-all shrink-0"
-            >
-              <Save className="h-3 w-3 text-emerald-400" />
-              <span className="hidden sm:inline">Sync & Publish</span>
-            </button>
-
-            {/* Quick action menu */}
-            <div className="relative">
-              <button
-                onClick={() => {
-                  const el = document.getElementById('cms-toolbar-actions-dropdown');
-                  if (el) el.classList.toggle('hidden');
-                }}
-                className="p-1 px-2 border border-zinc-200 rounded-md hover:bg-zinc-50 text-zinc-550 h-8 text-xs font-semibold select-none flex items-center justify-center shrink-0 cursor-pointer"
-              >
-                Actions
-              </button>
-              <div 
-                id="cms-toolbar-actions-dropdown"
-                className="absolute right-0 mt-1.5 w-40 rounded-md bg-white border border-zinc-200 shadow-lg ring-1 ring-zinc-950/5 p-1 z-40 text-left hidden font-medium text-xs text-zinc-650"
-              >
-                <button
-                  onClick={() => {
-                    handleDuplicateCurrent();
-                    document.getElementById('cms-toolbar-actions-dropdown')?.classList.add('hidden');
-                  }}
-                  className="w-full flex items-center px-2 py-1.5 hover:bg-zinc-50 text-zinc-700 rounded-md hover:text-zinc-950 text-left cursor-pointer"
-                >
-                  <Copy className="h-3.5 w-3.5 mr-2 text-zinc-400" />
-                  <span>Duplicate Asset</span>
-                </button>
-                <button
-                  onClick={() => {
-                    setRevisionSidebarOpen(true);
-                    document.getElementById('cms-toolbar-actions-dropdown')?.classList.add('hidden');
-                  }}
-                  className="w-full flex items-center px-2 py-1.5 hover:bg-zinc-50 text-zinc-700 rounded-md hover:text-zinc-950 text-left cursor-pointer"
-                >
-                  <History className="h-3.5 w-3.5 mr-2 text-indigo-500" />
-                  <span>Revisions History</span>
-                </button>
-                <button
-                  onClick={() => {
-                    handleDeleteCurrent();
-                    document.getElementById('cms-toolbar-actions-dropdown')?.classList.add('hidden');
-                  }}
-                  className="w-full flex items-center px-2 py-1.5 hover:bg-red-50 text-red-650 hover:text-red-750 rounded-md text-left cursor-pointer border-t border-zinc-100"
-                >
-                  <Trash2 className="h-3.5 w-3.5 mr-2 text-red-400" />
-                  <span>Move to Trash</span>
-                </button>
+                {/* Quick status button indicators */}
+                <div className="relative inline-flex items-center">
+                  <select
+                    value={formStatus}
+                    onChange={(e) => handleFieldChange(() => setFormStatus(e.target.value as any))}
+                    className="bg-transparent text-[11px] font-bold text-zinc-500 uppercase pr-6 pl-1 focus:outline-none cursor-pointer appearance-none"
+                  >
+                    <option value="Draft">Draft Mode</option>
+                    <option value="Review">In Review</option>
+                    <option value="Published">Published Live</option>
+                    <option value="Archived">Archived Vault</option>
+                  </select>
+                  <ChevronDown className="absolute right-1 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-405 text-zinc-400 pointer-events-none" />
+                </div>
               </div>
-            </div>
-          </div>
-        </header>
-        
-        {/* WORKSPACE SUB-METADATA TOOLBAR */}
-        <div className="h-10 bg-zinc-50/70 border-b border-zinc-150 px-4 flex items-center justify-between text-[11px] text-zinc-500 shrink-0 select-none">
-          
-          {/* File category and visibility details */}
-          <div className="flex items-center space-x-3.5">
-            <span className="flex items-center">
-              <Tag className="h-3 w-3 text-zinc-400 mr-1 shrink-0" />
-              Category:
-              <div className="relative inline-flex items-center ml-1">
-                <select
-                  value={formCategory}
-                  onChange={(e) => handleFieldChange(() => setFormCategory(e.target.value))}
-                  className="bg-transparent border-0 font-bold text-zinc-700 py-0 pl-1 pr-6 focus:outline-none focus:ring-0 cursor-pointer appearance-none text-[11px]"
-                >
-                  {categories.map(cat => (
-                    <option key={cat.id} value={cat.id}>{cat.name}</option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-1 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-450 pointer-events-none" />
-              </div>
-            </span>
 
-            <span>•</span>
-
-            <span className="flex items-center">
-              <Lock className="h-3 w-3 text-zinc-400 mr-1 shrink-0" />
-              Visibility:
-              <div className="relative inline-flex items-center ml-1">
-                <select
-                  value={formVisibility}
-                  onChange={(e) => handleFieldChange(() => setFormVisibility(e.target.value as any))}
-                  className="bg-transparent border-0 font-bold text-zinc-700 py-0 pl-1 pr-6 focus:outline-none focus:ring-0 cursor-pointer text-[10px] appearance-none"
-                >
-                  <option value="Public">Public Access</option>
-                  <option value="Private">Private Admin Only</option>
-                  <option value="Internal">Internal Development Only</option>
-                </select>
-                <ChevronDown className="absolute right-1 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-500 pointer-events-none" />
-              </div>
-            </span>
-
-            <span>•</span>
-
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setIsToolbarCreateDropdownOpen(!isToolbarCreateDropdownOpen)}
-                className="flex items-center justify-center space-x-1.5 h-7 px-2.5 bg-zinc-950 text-white rounded-md text-[10px] font-semibold hover:bg-zinc-800 cursor-pointer transition-colors"
-                title="Create a new draft asset"
-              >
-                <Plus className="h-3 w-3" />
-                <span>Create New</span>
-                <ChevronDown className={`h-2.5 w-2.5 transition-transform ${isToolbarCreateDropdownOpen ? 'rotate-180' : ''}`} />
-              </button>
-
-              {isToolbarCreateDropdownOpen && (
-                <>
-                  <div 
-                    className="fixed inset-0 z-40 bg-transparent" 
-                    onClick={() => setIsToolbarCreateDropdownOpen(false)}
-                  />
-                  <div className="absolute top-8 left-0 w-44 bg-white border border-zinc-200 rounded-md shadow-lg py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        handleCreateNewContentAsset('GitHub Repository');
-                        setIsToolbarCreateDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
-                    >
-                      <GitFork className="h-3 w-3 text-zinc-400" />
-                      <span>Create Skill</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        handleCreateNewContentAsset('Category');
-                        setIsToolbarCreateDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
-                    >
-                      <Tag className="h-3 w-3 text-zinc-400" />
-                      <span>Create Category</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        handleCreateNewContentAsset('Collection');
-                        setIsToolbarCreateDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
-                    >
-                      <Layers className="h-3 w-3 text-zinc-400" />
-                      <span>Create Collection</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        handleCreateNewContentAsset('Resource');
-                        setIsToolbarCreateDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
-                    >
-                      <ExternalLink className="h-3 w-3 text-zinc-400" />
-                      <span>Create Resource</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        handleCreateNewContentAsset('Prompt');
-                        setIsToolbarCreateDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
-                    >
-                      <Sparkles className="h-3 w-3 text-zinc-400" />
-                      <span>Create Prompt</span>
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
-
-            <button
-              type="button"
-              disabled={contents.length === 0}
-              onClick={() => {
-                handleDeleteCurrent();
-              }}
-              className={`flex items-center justify-center space-x-1.5 h-7 px-2.5 border rounded-md text-[10px] font-semibold transition-colors ${
-                contents.length === 0
-                  ? 'cursor-not-allowed text-zinc-400 border-zinc-200 bg-zinc-50'
-                  : 'border-red-200 text-red-650 hover:bg-red-50 hover:border-red-300 cursor-pointer'
-              }`}
-              title={contents.length === 0 ? "No active asset to delete" : "Delete currently active asset"}
-            >
-              <Trash2 className="h-3.5 w-3.5 text-red-500" />
-              <span className="text-red-600 font-medium">Delete Active</span>
-            </button>
-
-            <span>•</span>
-
-            <div className="flex items-center space-x-2">
-              <button
-                type="button"
-                onClick={() => {
-                  if (currentItem) {
-                    const newName = window.prompt("Rename file:", formTitle);
-                    if (newName && newName.trim()) {
-                      const trimmedName = newName.trim();
-                      setFormTitle(trimmedName);
-                      setFormSlug(trimmedName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''));
-                      setFormMetaTitle(`${trimmedName} - Curated openSkills`);
-                      const updatedMarkdown = updateMarkdownHeading(formMarkdown, trimmedName);
-                      setFormMarkdown(updatedMarkdown);
-                      setContents(prev => prev.map(c => {
-                        if (c.id === currentItem.id) {
-                          const updatedMd = updateMarkdownHeading(c.markdownContent || '', trimmedName);
-                          return {
-                            ...c,
-                            title: trimmedName,
-                            markdownContent: updatedMd
-                          };
-                        }
-                        return c;
-                      }));
-                      showToast(`✏️ Renamed file to "${trimmedName}"`);
-                    }
-                  }
-                }}
-                className="flex items-center space-x-1 hover:bg-zinc-250 active:bg-zinc-200/60 hover:bg-zinc-200 px-1.5 py-0.5 rounded cursor-pointer transition-colors text-zinc-650 text-zinc-600 hover:text-zinc-900"
-                title="Rename active file"
-              >
-                <Edit3 className="h-3 w-3" />
-                <span>Rename</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  if (currentItem) {
-                    setMoveItemModal({
-                      isOpen: true,
-                      itemType: 'file',
-                      itemId: currentItem.id,
-                      itemName: currentItem.title
-                    });
-                  }
-                }}
-                className="flex items-center space-x-1 hover:bg-zinc-250 active:bg-zinc-200/60 hover:bg-zinc-200 px-1.5 py-0.5 rounded cursor-pointer transition-colors text-zinc-650 text-zinc-600 hover:text-zinc-900"
-                title="Move active file to folder"
-              >
-                <ArrowUpDown className="h-3 w-3" />
-                <span>Move</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  if (currentItem) {
-                    const confirmDelete = window.confirm(`Are you sure you want to delete "${currentItem.title}"?`);
-                    if (confirmDelete) {
-                      handleDeleteCurrent();
-                    }
-                  }
-                }}
-                className="flex items-center space-x-1 hover:bg-red-50 active:bg-red-100 px-1.5 py-0.5 rounded cursor-pointer transition-colors text-red-500 hover:text-red-600"
-                title="Delete active file"
-              >
-                <Trash className="h-3 w-3" />
-                <span>Delete</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Autosave simulated log text */}
-          <div className="flex items-center space-x-2 font-mono text-[10px]">
-            {autosaveStatus === 'unsaved' && <span className="flex h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />}
-            {autosaveStatus === 'saving' && <span className="flex h-1.5 w-1.5 rounded-full bg-blue-500 animate-ping" />}
-            {autosaveStatus === 'saved' && <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500" />}
-
-            <span className="font-semibold text-zinc-400">
-              {autosaveStatus === 'unsaved' && 'Unsaved modifications'}
-              {autosaveStatus === 'saving' && 'Syncing client draft...'}
-              {autosaveStatus === 'saved' && `Cloud Synced at ${lastSavedTime}`}
-            </span>
-          </div>
-        </div>
-
-        {/* DOUBLE PANEL / NOTION SPLIT VIEW */}
-        <div id="cms-main-panels-container" className="flex-1 flex min-h-0 relative">
-          
-          {/* EDITOR AREA (LEFT/SPLIT PANEL) */}
-          {(viewMode === 'editor' || viewMode === 'split') && (
-            <div className="flex-1 flex flex-col border-r border-zinc-200 bg-white min-w-0 h-full relative">
-              
-              <div className="p-4.5 border-b border-zinc-100 bg-zinc-50/10 space-y-3 shrink-0 max-h-[320px] overflow-y-auto">
+              {/* Center Dynamic Content Title input box */}
+              <div className="flex-1 max-w-md mx-4">
                 <input
                   type="text"
-                  value={formDescription}
-                  onChange={(e) => handleFieldChange(() => setFormDescription(e.target.value))}
-                  placeholder="Insert bullet points summarizing this tool integration capability..."
-                  className="w-full text-xs font-medium text-zinc-600 bg-transparent border-b border-transparent hover:border-zinc-150 focus:border-blue-600 focus:outline-none pb-1 font-sans"
+                  value={formTitle}
+                  onChange={(e) => handleFieldChange(() => {
+                    const newTitle = e.target.value;
+                    setFormTitle(newTitle);
+                    setFormSlug(newTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''));
+                    setFormMetaTitle(`${newTitle} - Curated openSkills`);
+
+                    const updatedMarkdown = updateMarkdownHeading(formMarkdown, newTitle);
+                    setFormMarkdown(updatedMarkdown);
+                  })}
+                  placeholder="Give this content asset a title..."
+                  className="w-full text-center h-8 bg-zinc-50 focus:bg-white border-0 hover:border-zinc-200 focus:outline-none text-xs font-bold text-zinc-800 placeholder-zinc-400 font-mono rounded"
                 />
-
-                {/* Sub-block based on active Content Type */}
-                <div className="border border-zinc-200/80 rounded-lg p-3 bg-white space-y-2 text-xs">
-                  <div className="flex items-center justify-between font-bold text-zinc-400 text-[10px] uppercase mb-1">
-                    <span>{formType} Rich attributes & components</span>
-                    <span className="text-[9px] bg-indigo-50 text-indigo-700 px-1 py-0.5 rounded font-bold font-mono">Custom Input Node</span>
-                  </div>
-
-                  {/* GitHub Repo Details form */}
-                  {(formType === 'Skill' || formType === 'GitHub Repository') && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-zinc-500">Repository URL</label>
-                        <div className="flex gap-1.5">
-                          <input
-                            type="text"
-                            value={formGithubUrl}
-                            onChange={(e) => handleFieldChange(() => setFormGithubUrl(e.target.value))}
-                            placeholder="https://github.com/anthropics/skills/blob/main/skills/algorithmic-art/SKILL.md"
-                            className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
-                          />
-                          <button
-                            type="button"
-                            onClick={simulateGithubMetadataFetch}
-                            className="px-2 py-1 bg-zinc-200 hover:bg-zinc-300 rounded text-[10px] font-bold cursor-pointer text-zinc-700 inline-flex items-center gap-1"
-                            title="Auto Fetch stars/forks from api"
-                          >
-                            <RefreshCw className="h-3 w-3 shrink-0" />
-                            <span>Fetch</span>
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-3 gap-1">
-                        <div className="space-y-1">
-                          <label className="text-[10px] font-bold text-zinc-500">Stars</label>
-                          <input
-                            type="number"
-                            value={formGithubStars}
-                            onChange={(e) => handleFieldChange(() => setFormGithubStars(Number(e.target.value)))}
-                            className="bg-zinc-50 px-1 py-1 border border-zinc-200 rounded text-xs w-full text-center"
-                          />
-                        </div>
-                        <div className="space-y-1">
-                          <label className="text-[10px] font-bold text-zinc-500">Forks</label>
-                          <input
-                            type="number"
-                            value={formGithubForks}
-                            onChange={(e) => handleFieldChange(() => setFormGithubForks(Number(e.target.value)))}
-                            className="bg-zinc-50 px-1 py-1 border border-zinc-200 rounded text-xs w-full text-center"
-                          />
-                        </div>
-                        <div className="space-y-1">
-                          <label className="text-[10px] font-bold text-zinc-500">License</label>
-                          <input
-                            type="text"
-                            value={formGithubLicense}
-                            onChange={(e) => handleFieldChange(() => setFormGithubLicense(e.target.value))}
-                            className="bg-zinc-50 px-1.5 py-1 border border-zinc-200 rounded text-xs w-full text-center"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* AI Prompt parameters */}
-                  {formType === 'Prompt' && (
-                    <div className="space-y-2">
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          value={formPromptTitle}
-                          onChange={(e) => handleFieldChange(() => setFormPromptTitle(e.target.value))}
-                          placeholder="Prompt template name..."
-                          className="w-1/2 bg-zinc-50 p-1 px-1.5 border border-zinc-200 rounded text-xs"
-                        />
-                        <div className="relative w-1/2 inline-flex items-center">
-                          <select
-                            value={formPromptCategory}
-                            onChange={(e) => handleFieldChange(() => setFormPromptCategory(e.target.value))}
-                            className="w-full bg-zinc-50 p-1 pl-2 pr-7 border border-zinc-200 rounded text-xs focus:outline-none cursor-pointer appearance-none"
-                          >
-                            <option value="Coding">Coding</option>
-                            <option value="Writing">Writing</option>
-                            <option value="Marketing">Marketing</option>
-                            <option value="Research">Research</option>
-                            <option value="Automation">Automation</option>
-                          </select>
-                          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500 pointer-events-none" />
-                        </div>
-                      </div>
-
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-zinc-450 flex items-center justify-between">
-                          <span>Prompt Variable Injectors</span>
-                          <span className="text-[9px] text-zinc-400 lowercase">use double curly braces {"{{variable}}"}</span>
-                        </label>
-                        <div className="flex flex-wrap items-center gap-1.5 bg-zinc-50 border border-zinc-200 p-1.5 rounded-lg">
-                          {formPromptVariables.map((v) => (
-                            <span 
-                              key={v}
-                              className="font-mono text-[9px] font-semibold text-blue-800 bg-blue-10/10 border border-blue-200 px-1.5 py-0.5 rounded-md flex items-center gap-1 bg-amber-50"
-                            >
-                              <span>{`{{${v}}}`}</span>
-                              <button 
-                                type="button"
-                                onClick={() => handleRemovePromptVariable(v)}
-                                className="text-red-500 hover:text-red-700 cursor-pointer"
-                              >
-                                &times;
-                              </button>
-                            </span>
-                          ))}
-                          <div className="flex items-center gap-1 ml-auto">
-                            <input
-                              type="text"
-                              value={newVariableInput}
-                              onChange={(e) => setNewVariableInput(e.target.value)}
-                              placeholder="e.g. query"
-                              className="w-16 h-5 p-0.5 px-1 font-mono text-[9px] bg-white border border-zinc-300 rounded"
-                            />
-                            <button
-                              type="button"
-                              onClick={handleAddPromptVariable}
-                              className="p-1 px-1.5 bg-zinc-250 hover:bg-zinc-300 hover:text-zinc-950 font-bold text-[9px] border border-zinc-300 rounded cursor-pointer"
-                            >
-                              Add
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Category Directory Attributes */}
-                  {formType === 'Category' && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-zinc-500">Category ID / Slug</label>
-                        <input
-                          type="text"
-                          value={formSlug}
-                          onChange={(e) => handleFieldChange(() => setFormSlug(e.target.value.toLowerCase().replace(/\s+/g, '-')))}
-                          placeholder="e.g. development"
-                          className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-zinc-500">Lucide Icon Name</label>
-                        <div className="relative inline-flex items-center w-full">
-                          <select
-                            value={formTags[0] || 'Code2'}
-                            onChange={(e) => handleFieldChange(() => setFormTags([e.target.value]))}
-                            className="bg-zinc-50 border border-zinc-200 hover:border-zinc-300 rounded-md pl-2 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none w-full"
-                          >
-                            <option value="Code2">Code2 (Development)</option>
-                            <option value="PenTool">PenTool (Writing)</option>
-                            <option value="BookOpen">BookOpen (Research)</option>
-                            <option value="Megaphone">Megaphone (Marketing)</option>
-                            <option value="Palette">Palette (Design)</option>
-                            <option value="Clock">Clock (Productivity)</option>
-                            <option value="Cpu">Cpu (Automation)</option>
-                            <option value="GraduationCap">GraduationCap (Education)</option>
-                            <option value="Briefcase">Briefcase (Business)</option>
-                            <option value="Bot">Bot (Agents)</option>
-                          </select>
-                          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500 pointer-events-none" />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Collection Attributes */}
-                  {formType === 'Collection' && (
-                    <div className="space-y-2">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        <div className="space-y-1">
-                          <label className="text-[10px] font-bold text-zinc-500">Collection ID / Slug</label>
-                          <input
-                            type="text"
-                            value={formSlug}
-                            onChange={(e) => handleFieldChange(() => setFormSlug(e.target.value.toLowerCase().replace(/\s+/g, '-')))}
-                            placeholder="e.g. best-coding-skills"
-                            className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
-                          />
-                        </div>
-                        <div className="space-y-1">
-                          <label className="text-[10px] font-bold text-zinc-500">Color Theme Badge</label>
-                          <div className="relative inline-flex items-center w-full">
-                            <select
-                              value={formGithubLicense || 'blue'}
-                              onChange={(e) => handleFieldChange(() => setFormGithubLicense(e.target.value))}
-                              className="bg-zinc-50 border border-zinc-200 hover:border-zinc-300 rounded-md pl-2 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none w-full"
-                            >
-                              <option value="blue">Blue</option>
-                              <option value="purple">Purple</option>
-                              <option value="zinc">Zinc</option>
-                              <option value="green">Green</option>
-                              <option value="indigo">Indigo</option>
-                              <option value="amber">Amber</option>
-                              <option value="rose">Rose</option>
-                              <option value="teal">Teal</option>
-                            </select>
-                            <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500 pointer-events-none" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-zinc-500">Select Included Skills</label>
-                        <div className="max-h-24 overflow-y-auto border border-zinc-200 rounded-lg p-2 space-y-1 bg-zinc-50">
-                          {skills.map(s => {
-                            const isChecked = formTags.includes(s.id);
-                            return (
-                              <label key={s.id} className="flex items-center space-x-2 text-[11px] font-medium text-zinc-700 cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  checked={isChecked}
-                                  onChange={() => {
-                                    handleFieldChange(() => {
-                                      if (isChecked) {
-                                        setFormTags(prev => prev.filter(t => t !== s.id));
-                                      } else {
-                                        setFormTags(prev => [...prev, s.id]);
-                                      }
-                                    });
-                                  }}
-                                  className="rounded text-blue-600 focus:ring-blue-500"
-                                />
-                                <span>{s.name}</span>
-                              </label>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Resource Attributes */}
-                  {formType === 'Resource' && (
-                    <div className="space-y-2">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        <div className="space-y-1">
-                          <label className="text-[10px] font-bold text-zinc-500">Resource ID / Slug</label>
-                          <input
-                            type="text"
-                            value={formSlug}
-                            onChange={(e) => handleFieldChange(() => setFormSlug(e.target.value.toLowerCase().replace(/\s+/g, '-')))}
-                            placeholder="e.g. resource-mcp-guide"
-                            className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
-                          />
-                        </div>
-                        <div className="space-y-1">
-                          <label className="text-[10px] font-bold text-zinc-500">Resource Type</label>
-                          <div className="relative inline-flex items-center w-full">
-                            <select
-                              value={formTags[0] || 'Documentation'}
-                              onChange={(e) => handleFieldChange(() => setFormTags([e.target.value]))}
-                              className="bg-zinc-50 border border-zinc-200 hover:border-zinc-300 rounded-md pl-2 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none w-full"
-                            >
-                              <option value="Documentation">Documentation</option>
-                              <option value="Guide">Guide</option>
-                              <option value="Article">Article</option>
-                              <option value="Video">Video</option>
-                            </select>
-                            <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500 pointer-events-none" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                        <div className="space-y-1 sm:col-span-2">
-                          <label className="text-[10px] font-bold text-zinc-500">External URL Link</label>
-                          <input
-                            type="text"
-                            value={formGithubUrl}
-                            onChange={(e) => handleFieldChange(() => setFormGithubUrl(e.target.value))}
-                            placeholder="https://..."
-                            className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
-                          />
-                        </div>
-                        <div className="space-y-1">
-                          <label className="text-[10px] font-bold text-zinc-500">Read / Watch Time</label>
-                          <input
-                            type="text"
-                            value={formGithubLicense}
-                            onChange={(e) => handleFieldChange(() => setFormGithubLicense(e.target.value))}
-                            placeholder="e.g. 5 min read"
-                            className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
-                          />
-                        </div>
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-zinc-500">Author Name</label>
-                        <input
-                          type="text"
-                          value={formGithubName}
-                          onChange={(e) => handleFieldChange(() => setFormGithubName(e.target.value))}
-                          placeholder="e.g. Anthropic Developer Relations"
-                          className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Image Blocks and embed video elements */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-zinc-100">
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-bold text-zinc-500 flex items-center justify-between">
-                        <span>Image Attachments (Drag/Drop)</span>
-                        {formImageUrl && <button onClick={() => { setFormImageUrl(''); setFormImageCaption(''); }} className="text-red-500 font-bold text-[9px] hover:underline">Clear</button>}
-                      </label>
-                      
-                      {imageUploadProgress !== null ? (
-                        <div className="w-full bg-zinc-100 h-8 rounded border border-dashed border-zinc-300 flex items-center px-3 gap-2">
-                          <span className="animate-spin h-3.5 w-3.5 border-2 border-zinc-500 border-t-transparent rounded-full" />
-                          <div className="flex-1 bg-zinc-200 rounded-full h-1.5">
-                            <div className="bg-blue-600 h-1.5 rounded-full" style={{ width: `${imageUploadProgress}%` }} />
-                          </div>
-                          <span className="text-[9px] font-mono font-bold text-zinc-500">{imageUploadProgress}%</span>
-                        </div>
-                      ) : formImageUrl ? (
-                        <div className="flex flex-col gap-2 bg-zinc-50 border border-zinc-200 rounded-lg p-2.5 shadow-sm animate-in fade-in duration-200">
-                          <div className="aspect-[16/10] w-full overflow-hidden rounded-md border border-zinc-150 bg-zinc-100">
-                            <img 
-                              src={formImageUrl} 
-                              alt="preview" 
-                              referrerPolicy="no-referrer"
-                              className="h-full w-full object-cover hover:scale-[1.02] transition-transform duration-300" 
-                            />
-                          </div>
-                          <div className="flex items-center gap-2 px-0.5">
-                            <span className="text-[9px] uppercase tracking-wider font-extrabold text-zinc-400 shrink-0">Caption:</span>
-                            <input
-                              type="text"
-                              value={formImageCaption}
-                              onChange={(e) => handleFieldChange(() => setFormImageCaption(e.target.value))}
-                              placeholder="Captions text..."
-                              className="bg-transparent border-0 p-0 text-[10px] w-full focus:ring-0 focus:outline-none italic text-zinc-700 font-medium"
-                            />
-                          </div>
-                        </div>
-                      ) : (
-                        <div 
-                          onClick={simulateImageDrop}
-                          className="h-8 border border-dashed border-zinc-250 hover:border-zinc-400 bg-zinc-50 rounded flex items-center justify-center gap-1 text-[10px] text-zinc-450 cursor-pointer select-none transition-colors"
-                        >
-                          <ImageIcon className="h-3.5 w-3.5 text-zinc-400" />
-                          <span>Drag screenshot / click to load</span>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-bold text-zinc-500">Video Demonstration Link Embed (Vimeo/Yt)</label>
-                      <input
-                        type="text"
-                        value={formVideoUrl}
-                        onChange={(e) => handleFieldChange(() => setFormVideoUrl(e.target.value))}
-                        placeholder="https://youtube.com/watch?v=..."
-                        className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-[10px] w-full focus:bg-white"
-                      />
-                    </div>
-                  </div>
-
-                </div>
               </div>
 
-              {/* Slash Command floating helper menu */}
-              {slashMenuOpen && (
-                <div 
-                  className="absolute left-6 bottom-40 w-52 rounded-lg border border-zinc-200 bg-white shadow-xl ring-1 ring-zinc-950/5 p-1.5 z-55 text-left animate-in slide-in-from-bottom-2 duration-100"
-                >
-                  <div className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 px-2 py-1 border-b border-zinc-100">
-                    Notion Slash commands
-                  </div>
-                  <div className="max-h-52 overflow-y-auto mt-1 text-xs">
-                    <button
-                      onClick={() => insertSlashCommand('heading-1')}
-                      className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
-                    >
-                      <span className="font-bold text-zinc-500">H1</span>
-                      <span className="font-semibold text-zinc-805">Heading Large</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => insertSlashCommand('heading-2')}
-                      className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
-                    >
-                      <span className="font-bold text-zinc-500 text-[10px]">H2</span>
-                      <span className="font-semibold text-zinc-800">Heading Section</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => insertSlashCommand('callout-info')}
-                      className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
-                    >
-                      <Info className="h-3.5 w-3.5 text-blue-500 shrink-0" />
-                      <span className="font-semibold text-zinc-800">Callout Tip Box</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => insertSlashCommand('callout-warning')}
-                      className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
-                    >
-                      <AlertCircle className="h-3.5 w-3.5 text-amber-500 shrink-0" />
-                      <span className="font-semibold text-zinc-800">Callout Caution</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => insertSlashCommand('code')}
-                      className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
-                    >
-                      <FileCode className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
-                      <span className="font-semibold text-zinc-800">TS Code Block</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => insertSlashCommand('table')}
-                      className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
-                    >
-                      <TableIcon className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
-                      <span className="font-semibold text-zinc-800">Markdown Table</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => insertSlashCommand('checklist')}
-                      className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
-                    >
-                      <CheckCircle className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
-                      <span className="font-semibold text-zinc-800">Task Checklist</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => insertSlashCommand('image')}
-                      className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
-                    >
-                      <ImageIcon className="h-3.5 w-3.5 text-purple-500 shrink-0" />
-                      <span className="font-semibold text-zinc-800">Card Showcase Image</span>
-                    </button>
-                  </div>
-                </div>
-              )}
+              {/* Right Action panel */}
+              <div className="flex items-center space-x-2 font-sans">
 
-              {/* EDITOR TEXTAREA WORKSPACE */}
-              <div className="flex-1 flex flex-col p-4 bg-zinc-50/10 relative">
-                
-                <div className="flex items-center justify-between text-[11px] text-zinc-400 mb-1 font-mono px-1">
-                  <div className="flex items-center space-x-3">
-                    <span>Markdown documentation body editor (Support slash command)</span>
-                    <span className="text-zinc-300">|</span>
-                    <div className="flex items-center space-x-1.5">
-                      <button
-                        type="button"
-                        onClick={handleUndo}
-                        disabled={historyIndex === 0}
-                        className={`p-0.5 rounded cursor-pointer transition-colors ${
-                          historyIndex === 0 
-                            ? 'text-zinc-300 cursor-not-allowed' 
-                            : 'text-zinc-650 hover:text-zinc-950 hover:bg-zinc-100'
-                        }`}
-                        title="Undo (Ctrl+Z)"
-                      >
-                        <Undo className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleRedo}
-                        disabled={historyIndex >= history.length - 1}
-                        className={`p-0.5 rounded cursor-pointer transition-colors ${
-                          historyIndex >= history.length - 1 
-                            ? 'text-zinc-300 cursor-not-allowed' 
-                            : 'text-zinc-650 hover:text-zinc-950 hover:bg-zinc-100'
-                        }`}
-                        title="Redo (Ctrl+Y)"
-                      >
-                        <Redo className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                  <span>{formMarkdown.length} chars</span>
-                </div>
-
-                <textarea
-                  ref={textareaRef}
-                  value={formMarkdown}
-                  onChange={(e) => handleFieldChange(() => setFormMarkdown(e.target.value))}
-                  onKeyDown={handleTextareaKeyDown}
-                  placeholder="Type '/' to trigger Notion Commands menu instantly..."
-                  className="w-full flex-1 p-4 rounded-xl border border-zinc-200/90 focus:border-zinc-400 focus:outline-none focus:ring-1 focus:ring-zinc-300 text-xs text-zinc-800 leading-relaxed font-mono resize-none bg-white shadow-inner"
-                />
-
-                <div className="text-[10px] text-zinc-400 mt-2 italic px-1 flex justify-between">
-                  <span>Shortcuts: Press '⌘K' or 'Ctrl K' to quickly focus primary lookup search tags.</span>
-                  <span>Tips: Wrap your callout containers nicely using :::info.</span>
-                </div>
-
-              </div>
-
-            </div>
-          )}
-
-          {/* SPLIT LIVE PREVIEW / MARKDOWN RENDER PANEL */}
-          {(viewMode === 'split' || viewMode === 'preview') && (
-            <div className="flex-1 overflow-y-auto p-6 bg-white min-w-0 h-full">
-              
-              <div className="max-w-2xl mx-auto space-y-6">
-                
-                {/* Visual Document Heading card */}
-                <span className="text-[9px] font-extrabold uppercase bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 text-zinc-700 px-2 py-1 rounded">
-                  Live View: {formType}
-                </span>
-
-                <div className="space-y-2 mt-2">
-                  <h1 className="font-sans font-black tracking-tight text-xl sm:text-3xl text-zinc-950 leading-tight">
-                    {formTitle || <span className="text-zinc-302 text-zinc-300">Untitled Core Module</span>}
-                  </h1>
-                  
-                  {formDescription && (
-                    <p className="text-xs sm:text-sm text-zinc-500 leading-relaxed max-w-xl italic">
-                      {formDescription}
-                    </p>
-                  )}
-                </div>
-
-                {/* Sub-rendered visual widget blocks */}
-                
-                {/* Custom Block: GitHub style repo card */}
-                {formGithubUrl && (
-                  <div className="border border-zinc-200/90 rounded-xl overflow-hidden bg-zinc-50 p-4 font-sans hover:shadow-sm transition-all duration-200">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <span className="flex h-6 w-6 items-center justify-center bg-zinc-950 rounded text-white text-[10px] font-bold uppercase font-mono">
-                          GH
-                        </span>
-                        <div>
-                          <div className="text-xs font-bold text-zinc-950 hover:underline hover:text-blue-600 truncate max-w-xs flex items-center">
-                            {formGithubName || 'claudelabs/repository'}
-                            <ExternalLink className="h-2.5 w-2.5 ml-1 inline text-zinc-400" />
-                          </div>
-                          <span className="text-[10px] text-zinc-400 block -mt-0.5 font-mono">MIT license configured</span>
-                        </div>
-                      </div>
-
-                      <span className="text-[10px] font-bold bg-white text-zinc-650 px-2.5 py-1 rounded-md border border-zinc-150 flex items-center gap-1 shrink-0 font-mono">
-                        <CheckCircle className="h-3 w-3 text-emerald-500 mr-0.5" />
-                        Verified Repo
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-2 py-2 text-center text-zinc-700 border-t border-zinc-150">
-                      <div>
-                        <div className="font-mono text-xs font-black text-zinc-900 flex items-center justify-center gap-0.5">
-                          <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500 shrink-0" />
-                          <span>{(formGithubStars ?? 142).toLocaleString()}</span>
-                        </div>
-                        <span className="text-[9px] text-zinc-450 uppercase font-semibold">Stars repository</span>
-                      </div>
-                      <div className="border-x border-zinc-150">
-                        <div className="font-mono text-xs font-black text-zinc-900 flex items-center justify-center gap-0.5">
-                          <GitFork className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
-                          <span>{(formGithubForks ?? 24).toLocaleString()}</span>
-                        </div>
-                        <span className="text-[9px] text-zinc-450 uppercase font-semibold">Forks branch</span>
-                      </div>
-                      <div>
-                        <div className="font-mono text-[10px] font-black text-zinc-900 text-zinc-700 truncate px-1">
-                          {formGithubLicense}
-                        </div>
-                        <span className="text-[9px] text-zinc-450 uppercase font-semibold">Usage License</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Custom Block: Image block formatting */}
-                {formImageUrl && (
-                  <figure className="my-5 space-y-1.5 font-sans">
-                    <img 
-                      src={formImageUrl} 
-                      alt="Curated preview graphic" 
-                      className="w-full h-44 object-cover rounded-xl border border-zinc-100 shadow"
-                    />
-                    {formImageCaption && (
-                      <figcaption className="text-center text-[10px] text-zinc-400 italic">
-                        {formImageCaption}
-                      </figcaption>
-                    )}
-                  </figure>
-                )}
-
-                {/* Custom Block: Special prompt card block */}
-                {formType === 'Prompt' && (
-                  <div className="border border-zinc-200/90 rounded-xl overflow-hidden bg-zinc-50 font-sans shadow-sm">
-                    <div className="bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-2 flex items-center justify-between border-b border-zinc-150">
-                      <span className="text-[10px] font-bold text-zinc-700 tracking-wider flex items-center">
-                        <Sparkles className="h-3.5 w-3.5 text-blue-600 mr-1 shrink-0" />
-                        AI MODEL INTEGRATOR PANEL
-                      </span>
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(formPromptContent || '');
-                          showToast('📋 Prompt instruction copied to clipboard!');
-                        }}
-                        className="text-[10px] font-bold text-blue-700 hover:underline flex items-center gap-1 cursor-pointer bg-white px-2 py-0.5 border border-blue-200 rounded"
-                      >
-                        <Copy className="h-2.5 w-2.5" />
-                        Copy template
-                      </button>
-                    </div>
-
-                    <div className="p-4 bg-white space-y-3">
-                      <div>
-                        <span className="font-mono font-bold text-zinc-900 text-xs block">{formPromptTitle || 'Standard General Assistant instruction'}</span>
-                        <span className="text-[9px] text-zinc-400 block -mt-0.5">Category: {formPromptCategory} prompt guidelines</span>
-                      </div>
-
-                      <div className="bg-zinc-50 rounded-lg p-3 text-xs leading-relaxed border border-zinc-200 text-zinc-700 whitespace-pre-wrap font-mono">
-                        {formPromptContent || <span className="text-zinc-402 text-zinc-300">Set prompt content variables in editor...</span>}
-                      </div>
-
-                      {formPromptVariables.length > 0 && (
-                        <div className="pt-2 border-t border-zinc-100 space-y-2">
-                          <span className="text-[10px] font-bold text-zinc-450 uppercase tracking-wide">Interactive variables checklist:</span>
-                          <div className="flex flex-wrap gap-1.5">
-                            {formPromptVariables.map(v => (
-                              <span key={v} className="px-2 py-0.5 rounded text-[10px] font-mono font-bold text-zinc-700 bg-zinc-100 border border-zinc-200">
-                                {v}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Markdown text elements wrapper */}
-                <article id="rendered-markdown-root" className="prose prose-zinc dark:prose-invert max-w-none prose-sm text-zinc-800">
-                  {formatMarkdownPreviewHTML(formMarkdown)}
-                </article>
-
-                {/* Tags cluster */}
-                {formTags.length > 0 && (
-                  <div className="pt-4 border-t border-zinc-100 flex flex-wrap items-center gap-1.5 text-xs text-zinc-650">
-                    <span className="font-bold text-[10px] uppercase text-zinc-400">Attached tags:</span>
-                    {formTags.map(tag => (
-                      <span 
-                        key={tag} 
-                        className="font-mono text-[10px] font-bold text-zinc-600 bg-zinc-100 py-0.5 px-2 rounded border border-zinc-200 flex items-center gap-1"
-                      >
-                        <span>{tag}</span>
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                {/* Fictitious Embedded video preview widget layout */}
-                {formVideoUrl && (
-                  <div className="border border-zinc-150 rounded-lg overflow-hidden bg-zinc-950 p-2 font-sans relative my-4">
-                    <div className="aspect-video w-full rounded bg-zinc-900 flex items-center justify-center border border-zinc-800 text-center flex-col shrink-0">
-                      <div className="h-10 w-10 bg-red-600 text-white rounded-full flex items-center justify-center animate-pulse mb-2 shadow cursor-pointer">
-                        <Play className="h-5 w-5 fill-white text-white ml-0.5" />
-                      </div>
-                      <span className="text-[10px] font-bold text-zinc-400 uppercase font-mono">Dynamic Video Embed Player Block</span>
-                      <span className="text-[9px] text-zinc-500 truncate max-w-xs mt-0.5">{formVideoUrl}</span>
-                    </div>
-                  </div>
-                )}
-
-              </div>
-
-            </div>
-          )}
-
-          {/* EDIT SIDEBAR / SEO / SETTINGS ACCORDION */}
-          <aside className="w-80 border-l border-zinc-200 bg-zinc-50/50 flex flex-col shrink-0 overflow-y-auto">
-            
-            {/* SEO SETTINGS HEADER */}
-            <div className="p-4 border-b border-zinc-200 bg-white shadow-sm flex items-center justify-between">
-              <span className="text-xs font-bold text-zinc-950 uppercase flex items-center">
-                <Settings className="h-4 w-4 mr-1.5 text-zinc-500 shrink-0" />
-                SEO & Release Controls
-              </span>
-              <span className={`text-[10px] font-bold text-white px-2 py-0.5 rounded ${getScoreColor(seoScore)}`}>
-                Score: {seoScore}/100
-              </span>
-            </div>
-
-            {/* SEO Side panel Inputs card */}
-            <div className="p-4 space-y-4 text-xs font-sans">
-              
-              <div className="bg-white border border-zinc-200 rounded-lg p-3 space-y-3">
-                <div className="text-[9px] font-bold uppercase tracking-wider text-zinc-450 mb-1 flex justify-between">
-                  <span>SEO Score Diagnostics</span>
-                  <span className="font-mono text-zinc-400 font-normal">{getScoreLabel(seoScore)}</span>
-                </div>
-                <div className="w-full bg-zinc-100 rounded-full h-1.5 overflow-hidden">
-                  <div className={`h-1.5 rounded-full ${getScoreColor(seoScore)}`} style={{ width: `${seoScore}%` }} />
-                </div>
-              </div>
-
-              {/* Tag Selection suggestions panel */}
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
-                  Tags system keywords
-                </label>
-                <div className="flex flex-wrap gap-1 bg-white p-2 border border-zinc-200 rounded-lg min-h-12 items-center">
-                  {formTags.map(t => (
-                    <span key={t} className="bg-zinc-100 border border-zinc-200 rounded text-[10px] font-mono px-1.5 py-0.5 flex items-center gap-1 text-zinc-700">
-                      <span>{t}</span>
-                      <button onClick={() => handleRemoveTag(t)} className="text-red-500 hover:text-red-750 font-bold font-sans">&times;</button>
-                    </span>
-                  ))}
-                  {formTags.length === 0 && <span className="text-[10px] text-zinc-400 italic">No tags selected.</span>}
-                </div>
-                
-                <div className="flex gap-1.5 pt-0.5">
-                  <input
-                    type="text"
-                    value={newTagInput}
-                    onChange={(e) => setNewTagInput(e.target.value)}
-                    placeholder="Add tags, e.g. sql"
-                    className="w-full bg-white px-1.5 py-1 border border-zinc-250 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded text-xs"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        handleAddNewTag();
-                      }
-                    }}
-                  />
+                {/* View Mode Switches */}
+                <div className="flex items-center bg-zinc-100 p-1 border border-zinc-150 rounded-lg text-zinc-400">
                   <button
-                    type="button"
-                    onClick={handleAddNewTag}
-                    className="px-2 py-1 bg-zinc-200 hover:bg-zinc-300 rounded text-[10px] font-extrabold cursor-pointer border border-zinc-300"
+                    onClick={() => setViewMode('editor')}
+                    className={`p-1 rounded cursor-pointer ${viewMode === 'editor' ? 'bg-white text-zinc-800 shadow-sm' : 'hover:text-zinc-650'}`}
+                    title="Editor Only View"
                   >
-                    Add
+                    <Edit3 className="h-3 w-3" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode('split')}
+                    className={`p-1 rounded cursor-pointer ${viewMode === 'split' ? 'bg-white text-zinc-800 shadow-sm' : 'hover:text-zinc-650'}`}
+                    title="Split Side-by-Side Live View"
+                  >
+                    <Columns className="h-3 w-3" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode('preview')}
+                    className={`p-1 rounded cursor-pointer ${viewMode === 'preview' ? 'bg-white text-zinc-800 shadow-sm' : 'hover:text-zinc-650'}`}
+                    title="Preview Only Mode"
+                  >
+                    <Eye className="h-3 w-3" />
                   </button>
                 </div>
 
-                <div className="flex gap-1 mt-1 flex-wrap">
-                  {['mcp', 'automation', 'sql', 'agentic', 'database', 'tools'].map((tag) => (
-                    <button
-                      key={tag}
-                      type="button"
-                      onClick={() => {
-                        if (!formTags.includes(tag)) {
-                          handleFieldChange(() => setFormTags(prev => [...prev, tag]));
-                        }
-                      }}
-                      className="text-[9px] font-mono bg-zinc-100 border border-zinc-200 rounded hover:bg-zinc-200 text-zinc-650 px-1 py-0.5"
-                    >
-                      +{tag}
-                    </button>
-                  ))}
-                </div>
-              </div>
+                <span className="text-zinc-250 font-light">•</span>
 
-              {/* Parent Folder Selector */}
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
-                  Parent Folder
-                </label>
-                <div className="relative inline-flex items-center w-full">
-                  <select
-                    value={formFolderId}
-                    onChange={(e) => handleFieldChange(() => setFormFolderId(e.target.value))}
-                    className="w-full bg-white px-3 py-1.5 pr-8 border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-xs appearance-none cursor-pointer"
+                {/* Save trigger */}
+                <button
+                  onClick={handleCmsSaveRaw}
+                  className="flex items-center space-x-1.5 h-8 px-3 rounded-md bg-zinc-950 text-white hover:bg-zinc-800 text-xs font-bold cursor-pointer transition-all shrink-0"
+                >
+                  <Save className="h-3 w-3 text-emerald-400" />
+                  <span className="hidden sm:inline">Sync & Publish</span>
+                </button>
+
+                {/* Quick action menu */}
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      const el = document.getElementById('cms-toolbar-actions-dropdown');
+                      if (el) el.classList.toggle('hidden');
+                    }}
+                    className="p-1 px-2 border border-zinc-200 rounded-md hover:bg-zinc-50 text-zinc-550 h-8 text-xs font-semibold select-none flex items-center justify-center shrink-0 cursor-pointer"
                   >
-                    <option value="">(Root Directory)</option>
-                    {folders.map(f => (
-                      <option key={f.id} value={f.id}>{f.name}</option>
-                    ))}
-                  </select>
-                  <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-550 pointer-events-none" />
-                </div>
-              </div>
-
-              {/* Dynamic URL parameters Slug box */}
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
-                  Metadata URL Slug
-                </label>
-                <input
-                  type="text"
-                  value={formSlug}
-                  onChange={(e) => handleFieldChange(() => setFormSlug(e.target.value.toLowerCase().replace(/\s+/g, '-')))}
-                  className="w-full bg-white px-3 py-1.5 border border-zinc-205 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md font-mono text-[11px]"
-                  placeholder="e.g. sequential-thinking-skill"
-                />
-              </div>
-
-              {/* Dynamic SEO Meta Title */}
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
-                  SEO Meta Title Value
-                </label>
-                <input
-                  type="text"
-                  value={formMetaTitle}
-                  onChange={(e) => handleFieldChange(() => setFormMetaTitle(e.target.value))}
-                  className="w-full bg-white px-3 py-1.5 border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-xs font-semibold"
-                  placeholder="Insert meta tag title..."
-                />
-                <span className="text-[9px] text-zinc-400 block text-right">{formMetaTitle.length}/60 chars recommended</span>
-              </div>
-
-              {/* Dynamic SEO Description */}
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
-                  SEO Meta Description guidelines
-                </label>
-                <textarea
-                  value={formMetaDescription}
-                  onChange={(e) => handleFieldChange(() => setFormMetaDescription(e.target.value))}
-                  rows={3}
-                  className="w-full bg-white px-3 py-1.5 border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-xs leading-relaxed resize-none"
-                  placeholder="Enter detailed description summarizing search query items..."
-                />
-                <span className="text-[9px] text-zinc-400 block text-right">{formMetaDescription.length}/160 chars</span>
-              </div>
-
-              {/* Canonical URL address */}
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
-                  Canonical URL Address
-                </label>
-                <input
-                  type="text"
-                  value={formCanonicalUrl}
-                  onChange={(e) => handleFieldChange(() => setFormCanonicalUrl(e.target.value))}
-                  className="w-full bg-white px-3 py-1.5 border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md font-mono text-[10px]"
-                  placeholder="https://openskills.in/skill/..."
-                />
-              </div>
-
-              {/* Canonical Keywords */}
-              <div className="space-y-1 animate-in fade-in">
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
-                  Target Search Keywords
-                </label>
-                <input
-                  type="text"
-                  value={formKeywords}
-                  onChange={(e) => handleFieldChange(() => setFormKeywords(e.target.value))}
-                  className="w-full bg-white px-3 py-1.5 border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-[11px]"
-                  placeholder="postgres, sql, mcp, claude"
-                />
-              </div>
-
-              {/* Publishing Schedule Parameters */}
-              <div className="pt-3 border-t border-zinc-250 space-y-2">
-                <div className="text-[10px] font-bold uppercase tracking-wide text-zinc-500 mb-1">
-                  Scheduled release targets
-                </div>
-
-                <div className="space-y-1">
-                  <span className="text-[10px] text-zinc-450 block">Scheduled Publication Date</span>
-                  <div className="relative">
-                    <input
-                      type="date"
-                      value={formPublishDate}
-                      onChange={(e) => handleFieldChange(() => setFormPublishDate(e.target.value))}
-                      className="w-full bg-white px-3 py-1.5 border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-xs font-mono text-zinc-600"
-                    />
+                    Actions
+                  </button>
+                  <div
+                    id="cms-toolbar-actions-dropdown"
+                    className="absolute right-0 mt-1.5 w-40 rounded-md bg-white border border-zinc-200 shadow-lg ring-1 ring-zinc-950/5 p-1 z-40 text-left hidden font-medium text-xs text-zinc-650"
+                  >
+                    <button
+                      onClick={() => {
+                        handleDuplicateCurrent();
+                        document.getElementById('cms-toolbar-actions-dropdown')?.classList.add('hidden');
+                      }}
+                      className="w-full flex items-center px-2 py-1.5 hover:bg-zinc-50 text-zinc-700 rounded-md hover:text-zinc-950 text-left cursor-pointer"
+                    >
+                      <Copy className="h-3.5 w-3.5 mr-2 text-zinc-400" />
+                      <span>Duplicate Asset</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setRevisionSidebarOpen(true);
+                        document.getElementById('cms-toolbar-actions-dropdown')?.classList.add('hidden');
+                      }}
+                      className="w-full flex items-center px-2 py-1.5 hover:bg-zinc-50 text-zinc-700 rounded-md hover:text-zinc-950 text-left cursor-pointer"
+                    >
+                      <History className="h-3.5 w-3.5 mr-2 text-indigo-500" />
+                      <span>Revisions History</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleDeleteCurrent();
+                        document.getElementById('cms-toolbar-actions-dropdown')?.classList.add('hidden');
+                      }}
+                      className="w-full flex items-center px-2 py-1.5 hover:bg-red-50 text-red-650 hover:text-red-750 rounded-md text-left cursor-pointer border-t border-zinc-100"
+                    >
+                      <Trash2 className="h-3.5 w-3.5 mr-2 text-red-400" />
+                      <span>Move to Trash</span>
+                    </button>
                   </div>
                 </div>
+              </div>
+            </header>
 
-                <div className="flex gap-4 pt-2">
-                  <label className="flex items-center space-x-2 text-[11px] text-zinc-700 font-semibold cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={formFeatured}
-                      onChange={(e) => handleFieldChange(() => setFormFeatured(e.target.checked))}
-                      className="rounded border-zinc-300 text-blue-600 focus:ring-blue-500 h-3.5 w-3.5"
-                    />
-                    <span>Featured Content</span>
-                  </label>
+            {/* WORKSPACE SUB-METADATA TOOLBAR */}
+            <div className="h-10 bg-zinc-50/70 border-b border-zinc-150 px-4 flex items-center justify-between text-[11px] text-zinc-500 shrink-0 select-none">
 
-                  <label className="flex items-center space-x-2 text-[11px] text-zinc-700 font-semibold cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={formPinned}
-                      onChange={(e) => handleFieldChange(() => setFormPinned(e.target.checked))}
-                      className="rounded border-zinc-300 text-blue-600 focus:ring-blue-500 h-3.5 w-3.5"
-                    />
-                    <span>Pin to top</span>
-                  </label>
+              {/* File category and visibility details */}
+              <div className="flex items-center space-x-3.5">
+                <span className="flex items-center">
+                  <Tag className="h-3 w-3 text-zinc-400 mr-1 shrink-0" />
+                  Category:
+                  <div className="relative inline-flex items-center ml-1">
+                    <select
+                      value={formCategory}
+                      onChange={(e) => handleFieldChange(() => setFormCategory(e.target.value))}
+                      className="bg-transparent border-0 font-bold text-zinc-700 py-0 pl-1 pr-6 focus:outline-none focus:ring-0 cursor-pointer appearance-none text-[11px]"
+                    >
+                      {categories.map(cat => (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-1 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-450 pointer-events-none" />
+                  </div>
+                </span>
+
+                <span>•</span>
+
+                <span className="flex items-center">
+                  <Lock className="h-3 w-3 text-zinc-400 mr-1 shrink-0" />
+                  Visibility:
+                  <div className="relative inline-flex items-center ml-1">
+                    <select
+                      value={formVisibility}
+                      onChange={(e) => handleFieldChange(() => setFormVisibility(e.target.value as any))}
+                      className="bg-transparent border-0 font-bold text-zinc-700 py-0 pl-1 pr-6 focus:outline-none focus:ring-0 cursor-pointer text-[10px] appearance-none"
+                    >
+                      <option value="Public">Public Access</option>
+                      <option value="Private">Private Admin Only</option>
+                      <option value="Internal">Internal Development Only</option>
+                    </select>
+                    <ChevronDown className="absolute right-1 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-500 pointer-events-none" />
+                  </div>
+                </span>
+
+                <span>•</span>
+
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setIsToolbarCreateDropdownOpen(!isToolbarCreateDropdownOpen)}
+                    className="flex items-center justify-center space-x-1.5 h-7 px-2.5 bg-zinc-950 text-white rounded-md text-[10px] font-semibold hover:bg-zinc-800 cursor-pointer transition-colors"
+                    title="Create a new draft asset"
+                  >
+                    <Plus className="h-3 w-3" />
+                    <span>Create New</span>
+                    <ChevronDown className={`h-2.5 w-2.5 transition-transform ${isToolbarCreateDropdownOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {isToolbarCreateDropdownOpen && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-40 bg-transparent"
+                        onClick={() => setIsToolbarCreateDropdownOpen(false)}
+                      />
+                      <div className="absolute top-8 left-0 w-44 bg-white border border-zinc-200 rounded-md shadow-lg py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleCreateNewContentAsset('GitHub Repository');
+                            setIsToolbarCreateDropdownOpen(false);
+                          }}
+                          className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
+                        >
+                          <GitFork className="h-3 w-3 text-zinc-400" />
+                          <span>Create Skill</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleCreateNewContentAsset('Category');
+                            setIsToolbarCreateDropdownOpen(false);
+                          }}
+                          className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
+                        >
+                          <Tag className="h-3 w-3 text-zinc-400" />
+                          <span>Create Category</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleCreateNewContentAsset('Collection');
+                            setIsToolbarCreateDropdownOpen(false);
+                          }}
+                          className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
+                        >
+                          <Layers className="h-3 w-3 text-zinc-400" />
+                          <span>Create Collection</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleCreateNewContentAsset('Resource');
+                            setIsToolbarCreateDropdownOpen(false);
+                          }}
+                          className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
+                        >
+                          <ExternalLink className="h-3 w-3 text-zinc-400" />
+                          <span>Create Resource</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleCreateNewContentAsset('Prompt');
+                            setIsToolbarCreateDropdownOpen(false);
+                          }}
+                          className="w-full text-left px-2.5 py-1.5 text-[11px] text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 cursor-pointer transition-colors"
+                        >
+                          <Sparkles className="h-3 w-3 text-zinc-400" />
+                          <span>Create Prompt</span>
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (currentItem) {
+                        const newName = window.prompt("Rename file:", formTitle);
+                        if (newName && newName.trim()) {
+                          const trimmedName = newName.trim();
+                          setFormTitle(trimmedName);
+                          setFormSlug(trimmedName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''));
+                          setFormMetaTitle(`${trimmedName} - Curated openSkills`);
+                          const updatedMarkdown = updateMarkdownHeading(formMarkdown, trimmedName);
+                          setFormMarkdown(updatedMarkdown);
+                          setContents(prev => prev.map(c => {
+                            if (c.id === currentItem.id) {
+                              const updatedMd = updateMarkdownHeading(c.markdownContent || '', trimmedName);
+                              return {
+                                ...c,
+                                title: trimmedName,
+                                markdownContent: updatedMd
+                              };
+                            }
+                            return c;
+                          }));
+                          showToast(`✏️ Renamed file to "${trimmedName}"`);
+                        }
+                      }
+                    }}
+                    className="flex items-center space-x-1 hover:bg-zinc-250 active:bg-zinc-200/60 hover:bg-zinc-200 px-1.5 py-0.5 rounded cursor-pointer transition-colors text-zinc-650 text-zinc-600 hover:text-zinc-900"
+                    title="Rename active file"
+                  >
+                    <Edit3 className="h-3 w-3" />
+                    <span>Rename</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (currentItem) {
+                        setMoveItemModal({
+                          isOpen: true,
+                          itemType: 'file',
+                          itemId: currentItem.id,
+                          itemName: currentItem.title
+                        });
+                      }
+                    }}
+                    className="flex items-center space-x-1 hover:bg-zinc-250 active:bg-zinc-200/60 hover:bg-zinc-200 px-1.5 py-0.5 rounded cursor-pointer transition-colors text-zinc-650 text-zinc-600 hover:text-zinc-900"
+                    title="Move active file to folder"
+                  >
+                    <ArrowUpDown className="h-3 w-3" />
+                    <span>Move</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (currentItem) {
+                        const confirmDelete = window.confirm(`Are you sure you want to delete "${currentItem.title}"?`);
+                        if (confirmDelete) {
+                          handleDeleteCurrent();
+                        }
+                      }
+                    }}
+                    className="flex items-center space-x-1 hover:bg-red-50 active:bg-red-100 px-1.5 py-0.5 rounded cursor-pointer transition-colors text-red-500 hover:text-red-600"
+                    title="Delete active file"
+                  >
+                    <Trash className="h-3 w-3" />
+                    <span>Delete</span>
+                  </button>
                 </div>
               </div>
 
-              {/* GOOGLE WEB SNIPPET CARD SIMULATOR */}
-              <div className="bg-white border border-zinc-200 rounded-xl p-3 space-y-1 text-xs">
-                <span className="text-[9px] font-bold uppercase text-zinc-400">Google SERP Preview simulation</span>
-                <span className="text-blue-700 font-sans font-bold hover:underline block truncate max-w-xs">{formMetaTitle || formTitle || 'openSkills Curated Guides'}</span>
-                <span className="text-zinc-650 text-[10px] text-zinc-400 block font-mono">openskills.in/skill/{formSlug || 'new-slug'}</span>
-                <span className="text-zinc-600 text-[10px] line-clamp-2 leading-normal">{formMetaDescription || 'Equip your local Sonnet setups with database inspectors, web servers, and automation logic...'}</span>
-              </div>
+              {/* Autosave simulated log text */}
+              <div className="flex items-center space-x-2 font-mono text-xs">
+                {autosaveStatus === 'unsaved' && <span className="flex h-2 w-2 rounded-full bg-amber-500 animate-pulse" />}
+                {autosaveStatus === 'saving' && <span className="flex h-2 w-2 rounded-full bg-blue-500 animate-ping" />}
+                {autosaveStatus === 'saved' && <span className="flex h-2 w-2 rounded-full bg-emerald-500" />}
 
+                <span className="font-semibold text-zinc-400">
+                  {autosaveStatus === 'unsaved' && 'Unsaved modifications'}
+                  {autosaveStatus === 'saving' && 'Syncing client draft...'}
+                  {autosaveStatus === 'saved' && `Cloud Synced at ${lastSavedTime}`}
+                </span>
+              </div>
             </div>
 
-          </aside>
+            {/* DOUBLE PANEL / NOTION SPLIT VIEW */}
+            <div id="cms-main-panels-container" className="flex-1 flex min-h-0 relative">
 
-        </div>
-      </>
-      )}
+              {/* EDITOR AREA (LEFT/SPLIT PANEL) */}
+              {(viewMode === 'editor' || viewMode === 'split') && (
+                <div className="flex-1 flex flex-col border-r border-zinc-200 bg-white min-w-0 h-full relative">
+
+                  <div className="p-4.5 border-b border-zinc-100 bg-zinc-50/10 space-y-3 shrink-0 max-h-[320px] overflow-y-auto">
+                    <input
+                      type="text"
+                      value={formDescription}
+                      onChange={(e) => handleFieldChange(() => setFormDescription(e.target.value))}
+                      placeholder="Insert bullet points summarizing this tool integration capability..."
+                      className="w-full text-xs font-medium text-zinc-600 bg-transparent border-b border-transparent hover:border-zinc-150 focus:border-blue-600 focus:outline-none pb-1 font-sans"
+                    />
+
+                    {/* Sub-block based on active Content Type */}
+                    <div className="border border-zinc-200/80 rounded-lg p-3 bg-white space-y-2 text-xs">
+                      <div className="flex items-center justify-between font-bold text-zinc-400 text-[10px] uppercase mb-1">
+                        <span>{formType} Rich attributes & components</span>
+                        <span className="text-[9px] bg-indigo-50 text-indigo-700 px-1 py-0.5 rounded font-bold font-mono">Custom Input Node</span>
+                      </div>
+
+                      {/* GitHub Repo Details form */}
+                      {(formType === 'Skill' || formType === 'GitHub Repository') && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-zinc-500">Repository URL</label>
+                            <div className="flex gap-1.5">
+                              <input
+                                type="text"
+                                value={formGithubUrl}
+                                onChange={(e) => handleFieldChange(() => setFormGithubUrl(e.target.value))}
+                                placeholder="https://github.com/anthropics/skills/blob/main/skills/algorithmic-art/SKILL.md"
+                                className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                              />
+                              <button
+                                type="button"
+                                onClick={simulateGithubMetadataFetch}
+                                className="px-2 py-1 bg-zinc-200 hover:bg-zinc-300 rounded text-[10px] font-bold cursor-pointer text-zinc-700 inline-flex items-center gap-1"
+                                title="Auto Fetch stars/forks from api"
+                              >
+                                <RefreshCw className="h-3 w-3 shrink-0" />
+                                <span>Fetch</span>
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-3 gap-1">
+                            <div className="space-y-1">
+                              <label className="text-[10px] font-bold text-zinc-500">Stars</label>
+                              <input
+                                type="number"
+                                value={formGithubStars}
+                                onChange={(e) => handleFieldChange(() => setFormGithubStars(Number(e.target.value)))}
+                                className="bg-zinc-50 px-1 py-1 border border-zinc-200 rounded text-xs w-full text-center"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <label className="text-[10px] font-bold text-zinc-500">Forks</label>
+                              <input
+                                type="number"
+                                value={formGithubForks}
+                                onChange={(e) => handleFieldChange(() => setFormGithubForks(Number(e.target.value)))}
+                                className="bg-zinc-50 px-1 py-1 border border-zinc-200 rounded text-xs w-full text-center"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <label className="text-[10px] font-bold text-zinc-500">License</label>
+                              <input
+                                type="text"
+                                value={formGithubLicense}
+                                onChange={(e) => handleFieldChange(() => setFormGithubLicense(e.target.value))}
+                                className="bg-zinc-50 px-1.5 py-1 border border-zinc-200 rounded text-xs w-full text-center"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* AI Prompt parameters */}
+                      {formType === 'Prompt' && (
+                        <div className="space-y-2">
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              value={formPromptTitle}
+                              onChange={(e) => handleFieldChange(() => setFormPromptTitle(e.target.value))}
+                              placeholder="Prompt template name..."
+                              className="w-1/2 bg-zinc-50 p-1 px-1.5 border border-zinc-200 rounded text-xs"
+                            />
+                            <div className="relative w-1/2 inline-flex items-center">
+                              <select
+                                value={formPromptCategory}
+                                onChange={(e) => handleFieldChange(() => setFormPromptCategory(e.target.value))}
+                                className="w-full bg-zinc-50 p-1 pl-2 pr-7 border border-zinc-200 rounded text-xs focus:outline-none cursor-pointer appearance-none"
+                              >
+                                <option value="Coding">Coding</option>
+                                <option value="Writing">Writing</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Research">Research</option>
+                                <option value="Automation">Automation</option>
+                              </select>
+                              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500 pointer-events-none" />
+                            </div>
+                          </div>
+
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-zinc-450 flex items-center justify-between">
+                              <span>Prompt Variable Injectors</span>
+                              <span className="text-[9px] text-zinc-400 lowercase">use double curly braces {"{{variable}}"}</span>
+                            </label>
+                            <div className="flex flex-wrap items-center gap-1.5 bg-zinc-50 border border-zinc-200 p-1.5 rounded-lg">
+                              {formPromptVariables.map((v) => (
+                                <span
+                                  key={v}
+                                  className="font-mono text-[9px] font-semibold text-blue-800 bg-blue-10/10 border border-blue-200 px-1.5 py-0.5 rounded-md flex items-center gap-1 bg-amber-50"
+                                >
+                                  <span>{`{{${v}}}`}</span>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRemovePromptVariable(v)}
+                                    className="text-red-500 hover:text-red-700 cursor-pointer"
+                                  >
+                                    &times;
+                                  </button>
+                                </span>
+                              ))}
+                              <div className="flex items-center gap-1 ml-auto">
+                                <input
+                                  type="text"
+                                  value={newVariableInput}
+                                  onChange={(e) => setNewVariableInput(e.target.value)}
+                                  placeholder="e.g. query"
+                                  className="w-16 h-5 p-0.5 px-1 font-mono text-[9px] bg-white border border-zinc-300 rounded"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={handleAddPromptVariable}
+                                  className="p-1 px-1.5 bg-zinc-250 hover:bg-zinc-300 hover:text-zinc-950 font-bold text-[9px] border border-zinc-300 rounded cursor-pointer"
+                                >
+                                  Add
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Category Directory Attributes */}
+                      {formType === 'Category' && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-zinc-500">Category ID / Slug</label>
+                            <input
+                              type="text"
+                              value={formSlug}
+                              onChange={(e) => handleFieldChange(() => setFormSlug(e.target.value.toLowerCase().replace(/\s+/g, '-')))}
+                              placeholder="e.g. development"
+                              className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-zinc-500">Lucide Icon Name</label>
+                            <div className="relative inline-flex items-center w-full">
+                              <select
+                                value={formTags[0] || 'Code2'}
+                                onChange={(e) => handleFieldChange(() => setFormTags([e.target.value]))}
+                                className="bg-zinc-50 border border-zinc-200 hover:border-zinc-300 rounded-md pl-2 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none w-full"
+                              >
+                                <option value="Code2">Code2 (Development)</option>
+                                <option value="PenTool">PenTool (Writing)</option>
+                                <option value="BookOpen">BookOpen (Research)</option>
+                                <option value="Megaphone">Megaphone (Marketing)</option>
+                                <option value="Palette">Palette (Design)</option>
+                                <option value="Clock">Clock (Productivity)</option>
+                                <option value="Cpu">Cpu (Automation)</option>
+                                <option value="GraduationCap">GraduationCap (Education)</option>
+                                <option value="Briefcase">Briefcase (Business)</option>
+                                <option value="Bot">Bot (Agents)</option>
+                              </select>
+                              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500 pointer-events-none" />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Collection Attributes */}
+                      {formType === 'Collection' && (
+                        <div className="space-y-2">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div className="space-y-1">
+                              <label className="text-[10px] font-bold text-zinc-500">Collection ID / Slug</label>
+                              <input
+                                type="text"
+                                value={formSlug}
+                                onChange={(e) => handleFieldChange(() => setFormSlug(e.target.value.toLowerCase().replace(/\s+/g, '-')))}
+                                placeholder="e.g. best-coding-skills"
+                                className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <label className="text-[10px] font-bold text-zinc-500">Color Theme Badge</label>
+                              <div className="relative inline-flex items-center w-full">
+                                <select
+                                  value={formGithubLicense || 'blue'}
+                                  onChange={(e) => handleFieldChange(() => setFormGithubLicense(e.target.value))}
+                                  className="bg-zinc-50 border border-zinc-200 hover:border-zinc-300 rounded-md pl-2 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none w-full"
+                                >
+                                  <option value="blue">Blue</option>
+                                  <option value="purple">Purple</option>
+                                  <option value="zinc">Zinc</option>
+                                  <option value="green">Green</option>
+                                  <option value="indigo">Indigo</option>
+                                  <option value="amber">Amber</option>
+                                  <option value="rose">Rose</option>
+                                  <option value="teal">Teal</option>
+                                </select>
+                                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500 pointer-events-none" />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-zinc-500">Select Included Skills</label>
+                            <div className="max-h-24 overflow-y-auto border border-zinc-200 rounded-lg p-2 space-y-1 bg-zinc-50">
+                              {skills.map(s => {
+                                const isChecked = formTags.includes(s.id);
+                                return (
+                                  <label key={s.id} className="flex items-center space-x-2 text-[11px] font-medium text-zinc-700 cursor-pointer">
+                                    <input
+                                      type="checkbox"
+                                      checked={isChecked}
+                                      onChange={() => {
+                                        handleFieldChange(() => {
+                                          if (isChecked) {
+                                            setFormTags(prev => prev.filter(t => t !== s.id));
+                                          } else {
+                                            setFormTags(prev => [...prev, s.id]);
+                                          }
+                                        });
+                                      }}
+                                      className="rounded text-blue-600 focus:ring-blue-500"
+                                    />
+                                    <span>{s.name}</span>
+                                  </label>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Resource Attributes */}
+                      {formType === 'Resource' && (
+                        <div className="space-y-2">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div className="space-y-1">
+                              <label className="text-[10px] font-bold text-zinc-500">Resource ID / Slug</label>
+                              <input
+                                type="text"
+                                value={formSlug}
+                                onChange={(e) => handleFieldChange(() => setFormSlug(e.target.value.toLowerCase().replace(/\s+/g, '-')))}
+                                placeholder="e.g. resource-mcp-guide"
+                                className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <label className="text-[10px] font-bold text-zinc-500">Resource Type</label>
+                              <div className="relative inline-flex items-center w-full">
+                                <select
+                                  value={formTags[0] || 'Documentation'}
+                                  onChange={(e) => handleFieldChange(() => setFormTags([e.target.value]))}
+                                  className="bg-zinc-50 border border-zinc-200 hover:border-zinc-300 rounded-md pl-2 pr-7 py-1 text-xs font-semibold focus:outline-none cursor-pointer appearance-none w-full"
+                                >
+                                  <option value="Documentation">Documentation</option>
+                                  <option value="Guide">Guide</option>
+                                  <option value="Article">Article</option>
+                                  <option value="Video">Video</option>
+                                </select>
+                                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500 pointer-events-none" />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <div className="space-y-1 sm:col-span-2">
+                              <label className="text-[10px] font-bold text-zinc-500">External URL Link</label>
+                              <input
+                                type="text"
+                                value={formGithubUrl}
+                                onChange={(e) => handleFieldChange(() => setFormGithubUrl(e.target.value))}
+                                placeholder="https://..."
+                                className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <label className="text-[10px] font-bold text-zinc-500">Read / Watch Time</label>
+                              <input
+                                type="text"
+                                value={formGithubLicense}
+                                onChange={(e) => handleFieldChange(() => setFormGithubLicense(e.target.value))}
+                                placeholder="e.g. 5 min read"
+                                className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                              />
+                            </div>
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-zinc-500">Author Name</label>
+                            <input
+                              type="text"
+                              value={formGithubName}
+                              onChange={(e) => handleFieldChange(() => setFormGithubName(e.target.value))}
+                              placeholder="e.g. Anthropic Developer Relations"
+                              className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-xs w-full focus:bg-white"
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Image Blocks and embed video elements */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-zinc-100">
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-zinc-500 flex items-center justify-between">
+                            <span>Image Attachments (Drag/Drop)</span>
+                            {formImageUrl && <button onClick={() => { setFormImageUrl(''); setFormImageCaption(''); }} className="text-red-500 font-bold text-[9px] hover:underline">Clear</button>}
+                          </label>
+
+                          {imageUploadProgress !== null ? (
+                            <div className="w-full bg-zinc-100 h-8 rounded border border-dashed border-zinc-300 flex items-center px-3 gap-2">
+                              <span className="animate-spin h-3.5 w-3.5 border-2 border-zinc-500 border-t-transparent rounded-full" />
+                              <div className="flex-1 bg-zinc-200 rounded-full h-1.5">
+                                <div className="bg-blue-600 h-1.5 rounded-full" style={{ width: `${imageUploadProgress}%` }} />
+                              </div>
+                              <span className="text-[9px] font-mono font-bold text-zinc-500">{imageUploadProgress}%</span>
+                            </div>
+                          ) : formImageUrl ? (
+                            <div className="flex flex-col gap-2 bg-zinc-50 border border-zinc-200 rounded-lg p-2.5 shadow-sm animate-in fade-in duration-200">
+                              <div className="aspect-[16/10] w-full overflow-hidden rounded-md border border-zinc-150 bg-zinc-100">
+                                <img
+                                  src={formImageUrl}
+                                  alt="preview"
+                                  referrerPolicy="no-referrer"
+                                  className="h-full w-full object-cover hover:scale-[1.02] transition-transform duration-300"
+                                />
+                              </div>
+                              <div className="flex items-center gap-2 px-0.5">
+                                <span className="text-[9px] uppercase tracking-wider font-extrabold text-zinc-400 shrink-0">Caption:</span>
+                                <input
+                                  type="text"
+                                  value={formImageCaption}
+                                  onChange={(e) => handleFieldChange(() => setFormImageCaption(e.target.value))}
+                                  placeholder="Captions text..."
+                                  className="bg-transparent border-0 p-0 text-[10px] w-full focus:ring-0 focus:outline-none italic text-zinc-700 font-medium"
+                                />
+                              </div>
+                            </div>
+                          ) : (
+                            <div
+                              onClick={simulateImageDrop}
+                              className="h-8 border border-dashed border-zinc-250 hover:border-zinc-400 bg-zinc-50 rounded flex items-center justify-center gap-1 text-[10px] text-zinc-450 cursor-pointer select-none transition-colors"
+                            >
+                              <ImageIcon className="h-3.5 w-3.5 text-zinc-400" />
+                              <span>Drag screenshot / click to load</span>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-zinc-500">Video Demonstration Link Embed (Vimeo/Yt)</label>
+                          <input
+                            type="text"
+                            value={formVideoUrl}
+                            onChange={(e) => handleFieldChange(() => setFormVideoUrl(e.target.value))}
+                            placeholder="https://youtube.com/watch?v=..."
+                            className="bg-zinc-50 px-2 py-1 border border-zinc-200 rounded text-[10px] w-full focus:bg-white"
+                          />
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  {/* Slash Command floating helper menu */}
+                  {slashMenuOpen && (
+                    <div
+                      className="absolute left-6 bottom-40 w-52 rounded-lg border border-zinc-200 bg-white shadow-xl ring-1 ring-zinc-950/5 p-1.5 z-55 text-left animate-in slide-in-from-bottom-2 duration-100"
+                    >
+                      <div className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 px-2 py-1 border-b border-zinc-100">
+                        Notion Slash commands
+                      </div>
+                      <div className="max-h-52 overflow-y-auto mt-1 text-xs">
+                        <button
+                          onClick={() => insertSlashCommand('heading-1')}
+                          className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
+                        >
+                          <span className="font-bold text-zinc-500">H1</span>
+                          <span className="font-semibold text-zinc-805">Heading Large</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => insertSlashCommand('heading-2')}
+                          className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
+                        >
+                          <span className="font-bold text-zinc-500 text-[10px]">H2</span>
+                          <span className="font-semibold text-zinc-800">Heading Section</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => insertSlashCommand('callout-info')}
+                          className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
+                        >
+                          <Info className="h-3.5 w-3.5 text-blue-500 shrink-0" />
+                          <span className="font-semibold text-zinc-800">Callout Tip Box</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => insertSlashCommand('callout-warning')}
+                          className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
+                        >
+                          <AlertCircle className="h-3.5 w-3.5 text-amber-500 shrink-0" />
+                          <span className="font-semibold text-zinc-800">Callout Caution</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => insertSlashCommand('code')}
+                          className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
+                        >
+                          <FileCode className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
+                          <span className="font-semibold text-zinc-800">TS Code Block</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => insertSlashCommand('table')}
+                          className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
+                        >
+                          <TableIcon className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
+                          <span className="font-semibold text-zinc-800">Markdown Table</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => insertSlashCommand('checklist')}
+                          className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
+                        >
+                          <CheckCircle className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                          <span className="font-semibold text-zinc-800">Task Checklist</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => insertSlashCommand('image')}
+                          className="w-full flex items-center p-1 px-2 hover:bg-zinc-50 text-zinc-700 rounded text-left gap-2 cursor-pointer"
+                        >
+                          <ImageIcon className="h-3.5 w-3.5 text-purple-500 shrink-0" />
+                          <span className="font-semibold text-zinc-800">Card Showcase Image</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* EDITOR TEXTAREA WORKSPACE */}
+                  <div className="flex-1 flex flex-col p-4 bg-zinc-50/10 relative">
+
+                    <div className="flex items-center justify-between text-[11px] text-zinc-400 mb-1 font-mono px-1">
+                      <div className="flex items-center space-x-3">
+                        <span>Markdown documentation body editor (Support slash command)</span>
+                        <span className="text-zinc-300">|</span>
+                        <div className="flex items-center space-x-1.5">
+                          <button
+                            type="button"
+                            onClick={handleUndo}
+                            disabled={historyIndex === 0}
+                            className={`p-0.5 rounded cursor-pointer transition-colors ${historyIndex === 0
+                                ? 'text-zinc-300 cursor-not-allowed'
+                                : 'text-zinc-650 hover:text-zinc-950 hover:bg-zinc-100'
+                              }`}
+                            title="Undo (Ctrl+Z)"
+                          >
+                            <Undo className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleRedo}
+                            disabled={historyIndex >= history.length - 1}
+                            className={`p-0.5 rounded cursor-pointer transition-colors ${historyIndex >= history.length - 1
+                                ? 'text-zinc-300 cursor-not-allowed'
+                                : 'text-zinc-650 hover:text-zinc-950 hover:bg-zinc-100'
+                              }`}
+                            title="Redo (Ctrl+Y)"
+                          >
+                            <Redo className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                      <span>{formMarkdown.length} chars</span>
+                    </div>
+
+                    <textarea
+                      ref={textareaRef}
+                      value={formMarkdown}
+                      onChange={(e) => handleFieldChange(() => setFormMarkdown(e.target.value))}
+                      onKeyDown={handleTextareaKeyDown}
+                      placeholder="Type '/' to trigger Notion Commands menu instantly..."
+                      className="w-full flex-1 p-4 rounded-xl border border-zinc-200/90 focus:border-zinc-400 focus:outline-none focus:ring-1 focus:ring-zinc-300 text-xs text-zinc-800 leading-relaxed font-mono resize-y bg-white shadow-inner"
+                    />
+
+                    <div className="text-[10px] text-zinc-400 mt-2 italic px-1 flex justify-between">
+                      <span>Shortcuts: Press '⌘K' or 'Ctrl K' to quickly focus primary lookup search tags.</span>
+                      <span>Tips: Wrap your callout containers nicely using :::info.</span>
+                    </div>
+
+                  </div>
+
+                </div>
+              )}
+
+              {/* SPLIT LIVE PREVIEW / MARKDOWN RENDER PANEL */}
+              {(viewMode === 'split' || viewMode === 'preview') && (
+                <div className="flex-1 overflow-y-auto p-6 bg-white min-w-0 h-full">
+
+                  <div className="max-w-2xl mx-auto space-y-6">
+
+                    {/* Visual Document Heading card */}
+                    <span className="text-[9px] font-extrabold uppercase bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 text-zinc-700 px-2 py-1 rounded">
+                      Live View: {formType}
+                    </span>
+
+                    <div className="space-y-2 mt-2">
+                      <h1 className="font-sans font-black tracking-tight text-xl sm:text-3xl text-zinc-950 leading-tight">
+                        {formTitle || <span className="text-zinc-302 text-zinc-300">Untitled Core Module</span>}
+                      </h1>
+
+                      {formDescription && (
+                        <p className="text-xs sm:text-sm text-zinc-500 leading-relaxed max-w-xl italic">
+                          {formDescription}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Sub-rendered visual widget blocks */}
+
+                    {/* Custom Block: GitHub style repo card */}
+                    {formGithubUrl && (
+                      <div className="border border-zinc-200/90 rounded-xl overflow-hidden bg-zinc-50 p-4 font-sans hover:shadow-sm transition-all duration-200">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-2">
+                            <span className="flex h-6 w-6 items-center justify-center bg-zinc-950 rounded text-white text-[10px] font-bold uppercase font-mono">
+                              GH
+                            </span>
+                            <div>
+                              <div className="text-xs font-bold text-zinc-950 hover:underline hover:text-blue-600 truncate max-w-xs flex items-center">
+                                {formGithubName || 'claudelabs/repository'}
+                                <ExternalLink className="h-2.5 w-2.5 ml-1 inline text-zinc-400" />
+                              </div>
+                              <span className="text-[10px] text-zinc-400 block -mt-0.5 font-mono">MIT license configured</span>
+                            </div>
+                          </div>
+
+                          <span className="text-[10px] font-bold bg-white text-zinc-650 px-2.5 py-1 rounded-md border border-zinc-150 flex items-center gap-1 shrink-0 font-mono">
+                            <CheckCircle className="h-3 w-3 text-emerald-500 mr-0.5" />
+                            Verified Repo
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-2 py-2 text-center text-zinc-700 border-t border-zinc-150">
+                          <div>
+                            <div className="font-mono text-xs font-black text-zinc-900 flex items-center justify-center gap-0.5">
+                              <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500 shrink-0" />
+                              <span>{(formGithubStars ?? 142).toLocaleString()}</span>
+                            </div>
+                            <span className="text-[9px] text-zinc-450 uppercase font-semibold">Stars repository</span>
+                          </div>
+                          <div className="border-x border-zinc-150">
+                            <div className="font-mono text-xs font-black text-zinc-900 flex items-center justify-center gap-0.5">
+                              <GitFork className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
+                              <span>{(formGithubForks ?? 24).toLocaleString()}</span>
+                            </div>
+                            <span className="text-[9px] text-zinc-450 uppercase font-semibold">Forks branch</span>
+                          </div>
+                          <div>
+                            <div className="font-mono text-[10px] font-black text-zinc-900 text-zinc-700 truncate px-1">
+                              {formGithubLicense}
+                            </div>
+                            <span className="text-[9px] text-zinc-450 uppercase font-semibold">Usage License</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Custom Block: Image block formatting */}
+                    {formImageUrl && (
+                      <figure className="my-5 space-y-1.5 font-sans">
+                        <img
+                          src={formImageUrl}
+                          alt="Curated preview graphic"
+                          className="w-full h-44 object-cover rounded-xl border border-zinc-100 shadow"
+                        />
+                        {formImageCaption && (
+                          <figcaption className="text-center text-[10px] text-zinc-400 italic">
+                            {formImageCaption}
+                          </figcaption>
+                        )}
+                      </figure>
+                    )}
+
+                    {/* Custom Block: Special prompt card block */}
+                    {formType === 'Prompt' && (
+                      <div className="border border-zinc-200/90 rounded-xl overflow-hidden bg-zinc-50 font-sans shadow-sm">
+                        <div className="bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-2 flex items-center justify-between border-b border-zinc-150">
+                          <span className="text-[10px] font-bold text-zinc-700 tracking-wider flex items-center">
+                            <Sparkles className="h-3.5 w-3.5 text-blue-600 mr-1 shrink-0" />
+                            AI MODEL INTEGRATOR PANEL
+                          </span>
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(formPromptContent || '');
+                              showToast('📋 Prompt instruction copied to clipboard!');
+                            }}
+                            className="text-[10px] font-bold text-blue-700 hover:underline flex items-center gap-1 cursor-pointer bg-white px-2 py-0.5 border border-blue-200 rounded"
+                          >
+                            <Copy className="h-2.5 w-2.5" />
+                            Copy template
+                          </button>
+                        </div>
+
+                        <div className="p-4 bg-white space-y-3">
+                          <div>
+                            <span className="font-mono font-bold text-zinc-900 text-xs block">{formPromptTitle || 'Standard General Assistant instruction'}</span>
+                            <span className="text-[9px] text-zinc-400 block -mt-0.5">Category: {formPromptCategory} prompt guidelines</span>
+                          </div>
+
+                          <div className="bg-zinc-50 rounded-lg p-3 text-xs leading-relaxed border border-zinc-200 text-zinc-700 whitespace-pre-wrap font-mono">
+                            {formPromptContent || <span className="text-zinc-402 text-zinc-300">Set prompt content variables in editor...</span>}
+                          </div>
+
+                          {formPromptVariables.length > 0 && (
+                            <div className="pt-2 border-t border-zinc-100 space-y-2">
+                              <span className="text-[10px] font-bold text-zinc-450 uppercase tracking-wide">Interactive variables checklist:</span>
+                              <div className="flex flex-wrap gap-1.5">
+                                {formPromptVariables.map(v => (
+                                  <span key={v} className="px-2 py-0.5 rounded text-[10px] font-mono font-bold text-zinc-700 bg-zinc-100 border border-zinc-200">
+                                    {v}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Markdown text elements wrapper */}
+                    <article id="rendered-markdown-root" className="prose prose-zinc dark:prose-invert max-w-none prose-sm text-zinc-800">
+                      {formatMarkdownPreviewHTML(formMarkdown)}
+                    </article>
+
+                    {/* Tags cluster */}
+                    {formTags.length > 0 && (
+                      <div className="pt-4 border-t border-zinc-100 flex flex-wrap items-center gap-1.5 text-xs text-zinc-650">
+                        <span className="font-bold text-[10px] uppercase text-zinc-400">Attached tags:</span>
+                        {formTags.map(tag => (
+                          <span
+                            key={tag}
+                            className="font-mono text-[10px] font-bold text-zinc-600 bg-zinc-100 py-0.5 px-2 rounded border border-zinc-200 flex items-center gap-1"
+                          >
+                            <span>{tag}</span>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Fictitious Embedded video preview widget layout */}
+                    {formVideoUrl && (
+                      <div className="border border-zinc-150 rounded-lg overflow-hidden bg-zinc-950 p-2 font-sans relative my-4">
+                        <div className="aspect-video w-full rounded bg-zinc-900 flex items-center justify-center border border-zinc-800 text-center flex-col shrink-0">
+                          <div className="h-10 w-10 bg-red-600 text-white rounded-full flex items-center justify-center animate-pulse mb-2 shadow cursor-pointer">
+                            <Play className="h-5 w-5 fill-white text-white ml-0.5" />
+                          </div>
+                          <span className="text-[10px] font-bold text-zinc-400 uppercase font-mono">Dynamic Video Embed Player Block</span>
+                          <span className="text-[9px] text-zinc-500 truncate max-w-xs mt-0.5">{formVideoUrl}</span>
+                        </div>
+                      </div>
+                    )}
+
+                  </div>
+
+                </div>
+              )}
+
+              {/* EDIT SIDEBAR / SEO / SETTINGS ACCORDION */}
+              <aside className="w-80 border-l border-zinc-200 bg-zinc-50/50 flex flex-col shrink-0 overflow-y-auto">
+
+                {/* SEO SETTINGS HEADER */}
+                <div className="p-4 border-b border-zinc-200 bg-white shadow-sm flex items-center justify-between">
+                  <span className="text-xs font-bold text-zinc-950 uppercase flex items-center">
+                    <Settings className="h-4 w-4 mr-1.5 text-zinc-500 shrink-0" />
+                    SEO & Release Controls
+                  </span>
+                  <span className={`text-[10px] font-bold text-white px-2 py-0.5 rounded ${getScoreColor(seoScore)}`}>
+                    Score: {seoScore}/100
+                  </span>
+                </div>
+
+                {/* SEO Side panel Inputs card */}
+                <div className="p-4 space-y-4 text-xs font-sans">
+
+                  <div className="bg-white border border-zinc-200 rounded-lg p-3 space-y-3">
+                    <div className="text-[9px] font-bold uppercase tracking-wider text-zinc-450 mb-1 flex justify-between">
+                      <span>SEO Score Diagnostics</span>
+                      <span className="font-mono text-zinc-400 font-normal">{getScoreLabel(seoScore)}</span>
+                    </div>
+                    <div className="w-full bg-zinc-100 rounded-full h-1.5 overflow-hidden">
+                      <div className={`h-1.5 rounded-full ${getScoreColor(seoScore)}`} style={{ width: `${seoScore}%` }} />
+                    </div>
+                  </div>
+
+                  {/* Tag Selection suggestions panel */}
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
+                      Tags system keywords
+                    </label>
+                    <div className="flex flex-wrap gap-1 bg-white p-2 border border-zinc-200 rounded-lg min-h-12 items-center">
+                      {formTags.map(t => (
+                        <span key={t} className="bg-zinc-100 border border-zinc-200 rounded text-[10px] font-mono px-1.5 py-0.5 flex items-center gap-1 text-zinc-700">
+                          <span>{t}</span>
+                          <button onClick={() => handleRemoveTag(t)} className="text-red-500 hover:text-red-750 font-bold font-sans">&times;</button>
+                        </span>
+                      ))}
+                      {formTags.length === 0 && <span className="text-[10px] text-zinc-400 italic">No tags selected.</span>}
+                    </div>
+
+                    <div className="flex gap-1.5 pt-0.5">
+                      <input
+                        type="text"
+                        value={newTagInput}
+                        onChange={(e) => setNewTagInput(e.target.value)}
+                        placeholder="Add tags, e.g. sql"
+                        className="w-full bg-white px-1.5 py-1 border border-zinc-250 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded text-xs"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleAddNewTag();
+                          }
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddNewTag}
+                        className="px-2 py-1 bg-zinc-200 hover:bg-zinc-300 rounded text-[10px] font-extrabold cursor-pointer border border-zinc-300"
+                      >
+                        Add
+                      </button>
+                    </div>
+
+                    <div className="flex gap-1 mt-1 flex-wrap">
+                      {['mcp', 'automation', 'sql', 'agentic', 'database', 'tools'].map((tag) => (
+                        <button
+                          key={tag}
+                          type="button"
+                          onClick={() => {
+                            if (!formTags.includes(tag)) {
+                              handleFieldChange(() => setFormTags(prev => [...prev, tag]));
+                            }
+                          }}
+                          className="text-[9px] font-mono bg-zinc-100 border border-zinc-200 rounded hover:bg-zinc-200 text-zinc-650 px-1 py-0.5"
+                        >
+                          +{tag}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Parent Folder Selector */}
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
+                      Parent Folder
+                    </label>
+                    <div className="relative inline-flex items-center w-full">
+                      <select
+                        value={formFolderId}
+                        onChange={(e) => handleFieldChange(() => setFormFolderId(e.target.value))}
+                        className="w-full bg-white px-3 py-1.5 pr-8 border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-xs appearance-none cursor-pointer"
+                      >
+                        <option value="">(Root Directory)</option>
+                        {folders.map(f => (
+                          <option key={f.id} value={f.id}>{f.name}</option>
+                        ))}
+                      </select>
+                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-550 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  {/* Dynamic URL parameters Slug box */}
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
+                      Metadata URL Slug
+                    </label>
+                    <input
+                      type="text"
+                      value={formSlug}
+                      onChange={(e) => handleFieldChange(() => setFormSlug(e.target.value.toLowerCase().replace(/\s+/g, '-')))}
+                      className="w-full bg-white px-3 py-1.5 border border-zinc-205 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md font-mono text-[11px]"
+                      placeholder="e.g. sequential-thinking-skill"
+                    />
+                  </div>
+
+                  {/* Dynamic SEO Meta Title */}
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
+                      SEO Meta Title Value
+                    </label>
+                    <input
+                      type="text"
+                      value={formMetaTitle}
+                      onChange={(e) => handleFieldChange(() => setFormMetaTitle(e.target.value))}
+                      className="w-full bg-white px-3 py-1.5 border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-xs font-semibold"
+                      placeholder="Insert meta tag title..."
+                    />
+                    <span className="text-[9px] text-zinc-400 block text-right">{formMetaTitle.length}/60 chars recommended</span>
+                  </div>
+
+                  {/* Dynamic SEO Description */}
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
+                      SEO Meta Description guidelines
+                    </label>
+                    <textarea
+                      value={formMetaDescription}
+                      onChange={(e) => handleFieldChange(() => setFormMetaDescription(e.target.value))}
+                      rows={3}
+                      className="w-full bg-white px-3 py-1.5 border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-xs leading-relaxed resize-none"
+                      placeholder="Enter detailed description summarizing search query items..."
+                    />
+                    <span className="text-[9px] text-zinc-400 block text-right">{formMetaDescription.length}/160 chars</span>
+                  </div>
+
+                  {/* Canonical URL address */}
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
+                      Canonical URL Address
+                    </label>
+                    <input
+                      type="text"
+                      value={formCanonicalUrl}
+                      onChange={(e) => handleFieldChange(() => setFormCanonicalUrl(e.target.value))}
+                      className="w-full bg-white px-3 py-1.5 border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md font-mono text-[10px]"
+                      placeholder="https://openskills.in/skill/..."
+                    />
+                  </div>
+
+                  {/* Canonical Keywords */}
+                  <div className="space-y-1 animate-in fade-in">
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">
+                      Target Search Keywords
+                    </label>
+                    <input
+                      type="text"
+                      value={formKeywords}
+                      onChange={(e) => handleFieldChange(() => setFormKeywords(e.target.value))}
+                      className="w-full bg-white px-3 py-1.5 border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-[11px]"
+                      placeholder="postgres, sql, mcp, claude"
+                    />
+                  </div>
+
+                  {/* Publishing Schedule Parameters */}
+                  <div className="pt-3 border-t border-zinc-250 space-y-2">
+                    <div className="text-[10px] font-bold uppercase tracking-wide text-zinc-500 mb-1">
+                      Scheduled release targets
+                    </div>
+
+                    <div className="space-y-1">
+                      <span className="text-[10px] text-zinc-450 block">Scheduled Publication Date</span>
+                      <div className="relative">
+                        <input
+                          type="date"
+                          value={formPublishDate}
+                          onChange={(e) => handleFieldChange(() => setFormPublishDate(e.target.value))}
+                          className="w-full bg-white px-3 py-1.5 border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-600 rounded-md text-xs font-mono text-zinc-600"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex gap-4 pt-2">
+                      <label className="flex items-center space-x-2 text-[11px] text-zinc-700 font-semibold cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formFeatured}
+                          onChange={(e) => handleFieldChange(() => setFormFeatured(e.target.checked))}
+                          className="rounded border-zinc-300 text-blue-600 focus:ring-blue-500 h-3.5 w-3.5"
+                        />
+                        <span>Featured Content</span>
+                      </label>
+
+                      <label className="flex items-center space-x-2 text-[11px] text-zinc-700 font-semibold cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formPinned}
+                          onChange={(e) => handleFieldChange(() => setFormPinned(e.target.checked))}
+                          className="rounded border-zinc-300 text-blue-600 focus:ring-blue-500 h-3.5 w-3.5"
+                        />
+                        <span>Pin to top</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* GOOGLE WEB SNIPPET CARD SIMULATOR */}
+                  <div className="bg-white border border-zinc-200 rounded-xl p-3 space-y-1 text-xs">
+                    <span className="text-[9px] font-bold uppercase text-zinc-400">Google SERP Preview simulation</span>
+                    <span className="text-blue-700 font-sans font-bold hover:underline block truncate max-w-xs">{formMetaTitle || formTitle || 'openSkills Curated Guides'}</span>
+                    <span className="text-zinc-650 text-[10px] text-zinc-400 block font-mono">openskills.in/skill/{formSlug || 'new-slug'}</span>
+                    <span className="text-zinc-600 text-[10px] line-clamp-2 leading-normal">{formMetaDescription || 'Equip your local Sonnet setups with database inspectors, web servers, and automation logic...'}</span>
+                  </div>
+
+                </div>
+
+              </aside>
+
+            </div>
+          </>
+        )}
       </main>
 
       {/* REVISIONS HISTORY & VERSIONS SIDEPANEL DRAWER */}
@@ -3880,11 +3848,11 @@ export default function AdminContentEditor({
 
       {/* MOVE ITEM MODAL */}
       {moveItemModal.isOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-[120] bg-zinc-950/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200"
           onClick={() => setMoveItemModal(prev => ({ ...prev, isOpen: false }))}
         >
-          <div 
+          <div
             className="w-full max-w-md bg-white rounded-xl border border-zinc-200 shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >

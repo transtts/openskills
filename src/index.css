@@ -230,9 +230,15 @@
 
 /* Surface Layer 1: Zinc → deeper dark */
 .dark .bg-zinc-50,
+.dark .bg-zinc-50\/80,
 .dark .bg-zinc-50\/50,
+.dark .bg-zinc-50\/40,
+.dark .bg-zinc-50\/30,
+.dark .bg-zinc-50\/20,
 .dark .bg-zinc-50\/10,
-.dark .bg-zinc-100 {
+.dark .bg-zinc-100,
+.dark .bg-zinc-100\/50,
+.dark .bg-zinc-100\/80 {
   background-color: #111113 !important;
 }
 
@@ -264,9 +270,12 @@
 /* Borders: Visible yet subtle */
 .dark .border-zinc-200,
 .dark .border-zinc-200\/80,
+.dark .border-zinc-200\/60,
 .dark .border-zinc-100,
 .dark .border-zinc-150,
-.dark .border-zinc-105 {
+.dark .border-zinc-105,
+.dark .border-zinc-250,
+.dark .border-zinc-350 {
   border-color: rgba(255, 255, 255, 0.12) !important;
 }
 

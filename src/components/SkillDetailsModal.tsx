@@ -38,7 +38,7 @@ export default function SkillDetailsModal({
   isBookmarked,
   onToggleBookmark
 }: SkillDetailsModalProps) {
-  const [activeSubTab, setActiveSubTab] = useState<'overview' | 'installation' | 'usage' | 'examples' | 'changelog'>('overview');
+  const [activeSubTab, setActiveSubTab] = useState<'overview' | 'installation' | 'usage' | 'examples'>('overview');
   const [copiedText, setCopiedText] = useState<'install' | 'usage' | string | null>(null);
 
   if (!skill) return null;
@@ -58,12 +58,11 @@ export default function SkillDetailsModal({
     .filter(item => item.id !== skill.id && item.status === 'approved' && (item.category === skill.category || item.tags.some(tag => skill.tags.includes(tag))))
     .slice(0, 3);
 
-  const parsedSubTabs: { id: 'overview' | 'installation' | 'usage' | 'examples' | 'changelog', label: string, icon: any }[] = [
+  const parsedSubTabs: { id: 'overview' | 'installation' | 'usage' | 'examples', label: string, icon: any }[] = [
     { id: 'overview', label: 'Overview', icon: Info },
     { id: 'installation', label: 'Installation', icon: Terminal },
     { id: 'usage', label: 'Usage Guidelines', icon: Code },
-    { id: 'examples', label: 'Live Examples', icon: BookOpen },
-    { id: 'changelog', label: 'Changelog', icon: History }
+    { id: 'examples', label: 'Live Examples', icon: BookOpen }
   ];
 
   return (
@@ -214,7 +213,7 @@ export default function SkillDetailsModal({
           <div className="lg:col-span-2 p-6 flex flex-col min-h-[400px]">
             <Tabs value={activeSubTab} onValueChange={(val) => setActiveSubTab(val as any)} className="w-full flex-1 flex flex-col">
               {/* Tabs top selectors */}
-              <TabsList variant="line" className="flex border-b border-zinc-200 overflow-x-auto select-none no-scrollbar -mx-6 px-6 pb-px bg-transparent h-auto rounded-none justify-start w-full">
+              <TabsList variant="line" className="flex border-b border-zinc-200 overflow-x-auto select-none no-scrollbar pb-px bg-transparent h-auto rounded-none justify-start w-full">
                 {parsedSubTabs.map((subTab) => {
                   const TabIcon = subTab.icon;
                   return (
@@ -380,29 +379,7 @@ export default function SkillDetailsModal({
                   )}
                 </TabsContent>
 
-                {/* Tab 5: Changelog */}
-                <TabsContent value="changelog" className="space-y-5 animate-in fade-in duration-200">
-                  {skill.changelog && skill.changelog.length > 0 ? (
-                    skill.changelog.map((entry, idx) => (
-                      <div key={idx} className="relative pl-5 border-l-2 border-zinc-200 space-y-2">
-                        <span className="absolute -left-[6px] top-1 h-2.5 w-2.5 rounded-full border border-white bg-blue-600 block" />
-                        <div className="flex items-center space-x-2">
-                          <span className="font-mono text-xs font-bold text-zinc-900 bg-zinc-100 px-1.5 py-0.5 rounded">{entry.version}</span>
-                          <span className="text-[11px] text-zinc-400 font-medium">{entry.date}</span>
-                        </div>
-                        <ul className="list-disc pl-4 space-y-1 text-xs text-zinc-650">
-                          {entry.changes.map((change, cIdx) => (
-                            <li key={cIdx}>{change}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="py-12 text-center text-zinc-400">
-                      No historical release changelogs recorded.
-                    </div>
-                  )}
-                </TabsContent>
+
               </div>
             </Tabs>
           </div>

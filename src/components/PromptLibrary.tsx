@@ -26,10 +26,14 @@ export default function PromptLibrary({ prompts, onUpdatePrompt }: PromptLibrary
 
   const categories = ['all', 'Coding', 'Writing', 'Marketing', 'Research', 'Automation'];
 
-  const handleCopyPrompt = (content: string, id: string) => {
-    navigator.clipboard.writeText(content);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 1800);
+  const handleCopyPrompt = async (content: string, id: string) => {
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 1800);
+    } catch (err) {
+      console.warn('Clipboard copy failed:', err);
+    }
   };
 
   const handleStartEdit = (id: string, initialContent: string) => {

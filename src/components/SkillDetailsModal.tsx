@@ -38,15 +38,19 @@ export default function SkillDetailsModal({
   isBookmarked,
   onToggleBookmark
 }: SkillDetailsModalProps) {
-  if (!skill) return null;
-
   const [activeSubTab, setActiveSubTab] = useState<'overview' | 'installation' | 'usage' | 'examples' | 'changelog'>('overview');
   const [copiedText, setCopiedText] = useState<'install' | 'usage' | string | null>(null);
 
-  const handleCopy = (text: string, identifier: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedText(identifier);
-    setTimeout(() => setCopiedText(null), 1800);
+  if (!skill) return null;
+
+  const handleCopy = async (text: string, identifier: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedText(identifier);
+      setTimeout(() => setCopiedText(null), 1800);
+    } catch (err) {
+      console.warn('Clipboard copy failed:', err);
+    }
   };
 
   // Find 3 related items in identical or near category

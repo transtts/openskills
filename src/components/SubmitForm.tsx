@@ -2,14 +2,11 @@ import React, { useState } from 'react';
 import { 
   GitBranch, 
   Tag, 
-  FolderClock, 
-  HelpCircle, 
   CheckCircle2, 
   Upload, 
-  AlertCircle,
-  HelpCircleIcon
+  AlertCircle
 } from 'lucide-react';
-import { Category, Skill } from '../types';
+import { Category } from '../types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';

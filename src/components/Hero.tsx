@@ -2,7 +2,6 @@ import React from 'react';
 import { 
   Compass, 
   PlusCircle, 
-  GitPullRequest, 
   FolderGit2, 
   Users2, 
   Tags,

@@ -4,6 +4,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+  <link rel="preconnect" href="https://nap5k.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  </noscript>
   <title>OpenSkills - AI Skills, MCP Servers & Claude Skills Hub</title>
   <meta name="description"
     content="Discover AI Skills, MCP Servers, Claude Skills, Open Source Repositories, Tools and Resources." />
@@ -22,8 +30,19 @@
   <meta property="og:url" content="https://www.openskills.in" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://www.openskills.in/og-image.png" />
-  <script type="module" crossorigin src="/assets/index-tuWa9NwY.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-BY4VZahz.css">
+  <!-- Monetag click-triggered & session-restricted tag -->
+  <script>
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('a') || e.target.closest('button')) {
+        if (!sessionStorage.getItem('monetag_shown')) {
+          sessionStorage.setItem('monetag_shown', 'true');
+          (function(s){s.dataset.zone='11204099',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+        }
+      }
+    });
+  </script>
+  <script type="module" crossorigin src="/assets/index-0pOGGiqX.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-odGS3L8k.css">
 </head>
 
 <body>

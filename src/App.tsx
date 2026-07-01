@@ -1,26 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Bot, 
   Github, 
   Star, 
   GitFork, 
-  Calendar, 
-  ExternalLink, 
-  Eye, 
   Bookmark, 
-  Layers, 
   TrendingUp, 
-  PlusCircle, 
-  Terminal, 
-  BookOpen,
   LayoutGrid,
   Table,
-  Cpu,
-  BookmarkCheck,
-  ChevronRight,
-  Sparkles,
-  Award,
-  BookMarked
+  Award
 } from 'lucide-react';
 
 import Header from './components/Header';
@@ -92,7 +80,7 @@ export default function App() {
       try {
         return JSON.parse(saved);
       } catch (e) {
-        // fallback
+        return initialSkills;
       }
     }
     return initialSkills;
@@ -104,7 +92,7 @@ export default function App() {
       try {
         return JSON.parse(saved);
       } catch (e) {
-        // fallback
+        // fallback to default submissions
       }
     }
     // Seed initial pending demo submissions
@@ -140,7 +128,7 @@ export default function App() {
       try {
         return JSON.parse(saved);
       } catch (e) {
-        // fallback
+        return [];
       }
     }
     return [];
@@ -152,7 +140,7 @@ export default function App() {
       try {
         return JSON.parse(saved);
       } catch (e) {
-        // fallback
+        return initialPrompts;
       }
     }
     return initialPrompts;
@@ -217,20 +205,7 @@ export default function App() {
   // Detail Modal trigger state
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
 
-  // Trigger global search keyboard listener (Cmd + K or Ctrl + K)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        const searchInput = document.getElementById('header-search-input') || document.getElementById('global-search-input');
-        if (searchInput) {
-          searchInput.focus();
-        }
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  // Note: Ctrl+K keyboard shortcut is handled in Header component
 
   // Save changes to local storage whenever states alter
   useEffect(() => {
@@ -389,10 +364,11 @@ export default function App() {
     updateOrCreateMeta('og:description', description, true);
     updateOrCreateMeta('og:url', canonical, true);
     updateOrCreateMeta('og:image', ogImage, true);
+    updateOrCreateMeta('og:type', 'website', true);
   }, [selectedSkill, activeTab, selectedCategory, selectedTag, categories]);
 
-  // Extract all unique tags dynamically
-  const availableTags: string[] = (() => {
+  // Extract all unique tags dynamically (memoized)
+  const availableTags: string[] = useMemo(() => {
     const tagsSet = new Set<string>();
     skills
       .filter(s => s.status === 'approved')
@@ -402,7 +378,7 @@ export default function App() {
         }
       });
     return Array.from(tagsSet).sort();
-  })();
+  }, [skills]);
 
   // Handle bookmarks toggling
   const handleToggleBookmark = (skill: Skill) => {
@@ -648,6 +624,7 @@ export default function App() {
           {selectedSkill ? (
             <div id="skill-details-container" className="scroll-mt-20 animate-in fade-in duration-200">
               <SkillDetailsModal 
+                key={selectedSkill?.id}
                 skill={selectedSkill}
                 allSkills={skills}
                 onClose={() => {

@@ -7,7 +7,11 @@ import {
   Clock, 
   Sparkles, 
   Trash2, 
-  X
+  X,
+  Globe,
+  Star,
+  Calendar,
+  GitFork
 } from 'lucide-react';
 import { Category } from '../types';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
@@ -109,7 +113,12 @@ export default function SearchSection({
                   <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
-                  <SelectItem value="all">All Categories 🌐</SelectItem>
+                  <SelectItem value="all">
+                    <span className="flex items-center gap-1.5">
+                      <span>All Categories</span>
+                      <Globe className="h-3.5 w-3.5 text-zinc-400 shrink-0" />
+                    </span>
+                  </SelectItem>
                   {categories.map((cat) => (
                     <SelectItem key={cat.id} value={cat.id}>
                       {cat.name} ({cat.skillsCount})
@@ -134,7 +143,12 @@ export default function SearchSection({
                   <SelectValue placeholder="All Tags" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
-                  <SelectItem value="all">All Tags 🏷️</SelectItem>
+                  <SelectItem value="all">
+                    <span className="flex items-center gap-1.5">
+                      <span>All Tags</span>
+                      <Tag className="h-3.5 w-3.5 text-zinc-400 shrink-0" />
+                    </span>
+                  </SelectItem>
                   {availableTags.map((tag) => (
                     <SelectItem key={tag} value={tag}>
                       #{tag}
@@ -159,11 +173,27 @@ export default function SearchSection({
                   <SelectValue placeholder="Sort Order" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
-                  <SelectItem value="stars-desc">Most Stars 🌟 (High to Low)</SelectItem>
+                  <SelectItem value="stars-desc">
+                    <span className="flex items-center gap-1.5">
+                      <span>Most Stars</span>
+                      <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500 shrink-0" />
+                      <span className="text-[10px] text-zinc-400 font-normal ml-0.5">(High to Low)</span>
+                    </span>
+                  </SelectItem>
                   <SelectItem value="stars-asc">Least Stars</SelectItem>
-                  <SelectItem value="forks-desc">Most Forks ⌥</SelectItem>
+                  <SelectItem value="forks-desc">
+                    <span className="flex items-center gap-1.5">
+                      <span>Most Forks</span>
+                      <GitFork className="h-3.5 w-3.5 text-zinc-400 shrink-0" />
+                    </span>
+                  </SelectItem>
                   <SelectItem value="name-asc">Alphabetical (A - Z)</SelectItem>
-                  <SelectItem value="updated-desc">Recently Updated 📅</SelectItem>
+                  <SelectItem value="updated-desc">
+                    <span className="flex items-center gap-1.5">
+                      <span>Recently Updated</span>
+                      <Calendar className="h-3.5 w-3.5 text-zinc-400 shrink-0" />
+                    </span>
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
